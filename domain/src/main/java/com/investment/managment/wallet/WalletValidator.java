@@ -9,7 +9,8 @@ import static java.util.Objects.requireNonNull;
 
 public class WalletValidator implements Validator {
 
-    private static int MAX_NAME_SIZE = 100;
+    private static final int MAX_NAME_SIZE = 100;
+    private static final int MAX_DESCRIPTION_SIZE = 255;
     private final Wallet entity;
     private final ValidationHandler handler;
 
@@ -26,6 +27,7 @@ public class WalletValidator implements Validator {
     @Override
     public void validate() {
         checkNameConstraint();
+        checkDescriptionConstraint();
     }
 
     private void checkNameConstraint() {
@@ -43,6 +45,18 @@ public class WalletValidator implements Validator {
 
         if (name.length() > MAX_NAME_SIZE) {
             this.handler.append(new Error("'name' should be between 1 and %s characters".formatted(MAX_NAME_SIZE)));
+            return;
+        }
+    }
+
+    private void checkDescriptionConstraint() {
+        final var description = this.entity.getDescription();
+        if (isNull(description)) {
+            return;
+        }
+
+        if (description.length() > MAX_DESCRIPTION_SIZE) {
+            this.handler.append(new Error("'description' should be between 1 and %s characters".formatted(MAX_DESCRIPTION_SIZE)));
             return;
         }
     }
