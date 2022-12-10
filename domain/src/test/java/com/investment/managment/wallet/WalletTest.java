@@ -1,7 +1,9 @@
 package com.investment.managment.wallet;
 
+import com.investment.managment.validation.exception.DomainException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 public class WalletTest {
 
@@ -23,5 +25,26 @@ public class WalletTest {
         Assertions.assertEquals(actualWallet.getColor(), expectedColor);
         Assertions.assertNotNull(actualWallet.getCreatedAt());
         Assertions.assertNotNull(actualWallet.getUpdatedAt());
+    }
+
+
+    @Test
+    public void givenAInvalidNullName_whenCallsNewWallet_shouldReturnADomainException() {
+        final String expectedName = null;
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final Executable newWalletExecutable = () -> WalletBuilder.create()
+                .name(expectedName)
+                .description(expectedDescription)
+                .color(expectedColor)
+                .build();
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class, newWalletExecutable);
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
     }
 }
