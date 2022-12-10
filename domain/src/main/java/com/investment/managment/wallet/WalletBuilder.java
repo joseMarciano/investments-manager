@@ -1,8 +1,14 @@
 package com.investment.managment.wallet;
 
 import com.investment.managment.builder.AbstractBuilder;
+import com.investment.managment.validation.handler.ThrowableHandler;
 
 public final class WalletBuilder extends AbstractBuilder<Wallet> {
+
+    @Override
+    public void validate() {
+        WalletValidator.from(this.target, ThrowableHandler.newHandler()).validate();
+    }
 
     private WalletBuilder(final Wallet wallet) {
         super(wallet);
