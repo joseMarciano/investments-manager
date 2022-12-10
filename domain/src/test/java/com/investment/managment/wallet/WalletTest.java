@@ -93,4 +93,31 @@ public class WalletTest {
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
     }
+
+    @Test
+    public void givenAInvalidBigDescription_whenCallsNewWallet_shouldReturnADomainException() {
+        final var expectedName = "This is a long term wallet";
+        final var expectedDescription = """
+                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
+                maximiza as possibilidades por conta das formas de ação. Não obstante, o
+                desafiador cenário globalizado facilita a criação dos relacionamentos
+                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito 
+                de como a execução dos pontos do programa possibilita uma melhor visão 
+                global do sistema de formação de quadros que corresponde às necessidades.
+                """;
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'description' should be between 1 and 255 characters";
+
+        final Executable newWalletExecutable = () -> WalletBuilder.create()
+                .name(expectedName)
+                .description(expectedDescription)
+                .color(expectedColor)
+                .build();
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class, newWalletExecutable);
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
 }
