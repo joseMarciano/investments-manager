@@ -9,6 +9,7 @@ import static java.util.Objects.requireNonNull;
 
 public class WalletValidator implements Validator {
 
+    private static int MAX_NAME_SIZE = 100;
     private final Wallet entity;
     private final ValidationHandler handler;
 
@@ -35,8 +36,13 @@ public class WalletValidator implements Validator {
             return;
         }
 
-        if(name.isBlank()) {
+        if (name.isBlank()) {
             this.handler.append(new Error("'name' should not be empty"));
+            return;
+        }
+
+        if (name.length() > MAX_NAME_SIZE) {
+            this.handler.append(new Error("'name' should be between 1 and %s characters".formatted(MAX_NAME_SIZE)));
             return;
         }
     }
