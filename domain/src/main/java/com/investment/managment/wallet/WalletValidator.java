@@ -34,5 +34,10 @@ public class WalletValidator implements Validator {
             this.handler.append(new Error("'name' should not be null"));
             return;
         }
+
+        if(name.isBlank()) {
+            this.handler.append(new Error("'name' should not be empty"));
+            return;
+        }
     }
 }
