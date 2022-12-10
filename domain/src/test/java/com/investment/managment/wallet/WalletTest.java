@@ -27,7 +27,6 @@ public class WalletTest {
         Assertions.assertNotNull(actualWallet.getUpdatedAt());
     }
 
-
     @Test
     public void givenAInvalidNullName_whenCallsNewWallet_shouldReturnADomainException() {
         final String expectedName = null;
@@ -35,6 +34,26 @@ public class WalletTest {
         final var expectedColor = "FFFFFF";
 
         final var expectedErrorMessage = "'name' should not be null";
+
+        final Executable newWalletExecutable = () -> WalletBuilder.create()
+                .name(expectedName)
+                .description(expectedDescription)
+                .color(expectedColor)
+                .build();
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class, newWalletExecutable);
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
+
+    @Test
+    public void givenAInvalidEmptyName_whenCallsNewWallet_shouldReturnADomainException() {
+        final var expectedName = "  ";
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should not be empty";
 
         final Executable newWalletExecutable = () -> WalletBuilder.create()
                 .name(expectedName)
