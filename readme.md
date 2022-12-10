@@ -12,7 +12,7 @@
 
 ## :wrench: Architecture fluxogram
 
-<img src="diagram.png">
+![alt text](arch-diagram.png)
 
 ## :ballot_box_with_check: Progress of the project
 
