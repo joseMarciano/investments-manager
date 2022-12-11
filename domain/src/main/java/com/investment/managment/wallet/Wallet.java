@@ -27,7 +27,7 @@ public class Wallet extends AggregateRoot<WalletID> {
     }
 
     @Override
-    protected WalletID getId() {
+    public WalletID getId() {
         return this.id;
     }
 
