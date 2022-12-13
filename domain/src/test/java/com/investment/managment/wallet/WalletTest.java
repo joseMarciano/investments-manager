@@ -120,4 +120,134 @@ public class WalletTest {
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
     }
+
+    @Test
+    public void givenAValidWallet_whenCallsUpdateWithValidParams_shouldUpdateIt() {
+        final var expectedName = "Long term";
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var aWallet = WalletBuilder.create()
+                .name("long")
+                .description("Thus is a long term")
+                .color("FFFDF")
+                .build();
+
+        Assertions.assertEquals(aWallet.getCreatedAt(), aWallet.getUpdatedAt());
+
+        final var actualWallet = aWallet.update(expectedName, expectedDescription, expectedColor);
+
+        Assertions.assertNotNull(actualWallet.getId());
+        Assertions.assertEquals(actualWallet.getName(), expectedName);
+        Assertions.assertEquals(actualWallet.getDescription(), expectedDescription);
+        Assertions.assertEquals(actualWallet.getColor(), expectedColor);
+        Assertions.assertNotNull(actualWallet.getCreatedAt());
+        Assertions.assertTrue(actualWallet.getCreatedAt().isBefore(actualWallet.getUpdatedAt()));
+    }
+
+    @Test
+    public void givenAValidWallet_whenCallsUpdateWithAInvalidNullName_shouldReturnADomainException() {
+        final String expectedName = null;
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var aWallet = WalletBuilder.create()
+                .name("long")
+                .description("Thus is a long term")
+                .color("FFFDF")
+                .build();
+
+        Assertions.assertEquals(aWallet.getCreatedAt(), aWallet.getUpdatedAt());
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class,
+                        () -> aWallet.update(expectedName, expectedDescription, expectedColor));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
+
+    @Test
+    public void givenAValidWallet_whenCallsUpdateWithAInvalidEmptyName_shouldReturnADomainException() {
+        final var expectedName = "  ";
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should not be empty";
+
+        final var aWallet = WalletBuilder.create()
+                .name("long")
+                .description("Thus is a long term")
+                .color("FFFDF")
+                .build();
+
+        Assertions.assertEquals(aWallet.getCreatedAt(), aWallet.getUpdatedAt());
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class,
+                        () -> aWallet.update(expectedName, expectedDescription, expectedColor));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
+
+    @Test
+    public void givenAValidWallet_whenCallsUpdateWithAInvalidBigName_shouldReturnADomainException() {
+        final var expectedName = """
+                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
+                maximiza as possibilidades por conta das formas de ação. Não obstante, o
+                desafiador cenário globalizado facilita a criação dos relacionamentos
+                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
+                de como a execução dos pontos do programa possibilita uma melhor visão
+                global do sistema de formação de quadros que corresponde às necessidades.
+                """;
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should be between 1 and 100 characters";
+
+        final var aWallet = WalletBuilder.create()
+                .name("long")
+                .description("Thus is a long term")
+                .color("FFFDF")
+                .build();
+
+        Assertions.assertEquals(aWallet.getCreatedAt(), aWallet.getUpdatedAt());
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class,
+                        () -> aWallet.update(expectedName, expectedDescription, expectedColor));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
+
+    @Test
+    public void givenAValidWallet_whenCallsUpdateWithAInvalidBigDescription_shouldReturnADomainException() {
+        final var expectedName = "This is a long term wallet";
+        final var expectedDescription = """
+                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
+                maximiza as possibilidades por conta das formas de ação. Não obstante, o
+                desafiador cenário globalizado facilita a criação dos relacionamentos
+                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
+                de como a execução dos pontos do programa possibilita uma melhor visão
+                global do sistema de formação de quadros que corresponde às necessidades.
+                """;
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'description' should be between 1 and 255 characters";
+
+        final var aWallet = WalletBuilder.create()
+                .name("long")
+                .description("Thus is a long term")
+                .color("FFFDF")
+                .build();
+
+        Assertions.assertEquals(aWallet.getCreatedAt(), aWallet.getUpdatedAt());
+
+        final var actualException =
+                Assertions.assertThrows(DomainException.class,
+                        () -> aWallet.update(expectedName, expectedDescription, expectedColor));
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
+    }
 }
