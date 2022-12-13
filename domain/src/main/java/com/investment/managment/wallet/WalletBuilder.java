@@ -18,6 +18,10 @@ public final class WalletBuilder extends AbstractBuilder<Wallet> {
         return new WalletBuilder(new Wallet());
     }
 
+    public static WalletBuilder from(final Wallet aWallet) {
+        return new WalletBuilder(aWallet);
+    }
+
     public WalletBuilder name(final String name) {
         this.target.name = name;
         return this;
