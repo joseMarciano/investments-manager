@@ -1,3 +1,4 @@
 rootProject.name = 'investiment-managment'
 include 'domain'
+include 'application'
 

@@ -11,7 +11,7 @@ public class DomainException extends RuntimeException {
         return new DomainException(List.of(error));
     }
 
-    private DomainException(final List<Error> errors) {
+    DomainException(final List<Error> errors) {
         super("Domain Exception occurred");
         this.errors = requireNonNull(errors);
     }

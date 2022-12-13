@@ -26,8 +26,16 @@ public class Wallet extends AggregateRoot<WalletID> {
         this.updatedAt = now;
     }
 
+    public Wallet update(final String aName, final String aDescription, final String aColor) {
+        this.name = aName;
+        this.description = aDescription;
+        this.color = aColor;
+        this.updatedAt = Instant.now();
+        return WalletBuilder.from(this).build();
+    }
+
     @Override
-    protected WalletID getId() {
+    public WalletID getId() {
         return this.id;
     }
 

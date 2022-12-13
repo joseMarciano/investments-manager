@@ -6,7 +6,7 @@ import com.investment.managment.validation.handler.ThrowableHandler;
 public final class WalletBuilder extends AbstractBuilder<Wallet> {
 
     @Override
-    public void validate() {
+    protected void validate() {
         WalletValidator.from(this.target, ThrowableHandler.newHandler()).validate();
     }
 
@@ -16,6 +16,10 @@ public final class WalletBuilder extends AbstractBuilder<Wallet> {
 
     public static WalletBuilder create() {
         return new WalletBuilder(new Wallet());
+    }
+
+    public static WalletBuilder from(final Wallet aWallet) {
+        return new WalletBuilder(aWallet);
     }
 
     public WalletBuilder name(final String name) {

@@ -13,6 +13,6 @@ public abstract class AbstractBuilder<TARGET_CLASS> {
         return target;
     }
 
-    public void validate() {}
+    protected void validate() {}
 
 }
