@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: ${datasource.url}
+    username: ${datasource.user}
+    password: ${datasource.password}
+
+## TODO: Create a Hikari configuration
+## TODO: Read about spring.jpa.open-in-view

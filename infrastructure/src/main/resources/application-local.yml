@@ -1,0 +1,5 @@
+
+datasource:
+  url: jdbc:postgresql://localhost:5432/investment-management
+  user: developer
+  password: 123456
