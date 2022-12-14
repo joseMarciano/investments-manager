@@ -13,4 +13,6 @@ public interface WalletGateway {
     Optional<Wallet> findById(WalletID anId);
 
     Pagination<Wallet> findAll(SearchQuery query);
+
+    void deleteById(WalletID id);
 }
