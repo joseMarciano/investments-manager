@@ -39,8 +39,11 @@ public class WalletGatewayImpl implements WalletGateway {
     }
 
     @Override
-    public void deleteById(final WalletID id) {
-
+    public void deleteById(final WalletID anId) {
+        this.findById(anId)
+                .map(Wallet::getId)
+                .map(WalletID::getValue)
+                .ifPresent(walletRepository::deleteById);
     }
 
     private Wallet save(final Wallet aWallet) {
