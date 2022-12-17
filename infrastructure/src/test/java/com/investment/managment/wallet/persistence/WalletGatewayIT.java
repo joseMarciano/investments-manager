@@ -108,7 +108,44 @@ public class WalletGatewayIT extends DataBaseExtension {
         Assertions.assertNotNull(actualWallet.getCreatedAt());
         Assertions.assertNotNull(actualWallet.getUpdatedAt());
         Assertions.assertTrue(actualWallet.getCreatedAt().isBefore(actualWallet.getUpdatedAt()));
+    }
 
+    @Test
+    public void givenAValidId_whenCallsFindById_shouldReturnIt() {
+        final var expectedName = "Wallet";
+        final var expectedDescription = "Wallet long term";
+        final var expectedColor = "FFFFF";
+        var aWallet = WalletBuilder.create()
+                .name(expectedName)
+                .description(expectedDescription)
+                .color(expectedColor)
+                .build();
+        final var expectedId = aWallet.getId();
+
+        Assertions.assertEquals(0, walletRepository.count());
+        walletRepository.saveAndFlush(WalletJpaEntity.from(aWallet));
+        Assertions.assertEquals(1, walletRepository.count());
+
+        final var actualWallet = walletGateway.findById(expectedId).get();
+
+        Assertions.assertNotNull(actualWallet.getId());
+        Assertions.assertEquals(actualWallet.getId(), expectedId);
+        Assertions.assertEquals(actualWallet.getDescription(), expectedDescription);
+        Assertions.assertEquals(actualWallet.getColor(), expectedColor);
+        Assertions.assertNotNull(actualWallet.getCreatedAt());
+        Assertions.assertNotNull(actualWallet.getUpdatedAt());
+        Assertions.assertEquals(actualWallet.getCreatedAt(), actualWallet.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAInvalidId_whenCallsFindById_shouldReturnEmpty() {
+        final var anId = WalletID.unique();
+
+        Assertions.assertEquals(0, walletRepository.count());
+
+        final var walletOptional = walletGateway.findById(anId);
+        Assertions.assertTrue(walletOptional.isEmpty());
+        Assertions.assertEquals(0, walletRepository.count());
     }
 
 
