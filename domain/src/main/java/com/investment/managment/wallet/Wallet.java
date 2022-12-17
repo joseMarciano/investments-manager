@@ -1,6 +1,7 @@
 package com.investment.managment.wallet;
 
 import com.investment.managment.AggregateRoot;
+import com.investment.managment.util.InstantUtil;
 
 import java.time.Instant;
 
@@ -20,17 +21,30 @@ public class Wallet extends AggregateRoot<WalletID> {
 
 
     protected Wallet() {
-        final Instant now = Instant.now();
+        final Instant now = InstantUtil.now();
         this.id = WalletID.unique();
         this.createdAt = now;
         this.updatedAt = now;
+    }
+
+    private Wallet(final WalletID anId, final String aName, final String aDescription, final String aColor, final Instant createdAt, final Instant updatedAt) {
+        this.id = anId;
+        this.name = aName;
+        this.description = aDescription;
+        this.color = aColor;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public static Wallet with(final WalletID anId, final String aName, final String aDescription, final String aColor, final Instant createdAt, final Instant updatedAt) {
+        return new Wallet(anId, aName, aDescription, aColor, createdAt, updatedAt);
     }
 
     public Wallet update(final String aName, final String aDescription, final String aColor) {
         this.name = aName;
         this.description = aDescription;
         this.color = aColor;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtil.now();
         return WalletBuilder.from(this).build();
     }
 
