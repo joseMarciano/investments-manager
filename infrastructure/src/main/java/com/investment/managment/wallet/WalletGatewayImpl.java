@@ -30,7 +30,7 @@ public class WalletGatewayImpl implements WalletGateway {
 
     @Override
     public Optional<Wallet> findById(final WalletID anId) {
-        return Optional.empty();
+        return walletRepository.findById(anId.getValue()).map(WalletJpaEntity::toAggregate);
     }
 
     @Override
