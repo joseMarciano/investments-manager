@@ -19,13 +19,13 @@ public class WalletGatewayImpl implements WalletGateway {
 
     @Override
     public Wallet create(final Wallet aWallet) {
-        final WalletJpaEntity aWalletJpaEntity = walletRepository.save(WalletJpaEntity.from(aWallet));
-        return aWalletJpaEntity.toAggregate();
+        return save(aWallet);
     }
+
 
     @Override
     public Wallet update(final Wallet aWallet) {
-        return null;
+        return save(aWallet);
     }
 
     @Override
@@ -41,5 +41,10 @@ public class WalletGatewayImpl implements WalletGateway {
     @Override
     public void deleteById(final WalletID id) {
 
+    }
+
+    private Wallet save(final Wallet aWallet) {
+        final WalletJpaEntity aWalletJpaEntity = walletRepository.save(WalletJpaEntity.from(aWallet));
+        return aWalletJpaEntity.toAggregate();
     }
 }
