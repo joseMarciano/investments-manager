@@ -148,5 +148,34 @@ public class WalletGatewayIT extends DataBaseExtension {
         Assertions.assertEquals(0, walletRepository.count());
     }
 
+    @Test
+    public void givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
+        final var expectedName = "Wallet";
+        final var expectedDescription = "Wallet long term";
+        final var expectedColor = "FFFFF";
+        var aWallet = WalletBuilder.create()
+                .name(expectedName)
+                .description(expectedDescription)
+                .color(expectedColor)
+                .build();
+        final var expectedId = aWallet.getId();
+
+        Assertions.assertEquals(0, walletRepository.count());
+        walletRepository.saveAndFlush(WalletJpaEntity.from(aWallet));
+        Assertions.assertEquals(1, walletRepository.count());
+
+        walletGateway.deleteById(expectedId);
+
+        Assertions.assertEquals(0, walletRepository.count());
+    }
+
+    @Test
+    public void givenAInvalidId_whenCallsDeleteById_shouldBeOk() {
+        final var anId = WalletID.unique();
+        Assertions.assertEquals(0, walletRepository.count());
+        Assertions.assertDoesNotThrow(() -> walletGateway.deleteById(anId));
+        Assertions.assertEquals(0, walletRepository.count());
+    }
+
 
 }
