@@ -2,11 +2,17 @@ package com.investment.managment.wallet;
 
 import com.investment.managment.page.Pagination;
 import com.investment.managment.page.SearchQuery;
+import com.investment.managment.util.PaginationUtil;
+import com.investment.managment.util.SpecificationUtil;
 import com.investment.managment.wallet.persistence.WalletJpaEntity;
 import com.investment.managment.wallet.persistence.WalletRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
+import static java.util.Set.*;
 
 @Component
 public class WalletGatewayImpl implements WalletGateway {
@@ -35,7 +41,21 @@ public class WalletGatewayImpl implements WalletGateway {
 
     @Override
     public Pagination<Wallet> findAll(final SearchQuery query) {
-        return null;
+        final var walletSpecification =
+                SpecificationUtil.<WalletJpaEntity>like(
+                        of("name", "description"), query.filter()
+                );
+
+        Page<WalletJpaEntity> page = walletRepository.findAll(
+                walletSpecification,
+                PaginationUtil.buildPage(query)
+        );
+        return new Pagination<>(
+                query.offset(),
+                query.limit(),
+                page.getTotalElements(),
+                page.getContent()
+        ).map(WalletJpaEntity::toAggregate);
     }
 
     @Override
