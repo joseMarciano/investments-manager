@@ -197,7 +197,6 @@ public class WalletGatewayIT extends DataBaseExtension {
         final var expectedDirection = queryParams[3];
         final var expectedFilter = "";
 
-        //TODO: ADICIONAR TESTES PARAMETRIZADOS PARA FACILITAR.
         persistWallets(
                 create().name("Zero lost").description("A Day trade is nice").color("D0D0D0").build(),
                 create().name("A Day trade").description("The man").color("FFFFF").build(),
@@ -232,7 +231,6 @@ public class WalletGatewayIT extends DataBaseExtension {
         final var expectedDirection = queryParams[3];
         final var expectedFilter = "";
 
-        //TODO: ADICIONAR TESTES PARAMETRIZADOS PARA FACILITAR.
         persistWallets(
                 create().name("Zero lost").description("A Day trade is nice").color("D0D0D0").build(),
                 create().name("A Day trade").description("The man").color("FFFFF").build(),
@@ -264,7 +262,6 @@ public class WalletGatewayIT extends DataBaseExtension {
         final var expectedSort = "name";
         final var expectedDirection = "desc";
 
-        //TODO: ADICIONAR TESTES PARAMETRIZADOS PARA FACILITAR.
         persistWallets(
                 create().name("Liker many things").description("Options nicer").color("D0D0D0").build(),
                 create().name("Should I stay or should I go").description("Curious with ç").color("FFFFF").build(),
@@ -296,7 +293,6 @@ public class WalletGatewayIT extends DataBaseExtension {
         final var expectedDirection = "desc";
         final var expectedTotal = 0;
 
-        //TODO: ADICIONAR TESTES PARAMETRIZADOS PARA FACILITAR.
         persistWallets(
                 create().name("Liker many things").description("Options nicer").color("D0D0D0").build(),
                 create().name("Should I stay or should I go").description("Curious with ç").color("FFFFF").build(),
