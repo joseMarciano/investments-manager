@@ -5,4 +5,8 @@ public record CreateWalletCommandInput(
         String description,
         String color
 ) {
+
+    public static CreateWalletCommandInput with(final String name, final String description, final String color) {
+        return new CreateWalletCommandInput(name, description, color);
+    }
 }
