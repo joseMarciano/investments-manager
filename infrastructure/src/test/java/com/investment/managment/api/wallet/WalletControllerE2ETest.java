@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @E2ETest
@@ -33,12 +34,12 @@ public class WalletControllerE2ETest extends DataBaseExtension {
         final var expectedDescription = "This is a long term wallet";
         final var expectedColor = "FFFFFF";
 
-        final var actualWallet = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
+        final var actualRequestCommand = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
 
         final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(actualWallet));
+                .content(Json.writeValueAsString(actualRequestCommand));
 
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
@@ -50,107 +51,105 @@ public class WalletControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()));
     }
 
+    @Test
+    public void givenAInvalidNullName_whenCallsNewWallet_shouldReturn422() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
 
+        final var expectedErrorMessage = "'name' should not be null";
+        final var actualRequestCommand = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
 
+        final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
 
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
+                .andDo(MockMvcResultHandlers.print());
+    }
 
+    @Test
+    public void givenAInvalidEmptyName_whenCallsNewWallet_shouldReturn422() throws Exception {
+        final var expectedName = "  ";
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
 
+        final var expectedErrorMessage = "'name' should not be empty";
+        final var actualRequestCommand = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
 
+        final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
 
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
+                .andDo(MockMvcResultHandlers.print());
+    }
 
-//    @Test
-//    public void givenAInvalidNullName_whenCallsNewWallet_shouldReturnADomainException() {
-//        final String expectedName = null;
-//        final var expectedDescription = "This is a long term wallet";
-//        final var expectedColor = "FFFFFF";
-//
-//        final var expectedErrorMessage = "'name' should not be null";
-//
-//        final Executable newWalletExecutable = () -> WalletBuilder.create()
-//                .name(expectedName)
-//                .description(expectedDescription)
-//                .color(expectedColor)
-//                .build();
-//
-//        final var actualException =
-//                Assertions.assertThrows(DomainException.class, newWalletExecutable);
-//
-//        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
-//    }
-//
-//    @Test
-//    public void givenAInvalidEmptyName_whenCallsNewWallet_shouldReturnADomainException() {
-//        final var expectedName = "  ";
-//        final var expectedDescription = "This is a long term wallet";
-//        final var expectedColor = "FFFFFF";
-//
-//        final var expectedErrorMessage = "'name' should not be empty";
-//
-//        final Executable newWalletExecutable = () -> WalletBuilder.create()
-//                .name(expectedName)
-//                .description(expectedDescription)
-//                .color(expectedColor)
-//                .build();
-//
-//        final var actualException =
-//                Assertions.assertThrows(DomainException.class, newWalletExecutable);
-//
-//        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
-//    }
-//
-//    @Test
-//    public void givenAInvalidBigName_whenCallsNewWallet_shouldReturnADomainException() {
-//        final var expectedName = """
-//                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
-//                maximiza as possibilidades por conta das formas de ação. Não obstante, o
-//                desafiador cenário globalizado facilita a criação dos relacionamentos
-//                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
-//                de como a execução dos pontos do programa possibilita uma melhor visão
-//                global do sistema de formação de quadros que corresponde às necessidades.
-//                """;
-//        final var expectedDescription = "This is a long term wallet";
-//        final var expectedColor = "FFFFFF";
-//
-//        final var expectedErrorMessage = "'name' should be between 1 and 100 characters";
-//
-//        final Executable newWalletExecutable = () -> WalletBuilder.create()
-//                .name(expectedName)
-//                .description(expectedDescription)
-//                .color(expectedColor)
-//                .build();
-//
-//        final var actualException =
-//                Assertions.assertThrows(DomainException.class, newWalletExecutable);
-//
-//        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
-//    }
-//
-//    @Test
-//    public void givenAInvalidBigDescription_whenCallsNewWallet_shouldReturnADomainException() {
-//        final var expectedName = "This is a long term wallet";
-//        final var expectedDescription = """
-//                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
-//                maximiza as possibilidades por conta das formas de ação. Não obstante, o
-//                desafiador cenário globalizado facilita a criação dos relacionamentos
-//                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
-//                de como a execução dos pontos do programa possibilita uma melhor visão
-//                global do sistema de formação de quadros que corresponde às necessidades.
-//                """;
-//        final var expectedColor = "FFFFFF";
-//
-//        final var expectedErrorMessage = "'description' should be between 1 and 255 characters";
-//
-//        final Executable newWalletExecutable = () -> WalletBuilder.create()
-//                .name(expectedName)
-//                .description(expectedDescription)
-//                .color(expectedColor)
-//                .build();
-//
-//        final var actualException =
-//                Assertions.assertThrows(DomainException.class, newWalletExecutable);
-//
-//        Assertions.assertEquals(expectedErrorMessage, actualException.getError().message());
-//    }
+    @Test
+    public void givenAInvalidBigName_whenCallsNewWallet_shouldReturn422() throws Exception {
+        final var expectedName = """
+                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
+                maximiza as possibilidades por conta das formas de ação. Não obstante, o
+                desafiador cenário globalizado facilita a criação dos relacionamentos
+                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
+                de como a execução dos pontos do programa possibilita uma melhor visão
+                global do sistema de formação de quadros que corresponde às necessidades.
+                """;
+        final var expectedDescription = "This is a long term wallet";
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'name' should be between 1 and 100 characters";
+
+        final var actualRequestCommand = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
+
+        final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void givenAInvalidBigDescription_whenCallsNewWallet_shouldReturn422() throws Exception {
+        final var expectedName = "This is a long term wallet";
+        final var expectedDescription = """
+                Pensando mais a longo prazo, o acompanhamento das preferências de consumo
+                maximiza as possibilidades por conta das formas de ação. Não obstante, o
+                desafiador cenário globalizado facilita a criação dos relacionamentos
+                verticais entre as hierarquias. Ainda assim, existem dúvidas a respeito
+                de como a execução dos pontos do programa possibilita uma melhor visão
+                global do sistema de formação de quadros que corresponde às necessidades.
+                """;
+        final var expectedColor = "FFFFFF";
+
+        final var expectedErrorMessage = "'description' should be between 1 and 255 characters";
+
+        final var actualRequestCommand = new CreateWalletRequest(expectedName, expectedDescription, expectedColor);
+
+        final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
+                .andDo(MockMvcResultHandlers.print());
+    }
 //
 //    @Test
 //    public void givenAValidWallet_whenCallsUpdateWithValidParams_shouldUpdateIt() {
