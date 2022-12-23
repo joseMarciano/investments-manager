@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investment.managment.DataBaseExtension;
 import com.investment.managment.E2ETest;
 import com.investment.managment.config.json.Json;
-import com.investment.managment.validation.exception.NotFoundException;
-import com.investment.managment.wallet.WalletBuilder;
 import com.investment.managment.wallet.WalletID;
 import com.investment.managment.wallet.models.CreateWalletRequest;
 import com.investment.managment.wallet.models.CreateWalletResponse;
@@ -15,6 +13,8 @@ import com.investment.managment.wallet.persistence.WalletRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static java.lang.Integer.valueOf;
 
 @E2ETest
 public class WalletControllerE2ETest extends DataBaseExtension {
@@ -389,6 +389,163 @@ public class WalletControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0:1:name:asc, 3, A Day trade",
+            "0:1:name:desc, 3, Zero lost",
+            "0:1:description:asc, 3, Zero lost",
+            "0:1:description:desc, 3, É muito bom"
+    })
+    public void givenAValidQuery_whenCallsFindAll_shouldReturnPageCorrectly(final String params, final int expectedTotal, final String expectedName) throws Exception {
+        final var queryParams = params.split(":");
+        final var expectedOffset = queryParams[0];
+        final var expectedLimit = queryParams[1];
+        final var expectedSort = queryParams[2];
+        final var expectedDirection = queryParams[3];
+        final var expectedFilter = "";
+
+        givenWallets(
+                new CreateWalletRequest("Zero lost", "A Day trade is nice", "D0D0D0"),
+                new CreateWalletRequest("A Day trade", "The man", "FFFFF"),
+                new CreateWalletRequest("É muito bom", "Zero lost is liar", "D0D0D3")
+        );
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH)
+                .queryParam("offset", expectedOffset)
+                .queryParam("limit", expectedLimit)
+                .queryParam("sort", expectedSort)
+                .queryParam("direction", expectedDirection)
+                .queryParam("filter", expectedFilter)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.offset", Matchers.is(valueOf(expectedOffset))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.limit", Matchers.is(valueOf(expectedLimit))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedTotal)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", Matchers.is(expectedName)));
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "0:1:name:asc, 4, A Day trade",
+            "1:1:name:asc, 4, É muito bom",
+            "2:1:name:asc, 4, God Day trade",
+            "3:1:name:asc, 4, Zero lost"
+    })
+    public void givenAValidQuery_whenCallsFindAll_shouldPageCorrectly(final String params, final int expectedTotal, final String expectedName) throws Exception {
+        final var queryParams = params.split(":");
+        final var expectedOffset = queryParams[0];
+        final var expectedLimit = queryParams[1];
+        final var expectedSort = queryParams[2];
+        final var expectedDirection = queryParams[3];
+        final var expectedFilter = "";
+
+        givenWallets(
+                new CreateWalletRequest("Zero lost", "A Day trade is nice", "D0D0D0"),
+                new CreateWalletRequest("A Day trade", "The man", "FFFFF"),
+                new CreateWalletRequest("God Day trade", "The man", "FFFFF"),
+                new CreateWalletRequest("É muito bom", "Zero lost is liar", "D0D0D3")
+        );
+
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH)
+                .queryParam("offset", expectedOffset)
+                .queryParam("limit", expectedLimit)
+                .queryParam("sort", expectedSort)
+                .queryParam("direction", expectedDirection)
+                .queryParam("filter", expectedFilter)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.offset", Matchers.is(valueOf(expectedOffset))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.limit", Matchers.is(valueOf(expectedLimit))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedTotal)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", Matchers.is(expectedName)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "liker, Liker many things, 1",
+            "ld, Should I stay or should I go, 1",
+            "@, Caracteres especiais: +=12-!@, 1",
+    })
+    public void givenAValidQuery_whenCallsFindAll_shouldReturnPageFilteredCorrectly(final String expectedFilter, final String expectedName, final int expectedTotal) throws Exception {
+        final var expectedOffset = "0";
+        final var expectedLimit = "20";
+        final var expectedSort = "name";
+        final var expectedDirection = "desc";
+
+        givenWallets(
+                new CreateWalletRequest("Liker many things", "Options nicer", "D0D0D0"),
+                new CreateWalletRequest("Should I stay or should I go", "Curious with ç", "FFFFF"),
+                new CreateWalletRequest("Caracteres especiais: +=12-!@", "Zero lost is liar", "D0D0D3")
+        );
+
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH)
+                .queryParam("offset", expectedOffset)
+                .queryParam("limit", expectedLimit)
+                .queryParam("sort", expectedSort)
+                .queryParam("direction", expectedDirection)
+                .queryParam("filter", expectedFilter)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.offset", Matchers.is(valueOf(expectedOffset))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.limit", Matchers.is(valueOf(expectedLimit))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedTotal)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", Matchers.is(expectedName)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "consumer",
+            "(mui bien)",
+            "there are",
+    })
+    public void givenAValidQuery_whenCallsFindAll_shouldReturnEmptyPageCorrectly(final String expectedFilter) throws Exception {
+        final var expectedOffset = "0";
+        final var expectedLimit = "20";
+        final var expectedSort = "name";
+        final var expectedDirection = "desc";
+        final var expectedTotal = 0;
+
+        givenWallets(
+                new CreateWalletRequest("Liker many things", "Options nicer", "D0D0D0"),
+                new CreateWalletRequest("Should I stay or should I go", "Curious with ç", "FFFFF"),
+                new CreateWalletRequest("Caracteres especiais: +=12-!@", "Zero lost is liar", "D0D0D3")
+        );
+
+
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH)
+                .queryParam("offset", expectedOffset)
+                .queryParam("limit", expectedLimit)
+                .queryParam("sort", expectedSort)
+                .queryParam("direction", expectedDirection)
+                .queryParam("filter", expectedFilter)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.offset", Matchers.is(valueOf(expectedOffset))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.limit", Matchers.is(valueOf(expectedLimit))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.total", Matchers.is(expectedTotal)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items.length()", Matchers.is(0)));
+    }
+
+    private List<String> givenWallets(final CreateWalletRequest... walletsRequests) throws Exception {
+        final var walletsId = new ArrayList<String>();
+        for (CreateWalletRequest w : walletsRequests) {
+            walletsId.add(givenWallet(w));
+        }
+        return walletsId;
     }
 
     private String givenWallet(final CreateWalletRequest walletRequest) throws Exception {
