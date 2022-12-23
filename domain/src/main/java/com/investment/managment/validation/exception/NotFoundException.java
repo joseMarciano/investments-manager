@@ -12,6 +12,6 @@ public class NotFoundException extends DomainException {
     }
 
     public static NotFoundException of(final Identifier<?> anId, final Class<? extends AggregateRoot<?>> aClass) {
-        return new NotFoundException(new Error("Entity %s with identifier %s was not found".formatted(anId.getValue(), aClass.getSimpleName())));
+        return new NotFoundException(new Error("Entity %s with identifier %s was not found".formatted(aClass.getSimpleName(), anId.getValue())));
     }
 }

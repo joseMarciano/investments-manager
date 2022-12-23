@@ -1,8 +1,13 @@
 spring:
+  flyway:
+      enabled: false
   datasource:
     url: ${datasource.url}
     username: ${datasource.user}
     password: ${datasource.password}
+  jpa:
+    hibernate:
+      ddl-auto: none
 
 ## TODO: Create a Hikari configuration
 ## TODO: Read about spring.jpa.open-in-view

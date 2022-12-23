@@ -52,7 +52,7 @@ public class FindWalletByIdUseCaseTest {
     @Test
     public void givenAnInvalidID_whenCallsUseCase_shouldReturnANotFoundException() {
         final var expectedId = WalletID.unique();
-        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted(expectedId.getValue(), "Wallet");
+        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted( "Wallet", expectedId.getValue());
 
         when(walletGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.empty());
