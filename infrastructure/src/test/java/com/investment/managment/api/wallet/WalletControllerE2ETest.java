@@ -9,6 +9,7 @@ import com.investment.managment.wallet.models.CreateWalletRequest;
 import com.investment.managment.wallet.models.CreateWalletResponse;
 import com.investment.managment.wallet.models.UpdateWalletRequest;
 import com.investment.managment.wallet.models.UpdateWalletResponse;
+import com.investment.managment.wallet.persistence.WalletRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class WalletControllerE2ETest extends DataBaseExtension {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private WalletRepository walletRepository;
 
     @Autowired
     private ObjectMapper mapper;
@@ -307,6 +311,40 @@ public class WalletControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+
+    @Test
+    public void givenAValidID_whenCallsDeleteWallet_shouldDeleteIt() throws Exception {
+        final var expectedName = "This is a long term wallet";
+        final var expectedDescription = "THis is long term description";
+        final var expectedColor = "FFFFFF";
+
+        Assertions.assertEquals(walletRepository.count(), 0);
+        final var expectedId = givenWallet(new CreateWalletRequest(expectedName, expectedDescription, expectedColor));
+        Assertions.assertEquals(walletRepository.count(), 1);
+
+        final RequestBuilder request = MockMvcRequestBuilders.delete(DEFAULT_PATH + "/{id}", expectedId);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andDo(MockMvcResultHandlers.print());
+
+        Assertions.assertEquals(walletRepository.count(), 0);
+    }
+
+    @Test
+    public void givenAnInvalidID_whenCallsDeleteWallet_shouldBeOk() throws Exception {
+        Assertions.assertEquals(walletRepository.count(), 0);
+        final var anId = WalletID.unique().getValue();
+
+        final RequestBuilder request = MockMvcRequestBuilders.delete(DEFAULT_PATH + "/{id}", anId);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andDo(MockMvcResultHandlers.print());
+
+        Assertions.assertEquals(walletRepository.count(), 0);
     }
 
     private String givenWallet(final CreateWalletRequest walletRequest) throws Exception {
