@@ -1,8 +1,10 @@
 package com.investment.managment.api.wallet;
 
 import com.investment.managment.api.WalletAPI;
+import com.investment.managment.wallet.WalletID;
 import com.investment.managment.wallet.create.CreateWalletCommandInput;
 import com.investment.managment.wallet.create.CreateWalletUseCase;
+import com.investment.managment.wallet.deleteById.DeleteWalletByIdUseCase;
 import com.investment.managment.wallet.models.CreateWalletRequest;
 import com.investment.managment.wallet.models.CreateWalletResponse;
 import com.investment.managment.wallet.models.UpdateWalletRequest;
@@ -18,9 +20,14 @@ public class WalletController implements WalletAPI {
     private final CreateWalletUseCase createWalletUseCase;
     private final UpdateWalletUseCase updateWalletUseCase;
 
-    public WalletController(final CreateWalletUseCase createWalletUseCase, final UpdateWalletUseCase updateWalletUseCase) {
+    private final DeleteWalletByIdUseCase deleteWalletByIdUseCase;
+
+    public WalletController(final CreateWalletUseCase createWalletUseCase,
+                            final UpdateWalletUseCase updateWalletUseCase,
+                            final DeleteWalletByIdUseCase deleteWalletByIdUseCase) {
         this.createWalletUseCase = createWalletUseCase;
         this.updateWalletUseCase = updateWalletUseCase;
+        this.deleteWalletByIdUseCase = deleteWalletByIdUseCase;
     }
 
     @Override
@@ -46,5 +53,8 @@ public class WalletController implements WalletAPI {
         return WalletAPIPresenter.present(updateWalletUseCase.execute(aCommand));
     }
 
-
+    @Override
+    public void deleteById(final String id) {
+        deleteWalletByIdUseCase.execute(WalletID.from(id));
+    }
 }

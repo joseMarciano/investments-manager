@@ -18,5 +18,9 @@ public interface WalletAPI {
     @ResponseStatus(HttpStatus.OK)
     UpdateWalletResponse update(@PathVariable("id") String id, @RequestBody UpdateWalletRequest walletRequest);
 
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteById(@PathVariable("id") String id);
+
 
 }
