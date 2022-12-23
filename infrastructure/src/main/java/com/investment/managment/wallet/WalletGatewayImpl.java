@@ -41,10 +41,10 @@ public class WalletGatewayImpl implements WalletGateway {
 
     @Override
     public Pagination<Wallet> findAll(final SearchQuery query) {
-        final var walletSpecification =
-                SpecificationUtil.<WalletJpaEntity>like(
-                        of("name", "description"), query.filter()
-                );
+        final var walletSpecification = Optional.ofNullable(query.filter())
+                .map(filter -> SpecificationUtil.<WalletJpaEntity>like(
+                        of("name", "description"), filter
+                )).orElse(null);
 
         Page<WalletJpaEntity> page = walletRepository.findAll(
                 walletSpecification,

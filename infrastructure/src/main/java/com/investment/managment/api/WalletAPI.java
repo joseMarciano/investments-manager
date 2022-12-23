@@ -26,11 +26,11 @@ public interface WalletAPI {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    Pagination<PageWalletResponse> page(@RequestParam("limit") int limit,
-                                        @RequestParam("offset") int offset,
-                                        @RequestParam("filter") String filter,
-                                        @RequestParam("sort") String sort,
-                                        @RequestParam("direction") String direction);
+    Pagination<PageWalletResponse> page(@RequestParam(value = "limit", defaultValue = "20") int limit,
+                                        @RequestParam(value = "offset", defaultValue = "0") int offset,
+                                        @RequestParam(value = "filter", required = false) String filter,
+                                        @RequestParam(value = "sort", defaultValue = "name") String sort,
+                                        @RequestParam(value = "direction", defaultValue = "asc") String direction);
 
 
 }
