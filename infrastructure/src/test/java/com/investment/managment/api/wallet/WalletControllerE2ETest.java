@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investment.managment.DataBaseExtension;
 import com.investment.managment.E2ETest;
 import com.investment.managment.config.json.Json;
+import com.investment.managment.validation.exception.NotFoundException;
+import com.investment.managment.wallet.WalletBuilder;
 import com.investment.managment.wallet.WalletID;
 import com.investment.managment.wallet.models.CreateWalletRequest;
 import com.investment.managment.wallet.models.CreateWalletResponse;
@@ -21,6 +23,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @E2ETest
 public class WalletControllerE2ETest extends DataBaseExtension {
@@ -345,6 +352,43 @@ public class WalletControllerE2ETest extends DataBaseExtension {
                 .andDo(MockMvcResultHandlers.print());
 
         Assertions.assertEquals(walletRepository.count(), 0);
+    }
+
+    @Test
+    public void givenAValidID_whenCallsUseCase_shouldReturnWallet() throws Exception {
+        final var expectedName = "This is a long term wallet";
+        final var expectedDescription = "THis is long term description";
+        final var expectedColor = "FFFFFF";
+
+        Assertions.assertEquals(walletRepository.count(), 0);
+        final var expectedId = givenWallet(new CreateWalletRequest(expectedName, expectedDescription, expectedColor));
+        Assertions.assertEquals(walletRepository.count(), 1);
+
+
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH + "/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(expectedId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(expectedName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is(expectedDescription)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.color", Matchers.is(expectedColor)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()));
+    }
+
+    @Test
+    public void givenAnInvalidID_whenCallsUseCase_shouldReturnANotFoundException() throws Exception {
+        final var expectedId = WalletID.unique();
+
+        final RequestBuilder request = MockMvcRequestBuilders.get(DEFAULT_PATH + "/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
     }
 
     private String givenWallet(final CreateWalletRequest walletRequest) throws Exception {
