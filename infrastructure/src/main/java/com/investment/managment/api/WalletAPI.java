@@ -1,5 +1,6 @@
 package com.investment.managment.api;
 
+import com.investment.managment.page.Pagination;
 import com.investment.managment.wallet.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,14 @@ public interface WalletAPI {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     FindByIdWalletResponse findById(@PathVariable("id") String id);
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    Pagination<PageWalletResponse> page(@RequestParam("limit") int limit,
+                                        @RequestParam("offset") int offset,
+                                        @RequestParam("filter") String filter,
+                                        @RequestParam("sort") String sort,
+                                        @RequestParam("direction") String direction);
 
 
 }

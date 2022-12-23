@@ -4,10 +4,10 @@ import com.investment.managment.wallet.create.CreateWalletCommandOutput;
 import com.investment.managment.wallet.findById.FindWalletByIdCommandOutput;
 import com.investment.managment.wallet.models.CreateWalletResponse;
 import com.investment.managment.wallet.models.FindByIdWalletResponse;
+import com.investment.managment.wallet.models.PageWalletResponse;
 import com.investment.managment.wallet.models.UpdateWalletResponse;
+import com.investment.managment.wallet.page.PageWalletCommandOutput;
 import com.investment.managment.wallet.update.UpdateWalletCommandOutput;
-
-import java.util.function.Function;
 
 public interface WalletAPIPresenter {
 
@@ -41,6 +41,15 @@ public interface WalletAPIPresenter {
                 command.color(),
                 command.createdAt(),
                 command.updatedAt()
+        );
+    }
+
+    static PageWalletResponse present(PageWalletCommandOutput command) {
+        return new PageWalletResponse(
+                command.id().getValue(),
+                command.name(),
+                command.description(),
+                command.color()
         );
     }
 }
