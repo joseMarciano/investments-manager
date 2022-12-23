@@ -177,7 +177,7 @@ public class UpdateWalletUseCaseTest {
         final var expectedDescription = "Long term wallet";
         final var expectedColor = "FFFFFF";
         final var expectedId = WalletID.unique();
-        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted(expectedId.getValue(), "Wallet");
+        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted("Wallet", expectedId.getValue());
 
         final var aCommand = new UpdateWalletCommandInput(expectedId, expectedName, expectedDescription, expectedColor);
 
