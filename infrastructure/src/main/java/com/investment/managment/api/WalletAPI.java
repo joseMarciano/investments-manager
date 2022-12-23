@@ -1,9 +1,6 @@
 package com.investment.managment.api;
 
-import com.investment.managment.wallet.models.CreateWalletRequest;
-import com.investment.managment.wallet.models.CreateWalletResponse;
-import com.investment.managment.wallet.models.UpdateWalletRequest;
-import com.investment.managment.wallet.models.UpdateWalletResponse;
+import com.investment.managment.wallet.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +18,10 @@ public interface WalletAPI {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteById(@PathVariable("id") String id);
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    FindByIdWalletResponse findById(@PathVariable("id") String id);
 
 
 }

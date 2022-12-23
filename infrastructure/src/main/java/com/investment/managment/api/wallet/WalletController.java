@@ -5,10 +5,8 @@ import com.investment.managment.wallet.WalletID;
 import com.investment.managment.wallet.create.CreateWalletCommandInput;
 import com.investment.managment.wallet.create.CreateWalletUseCase;
 import com.investment.managment.wallet.deleteById.DeleteWalletByIdUseCase;
-import com.investment.managment.wallet.models.CreateWalletRequest;
-import com.investment.managment.wallet.models.CreateWalletResponse;
-import com.investment.managment.wallet.models.UpdateWalletRequest;
-import com.investment.managment.wallet.models.UpdateWalletResponse;
+import com.investment.managment.wallet.findById.FindWalletByIdUseCase;
+import com.investment.managment.wallet.models.*;
 import com.investment.managment.wallet.presenter.WalletAPIPresenter;
 import com.investment.managment.wallet.update.UpdateWalletCommandInput;
 import com.investment.managment.wallet.update.UpdateWalletUseCase;
@@ -19,15 +17,17 @@ public class WalletController implements WalletAPI {
 
     private final CreateWalletUseCase createWalletUseCase;
     private final UpdateWalletUseCase updateWalletUseCase;
-
     private final DeleteWalletByIdUseCase deleteWalletByIdUseCase;
+    private final FindWalletByIdUseCase findWalletByIdUseCase;
 
     public WalletController(final CreateWalletUseCase createWalletUseCase,
                             final UpdateWalletUseCase updateWalletUseCase,
-                            final DeleteWalletByIdUseCase deleteWalletByIdUseCase) {
+                            final DeleteWalletByIdUseCase deleteWalletByIdUseCase,
+                            final FindWalletByIdUseCase findWalletByIdUseCase) {
         this.createWalletUseCase = createWalletUseCase;
         this.updateWalletUseCase = updateWalletUseCase;
         this.deleteWalletByIdUseCase = deleteWalletByIdUseCase;
+        this.findWalletByIdUseCase = findWalletByIdUseCase;
     }
 
     @Override
@@ -56,5 +56,10 @@ public class WalletController implements WalletAPI {
     @Override
     public void deleteById(final String id) {
         deleteWalletByIdUseCase.execute(WalletID.from(id));
+    }
+
+    @Override
+    public FindByIdWalletResponse findById(final String id) {
+        return WalletAPIPresenter.present(findWalletByIdUseCase.execute(WalletID.from(id)));
     }
 }
