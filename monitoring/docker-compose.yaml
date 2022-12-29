@@ -1,30 +1,35 @@
 version: '3.1'
 
-# Ver sobre volumes para adicionar os beats para métricas
+volumes:
+  volume-certificate:
+
 services:
+  metric-beat:
+    depends_on: [kibana]
+    container_name: 'metric-beat'
+    network_mode: 'host'
+    image: docker.elastic.co/beats/metricbeat:8.5.3
+    volumes:
+      - "./metric-beat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - volume-certificate:/usr/elastic/
+    command:
+      - '-e'
+      - '--strict.perms=false'
   kibana:
+    depends_on: [elastic]
     container_name: 'kibana'
+    network_mode: 'host'
     image: kibana:8.5.3
-    environment:
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
     ports:
       - "5601:5601"
-    networks:
-      - monitoring
-    depends_on:
-      - elastic
   elastic:
-    networks:
-      - monitoring
+    network_mode: 'host'
     container_name: 'elasticsearch'
     image: elasticsearch:8.5.3
+    volumes:
+      - volume-certificate:/usr/share/elasticsearch/config/
     environment:
-      - "discovery.type=single-node"
-      - "xpack.security.enabled=false"
+      - 'discovery.type=single-node'
     ports:
       - "9200:9200"
       - "9300:9300"
-
-networks:
-  monitoring:
-    driver: 'bridge'
