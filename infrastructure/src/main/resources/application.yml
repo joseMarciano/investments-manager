@@ -1,3 +1,8 @@
+server:
+  servlet:
+    contextPath: /api
+
+
 spring:
   flyway:
       enabled: false
