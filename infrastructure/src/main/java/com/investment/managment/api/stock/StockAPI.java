@@ -16,7 +16,7 @@ public interface StockAPI {
     Pagination<PageStockResponse> page(@RequestParam(value = "limit", defaultValue = "20") int limit,
                                        @RequestParam(value = "offset", defaultValue = "0") int offset,
                                        @RequestParam(value = "filter", required = false) String filter,
-                                       @RequestParam(value = "sort", defaultValue = "name") String sort,
+                                       @RequestParam(value = "sort", defaultValue = "symbol") String sort,
                                        @RequestParam(value = "direction", defaultValue = "asc") String direction);
 
 
