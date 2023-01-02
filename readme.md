@@ -17,18 +17,15 @@
 ## :ballot_box_with_check: Progress of the project
 
 - [x] Initialize application
-- [x] Implementation about Wallet ⚠  *in progress*
+- [x] Implementation about Wallet 
+- [x] Implementation about Stocks ⚠ _in progress_
 
 ### :robot: Back-end:
 
 ![Badge](https://img.shields.io/badge/Spring_Boot--%236DB33F?style=for-the-badge&logo=SpringBoot&color=6DB33F)
-
-[//]: # (![Badge]&#40;https://img.shields.io/badge/MySQL--%236DB33F?style=for-the-badge&logo=MySQL&color=4479A1&#41;)
-
-[//]: # (![Badge]&#40;https://img.shields.io/badge/Apache_Kafka--%2347A248?style=for-the-badge&logo=ApacheKafka&color=231F20&#41;)
-
-[//]: # (![Badge]&#40;https://img.shields.io/badge/RabbitMQ--%2347A248?style=for-the-badge&logo=RabbitMQ&color=FF6600&#41;)
-
-[//]: # (![Badge]&#40;https://img.shields.io/badge/FlyWay--%2347A248?style=for-the-badge&logo=Flyway&color=CC0200&#41;)
+![Badge](https://img.shields.io/badge/PostgeSQL--%236DB33F?style=for-the-badge&logo=Postgresql&color=4169E1)
+![Badge](https://img.shields.io/badge/Flyway--%2347A248?style=for-the-badge&logo=Flyway&color=CC0200)
+![Badge](https://img.shields.io/badge/RabbitMQ--%2347A248?style=for-the-badge&logo=RabbitMQ&color=FF6600)
+![Badge](https://img.shields.io/badge/Redis--%2347A248?style=for-the-badge&logo=Redis&color=DC382D)
 
 
