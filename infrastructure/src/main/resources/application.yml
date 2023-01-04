@@ -10,9 +10,16 @@ spring:
     url: ${datasource.url}
     username: ${datasource.user}
     password: ${datasource.password}
+  ## TODO: Create a Hikari configuration
+  ## TODO: Read about spring.jpa.open-in-view
   jpa:
     hibernate:
       ddl-auto: none
+feign:
+  client:
+    config:
+      market-data:
+        defaultRequestHeaders:
 
-## TODO: Create a Hikari configuration
-## TODO: Read about spring.jpa.open-in-view
+          Authorization: Bearer ${feign-client.market-data.token}
+

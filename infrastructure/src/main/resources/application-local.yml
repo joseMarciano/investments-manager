@@ -10,3 +10,10 @@ datasource:
   url: jdbc:postgresql://localhost:5432/investment-management
   user: developer
   password: 123456
+
+
+feign-client:
+  market-data:
+    token: ${MARKET_DATA_TOKEN}
+    url: https://api.dadosdemercado.com.br/v1/
+    name: market-data
