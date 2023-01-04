@@ -27,6 +27,8 @@ dependencies {
     implementation project(':domain')
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.6'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.6'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.4'
+
     implementation 'org.postgresql:postgresql:42.5.1'
 
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
