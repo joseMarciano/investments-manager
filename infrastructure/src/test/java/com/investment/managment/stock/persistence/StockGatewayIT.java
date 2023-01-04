@@ -137,6 +137,37 @@ public class StockGatewayIT extends DataBaseExtension {
     }
 
     @Test
+    public void givenAValidId_whenCallsFindBySymbol_shouldReturnIt() {
+        final var expectedSymbol = "PETR4";
+        var aStock = create()
+                .symbol(expectedSymbol)
+                .build();
+        final var expectedId = aStock.getId();
+
+        Assertions.assertEquals(0, stockRepository.count());
+        stockRepository.saveAndFlush(StockJpaEntity.from(aStock));
+        Assertions.assertEquals(1, stockRepository.count());
+
+        final var actualStock = stockGateway.findBySymbol(expectedSymbol).get();
+
+        Assertions.assertNotNull(actualStock.getId());
+        Assertions.assertEquals(actualStock.getId(), expectedId);
+        Assertions.assertEquals(actualStock.getSymbol(), expectedSymbol);
+        Assertions.assertNotNull(actualStock.getCreatedAt());
+        Assertions.assertNotNull(actualStock.getUpdatedAt());
+        Assertions.assertEquals(actualStock.getCreatedAt(), actualStock.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAInvalidId_whenCallsFindBySymbol_shouldReturnEmpty() {
+        Assertions.assertEquals(0, stockRepository.count());
+
+        final var walletOptional = stockGateway.findBySymbol("ANY_SYMBOL");
+        Assertions.assertTrue(walletOptional.isEmpty());
+        Assertions.assertEquals(0, stockRepository.count());
+    }
+
+    @Test
     public void givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
         final var expectedSymbol = "PETR4";
         var aStock = create()
