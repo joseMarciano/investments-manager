@@ -4,3 +4,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+#TODO: implements integration tests with feign
+feign-client:
+  market-data:
+    name: market-data
+    url: localhost
