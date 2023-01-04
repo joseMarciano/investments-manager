@@ -12,6 +12,8 @@ public interface StockGateway {
 
     Optional<Stock> findById(StockID anId);
 
+    Optional<Stock> findBySymbol(String symbol);
+
     Pagination<Stock> findAll(SearchQuery query);
 
     void deleteById(StockID id);

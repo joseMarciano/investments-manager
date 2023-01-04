@@ -37,6 +37,10 @@ public class StockGatewayImpl implements StockGateway {
     public Optional<Stock> findById(final StockID anId) {
         return stockRepository.findById(anId.getValue()).map(StockJpaEntity::toAggregate);
     }
+    @Override
+    public Optional<Stock> findBySymbol(final String aSymbol) {
+        return stockRepository.findBySymbol(aSymbol).map(StockJpaEntity::toAggregate);
+    }
 
     @Override
     public Pagination<Stock> findAll(final SearchQuery query) {
