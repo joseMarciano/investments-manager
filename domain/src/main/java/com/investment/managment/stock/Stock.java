@@ -4,6 +4,7 @@ import com.investment.managment.AggregateRoot;
 import com.investment.managment.util.InstantUtil;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Stock extends AggregateRoot<StockID> {
 
@@ -55,5 +56,18 @@ public class Stock extends AggregateRoot<StockID> {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Stock stock = (Stock) o;
+        return getId().equals(stock.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
