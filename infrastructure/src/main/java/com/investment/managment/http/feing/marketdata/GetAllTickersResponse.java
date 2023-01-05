@@ -1,9 +1,9 @@
-package com.investment.managment.http.feing;
+package com.investment.managment.http.feing.marketdata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record GetAllTickersResponseFeign(
+public record GetAllTickersResponse(
         String name,
         String ticker
 ) {
