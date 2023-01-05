@@ -9,7 +9,7 @@ public record UpdateStockCommandInput(
         String symbol
 ) {
 
-    public static UpdateStockCommandInput with(final String id, final String name) {
-        return new UpdateStockCommandInput(StockID.from(id), name);
+    public static UpdateStockCommandInput with(final String id, final String symbol) {
+        return new UpdateStockCommandInput(StockID.from(id), symbol);
     }
 }
