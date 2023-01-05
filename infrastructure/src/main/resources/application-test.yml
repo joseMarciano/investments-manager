@@ -11,3 +11,7 @@ feign-client:
   market-data:
     name: market-data
     url: localhost
+
+app-context:
+  scheduler:
+    disabled: true

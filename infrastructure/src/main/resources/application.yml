@@ -20,6 +20,8 @@ feign:
     config:
       market-data:
         defaultRequestHeaders:
-
           Authorization: Bearer ${feign-client.market-data.token}
 
+app-context:
+  scheduler:
+    disabled: false
