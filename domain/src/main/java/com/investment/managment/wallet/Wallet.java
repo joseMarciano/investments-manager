@@ -4,6 +4,7 @@ import com.investment.managment.AggregateRoot;
 import com.investment.managment.util.InstantUtil;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Wallet extends AggregateRoot<WalletID> {
 
@@ -71,5 +72,18 @@ public class Wallet extends AggregateRoot<WalletID> {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Wallet wallet = (Wallet) o;
+        return getId().equals(wallet.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
