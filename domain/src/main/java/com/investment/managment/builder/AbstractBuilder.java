@@ -9,10 +9,19 @@ public abstract class AbstractBuilder<TARGET_CLASS> {
     }
 
     public TARGET_CLASS build() {
-        this.validate();
+        this.validateEntity();
         return target;
     }
 
-    protected void validate() {}
+    private void validateEntity() {
+        this.validate();
+        this.afterValidate();
+    }
+
+    protected void validate() {
+    }
+
+    protected void afterValidate() {
+    }
 
 }
