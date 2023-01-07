@@ -33,13 +33,15 @@ public class ExecutionValidator implements Validator {
         checkBuyExecutedQuantityConstraint();
         checkBuyExecutedPriceConstraint();
         checkProfitPercentageConstraint();
+        checkBoughtAtConstraint();
+        checkSoldAtConstraint();
     }
 
     private void checkStockIdConstraint() {
         final var stockId = this.entity.getStockId();
 
         if (isNull(stockId)) {
-            this.handler.append(new Error("'stockId' should not be null"));
+            this.handler.append(new Error("'stockId' must not be null"));
             return;
         }
     }
@@ -48,7 +50,7 @@ public class ExecutionValidator implements Validator {
         final var walletId = this.entity.getWalletId();
 
         if (isNull(walletId)) {
-            this.handler.append(new Error("'walletId' should not be null"));
+            this.handler.append(new Error("'walletId' must not be null"));
             return;
         }
     }
@@ -57,7 +59,7 @@ public class ExecutionValidator implements Validator {
         final var status = this.entity.getStatus();
 
         if (isNull(status)) {
-            this.handler.append(new Error("'status' should not be null"));
+            this.handler.append(new Error("'status' must not be null"));
             return;
         }
     }
@@ -136,4 +138,39 @@ public class ExecutionValidator implements Validator {
             return;
         }
     }
+
+    public void checkBoughtAtConstraint(){
+        final var boughtAt = this.entity.getBoughtAt();
+        final var status = this.entity.getStatus();
+
+        if(BUY.equals(status) && isNull(boughtAt)) {
+            this.handler.append(new Error("'boughtAt' must not be null"));
+            return;
+        }
+
+        if(SELL.equals(status) && nonNull(boughtAt)) {
+            this.handler.append(new Error("'boughtAt' should not be filled"));
+            return;
+        }
+
+
+    }
+    public void checkSoldAtConstraint(){
+        final var soldAt = this.entity.getSoldAt();
+        final var status = this.entity.getStatus();
+
+        if(SELL.equals(status) && isNull(soldAt)) {
+            this.handler.append(new Error("'soldAt' must not be null"));
+            return;
+        }
+
+        if(BUY.equals(status) && nonNull(soldAt)) {
+            this.handler.append(new Error("'soldAt' should not be filled"));
+            return;
+        }
+
+
+    }
+
+
 }

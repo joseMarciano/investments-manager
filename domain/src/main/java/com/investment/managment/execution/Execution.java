@@ -39,6 +39,10 @@ public class Execution extends AggregateRoot<ExecutionID> {
 
     protected ExecutionStatus status;
 
+    protected Instant boughtAt;
+
+    protected Instant soldAt;
+
     private final Instant createdAt;
 
     private Instant updatedAt;
@@ -125,6 +129,14 @@ public class Execution extends AggregateRoot<ExecutionID> {
 
     public Double getProfitPercentage() {
         return profitPercentage;
+    }
+
+    public Instant getBoughtAt() {
+        return boughtAt;
+    }
+
+    public Instant getSoldAt() {
+        return soldAt;
     }
 
     public Instant getCreatedAt() {

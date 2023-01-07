@@ -6,6 +6,7 @@ import com.investment.managment.validation.handler.ThrowableHandler;
 import com.investment.managment.wallet.WalletID;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public final class ExecutionBuilder extends AbstractBuilder<Execution> {
 
@@ -69,6 +70,15 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
 
     public ExecutionBuilder profitPercentage(final Double profitPercentage) {
         this.target.profitPercentage = profitPercentage;
+        return this;
+    }
+
+    public ExecutionBuilder boughtAt(final Instant boughtAt) {
+        this.target.boughtAt = boughtAt;
+        return this;
+    }
+    public ExecutionBuilder soldAt(final Instant soldAt) {
+        this.target.soldAt = soldAt;
         return this;
     }
 
