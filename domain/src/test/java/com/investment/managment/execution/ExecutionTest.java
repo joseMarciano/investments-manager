@@ -25,7 +25,7 @@ public class ExecutionTest {
         final var expectedBuyExecutedVolume = BigDecimal.valueOf(1000L);
         final var expectedBoughtAt = Instant.now();
 
-        final var actualWallet = ExecutionBuilder.create()
+        final var actualExecution = ExecutionBuilder.create()
                 .stockId(expectedStockId)
                 .walletId(expectedWalletId)
                 .buyExecutedQuantity(expectedBuyExecutedQuantity)
@@ -39,23 +39,23 @@ public class ExecutionTest {
                 .build();
 
 
-        Assertions.assertNotNull(actualWallet.getId());
-        Assertions.assertEquals(actualWallet.getStockId(), expectedStockId);
-        Assertions.assertEquals(actualWallet.getWalletId(), expectedWalletId);
-        Assertions.assertEquals(actualWallet.getBuyExecutedQuantity(), expectedBuyExecutedQuantity);
-        Assertions.assertEquals(actualWallet.getSellExecutedQuantity(), expectedSellExecutedQuantity);
-        Assertions.assertEquals(actualWallet.getBuyExecutedPrice(), expectedBuyExecutedPrice);
-        Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
-        Assertions.assertEquals(actualWallet.getBuyExecutedVolume(), expectedBuyExecutedVolume);
-        Assertions.assertEquals(actualWallet.getProfitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(actualWallet.getBoughtAt(), expectedBoughtAt);
-        Assertions.assertNull(actualWallet.getSoldAt());
-        Assertions.assertNull(actualWallet.getSellExecutedVolume());
-        Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
-        Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
-        Assertions.assertNotNull(actualWallet.getCreatedAt());
-        Assertions.assertNotNull(actualWallet.getUpdatedAt());
-        Assertions.assertEquals(actualWallet.getUpdatedAt(), actualWallet.getCreatedAt());
+        Assertions.assertNotNull(actualExecution.getId());
+        Assertions.assertEquals(actualExecution.getStockId(), expectedStockId);
+        Assertions.assertEquals(actualExecution.getWalletId(), expectedWalletId);
+        Assertions.assertEquals(actualExecution.getBuyExecutedQuantity(), expectedBuyExecutedQuantity);
+        Assertions.assertEquals(actualExecution.getSellExecutedQuantity(), expectedSellExecutedQuantity);
+        Assertions.assertEquals(actualExecution.getBuyExecutedPrice(), expectedBuyExecutedPrice);
+        Assertions.assertEquals(actualExecution.getSellExecutedPrice(), expectedSellExecutedPrice);
+        Assertions.assertEquals(actualExecution.getBuyExecutedVolume(), expectedBuyExecutedVolume);
+        Assertions.assertEquals(actualExecution.getProfitPercentage(), expectedProfitPercentage);
+        Assertions.assertEquals(actualExecution.getBoughtAt(), expectedBoughtAt);
+        Assertions.assertNull(actualExecution.getSoldAt());
+        Assertions.assertNull(actualExecution.getSellExecutedVolume());
+        Assertions.assertEquals(actualExecution.getStatus(), expectedStatus);
+        Assertions.assertEquals(actualExecution.getOrigin(), expectedOrigin);
+        Assertions.assertNotNull(actualExecution.getCreatedAt());
+        Assertions.assertNotNull(actualExecution.getUpdatedAt());
+        Assertions.assertEquals(actualExecution.getUpdatedAt(), actualExecution.getCreatedAt());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ExecutionTest {
         final var expectedBuyExecutedVolume = BigDecimal.valueOf(110);
         final var expectedSoldAt = Instant.now();
 
-        final var actualWallet = ExecutionBuilder.create()
+        final var actualExecution = ExecutionBuilder.create()
                 .stockId(expectedStockId)
                 .walletId(expectedWalletId)
                 .buyExecutedQuantity(expectedBuyExecutedQuantity)
@@ -86,23 +86,23 @@ public class ExecutionTest {
                 .build();
 
 
-        Assertions.assertNotNull(actualWallet.getId());
-        Assertions.assertEquals(actualWallet.getStockId(), expectedStockId);
-        Assertions.assertEquals(actualWallet.getWalletId(), expectedWalletId);
-        Assertions.assertEquals(actualWallet.getBuyExecutedQuantity(), expectedBuyExecutedQuantity);
-        Assertions.assertEquals(actualWallet.getSellExecutedQuantity(), expectedSellExecutedQuantity);
-        Assertions.assertEquals(actualWallet.getBuyExecutedPrice(), expectedBuyExecutedPrice);
-        Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
-        Assertions.assertEquals(actualWallet.getSellExecutedVolume(), expectedBuyExecutedVolume);
-        Assertions.assertEquals(actualWallet.getProfitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(actualWallet.getSoldAt(), expectedSoldAt);
-        Assertions.assertNull(actualWallet.getBoughtAt());
-        Assertions.assertNull(actualWallet.getBuyExecutedVolume());
-        Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
-        Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
-        Assertions.assertNotNull(actualWallet.getCreatedAt());
-        Assertions.assertNotNull(actualWallet.getUpdatedAt());
-        Assertions.assertEquals(actualWallet.getUpdatedAt(), actualWallet.getCreatedAt());
+        Assertions.assertNotNull(actualExecution.getId());
+        Assertions.assertEquals(actualExecution.getStockId(), expectedStockId);
+        Assertions.assertEquals(actualExecution.getWalletId(), expectedWalletId);
+        Assertions.assertEquals(actualExecution.getBuyExecutedQuantity(), expectedBuyExecutedQuantity);
+        Assertions.assertEquals(actualExecution.getSellExecutedQuantity(), expectedSellExecutedQuantity);
+        Assertions.assertEquals(actualExecution.getBuyExecutedPrice(), expectedBuyExecutedPrice);
+        Assertions.assertEquals(actualExecution.getSellExecutedPrice(), expectedSellExecutedPrice);
+        Assertions.assertEquals(actualExecution.getSellExecutedVolume(), expectedBuyExecutedVolume);
+        Assertions.assertEquals(actualExecution.getProfitPercentage(), expectedProfitPercentage);
+        Assertions.assertEquals(actualExecution.getSoldAt(), expectedSoldAt);
+        Assertions.assertNull(actualExecution.getBoughtAt());
+        Assertions.assertNull(actualExecution.getBuyExecutedVolume());
+        Assertions.assertEquals(actualExecution.getStatus(), expectedStatus);
+        Assertions.assertEquals(actualExecution.getOrigin(), expectedOrigin);
+        Assertions.assertNotNull(actualExecution.getCreatedAt());
+        Assertions.assertNotNull(actualExecution.getUpdatedAt());
+        Assertions.assertEquals(actualExecution.getUpdatedAt(), actualExecution.getCreatedAt());
     }
 
     @Test
