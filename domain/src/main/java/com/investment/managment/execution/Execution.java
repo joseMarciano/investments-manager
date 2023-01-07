@@ -65,7 +65,34 @@ public class Execution extends AggregateRoot<ExecutionID> {
         return new Execution(anId, createdAt, updatedAt);
     }
 
-    public Execution update() {
+    public Execution update( // TODO: need to be tested
+                             final ExecutionID origin,
+                             final StockID stockId,
+                             final WalletID walletId,
+                             final Double profitPercentage,
+                             final Long buyExecutedQuantity,
+                             final BigDecimal buyExecutedPrice,
+                             final BigDecimal buyExecutedVolume,
+                             final Long sellExecutedQuantity,
+                             final BigDecimal sellExecutedPrice,
+                             final BigDecimal sellExecutedVolume,
+                             final ExecutionStatus status,
+                             final Instant boughtAt,
+                             final Instant soldAt
+    ) {
+        this.origin = origin;
+        this.stockId = stockId;
+        this.walletId = walletId;
+        this.profitPercentage = profitPercentage;
+        this.buyExecutedQuantity = buyExecutedQuantity;
+        this.buyExecutedPrice = buyExecutedPrice;
+        this.buyExecutedVolume = buyExecutedVolume;
+        this.sellExecutedQuantity = sellExecutedQuantity;
+        this.sellExecutedPrice = sellExecutedPrice;
+        this.sellExecutedVolume = sellExecutedVolume;
+        this.status = status;
+        this.boughtAt = boughtAt;
+        this.soldAt = soldAt;
         this.updatedAt = InstantUtil.now();
         return ExecutionBuilder.from(this).build();
     }
