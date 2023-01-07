@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
+import static com.investment.managment.execution.ExecutionStatus.*;
+import static java.math.BigDecimal.valueOf;
+
 public class Execution extends AggregateRoot<ExecutionID> {
 
     private final ExecutionID id;
@@ -58,6 +61,18 @@ public class Execution extends AggregateRoot<ExecutionID> {
     public Execution update() {
         this.updatedAt = InstantUtil.now();
         return ExecutionBuilder.from(this).build();
+    }
+
+    protected void calculateBuyExecutedVolume() {
+        this.buyExecutedVolume = BUY.equals(this.status)
+                ? this.buyExecutedPrice.multiply(valueOf(this.buyExecutedQuantity))
+                : null;
+    }
+
+    protected void calculateSellExecutedVolume() {
+        this.sellExecutedVolume = SELL.equals(this.status)
+                ? this.sellExecutedPrice.multiply(valueOf(this.sellExecutedQuantity))
+                : null;
     }
 
     @Override

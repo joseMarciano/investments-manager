@@ -14,6 +14,12 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
         ExecutionValidator.from(this.target, ThrowableHandler.newHandler()).validate();
     }
 
+    @Override
+    protected void afterValidate() {
+        this.target.calculateBuyExecutedVolume();
+        this.target.calculateSellExecutedVolume();
+    }
+
     private ExecutionBuilder(final Execution execution) {
         super(execution);
     }
