@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public class ExecutionTest {
 
@@ -22,6 +23,7 @@ public class ExecutionTest {
         final var expectedProfitPercentage = 5.00;
         final ExecutionID expectedOrigin = null;
         final var expectedBuyExecutedVolume = BigDecimal.valueOf(1000L);
+        final var expectedBoughtAt = Instant.now();
 
         final var actualWallet = ExecutionBuilder.create()
                 .stockId(expectedStockId)
@@ -31,6 +33,7 @@ public class ExecutionTest {
                 .buyExecutedPrice(expectedBuyExecutedPrice)
                 .sellExecutedPrice(expectedSellExecutedPrice)
                 .status(expectedStatus)
+                .boughtAt(expectedBoughtAt)
                 .profitPercentage(expectedProfitPercentage)
                 .origin(expectedOrigin)
                 .build();
@@ -45,6 +48,8 @@ public class ExecutionTest {
         Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
         Assertions.assertEquals(actualWallet.getBuyExecutedVolume(), expectedBuyExecutedVolume);
         Assertions.assertEquals(actualWallet.getProfitPercentage(), expectedProfitPercentage);
+        Assertions.assertEquals(actualWallet.getBoughtAt(), expectedBoughtAt);
+        Assertions.assertNull(actualWallet.getSoldAt());
         Assertions.assertNull(actualWallet.getSellExecutedVolume());
         Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
         Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
@@ -65,6 +70,7 @@ public class ExecutionTest {
         final var expectedStatus = ExecutionStatus.SELL;
         final ExecutionID expectedOrigin = null;
         final var expectedBuyExecutedVolume = BigDecimal.valueOf(110);
+        final var expectedSoldAt = Instant.now();
 
         final var actualWallet = ExecutionBuilder.create()
                 .stockId(expectedStockId)
@@ -74,6 +80,7 @@ public class ExecutionTest {
                 .buyExecutedPrice(expectedBuyExecutedPrice)
                 .sellExecutedPrice(expectedSellExecutedPrice)
                 .profitPercentage(expectedProfitPercentage)
+                .soldAt(expectedSoldAt)
                 .status(expectedStatus)
                 .origin(expectedOrigin)
                 .build();
@@ -88,6 +95,8 @@ public class ExecutionTest {
         Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
         Assertions.assertEquals(actualWallet.getSellExecutedVolume(), expectedBuyExecutedVolume);
         Assertions.assertEquals(actualWallet.getProfitPercentage(), expectedProfitPercentage);
+        Assertions.assertEquals(actualWallet.getSoldAt(), expectedSoldAt);
+        Assertions.assertNull(actualWallet.getBoughtAt());
         Assertions.assertNull(actualWallet.getBuyExecutedVolume());
         Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
         Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
@@ -190,7 +199,7 @@ public class ExecutionTest {
         final BigDecimal expectedSellExecutedPrice = null;
         final var expectedStatus = ExecutionStatus.BUY;
         final ExecutionID expectedOrigin = null;
-        final var expectedErrorMessage = "'stockId' should not be null";
+        final var expectedErrorMessage = "'stockId' must not be null";
 
         final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
                 .stockId(expectedStockId)
@@ -199,6 +208,137 @@ public class ExecutionTest {
                 .sellExecutedQuantity(expectedSellExecutedQuantity)
                 .buyExecutedPrice(expectedBuyExecutedPrice)
                 .sellExecutedPrice(expectedSellExecutedPrice)
+                .status(expectedStatus)
+                .origin(expectedOrigin)
+                .build());
+
+        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+    }
+
+    @Test
+    public void givenParamsWithBoughtAtFilledAndStatusSELL_whenCallsNewExecution_shouldReturnADomainException() {
+        final var expectedStockId = StockID.unique();
+        final var expectedWalletId = WalletID.unique();
+        final Long expectedBuyExecutedQuantity = null;
+        final var expectedSellExecutedQuantity = 1L;
+        final BigDecimal expectedBuyExecutedPrice = null;
+        final var expectedSellExecutedPrice = BigDecimal.TEN;
+        final var expectedStatus = ExecutionStatus.SELL;
+        final var expectedProfitPercentage = 5.00;
+        final ExecutionID expectedOrigin = null;
+        final var expectedBoughtAt = Instant.now();
+        final Instant expectedSoldAt = null;
+
+        final var expectedErrorMessage = "'boughtAt' should not be filled";
+
+        final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
+                .stockId(expectedStockId)
+                .walletId(expectedWalletId)
+                .buyExecutedQuantity(expectedBuyExecutedQuantity)
+                .sellExecutedQuantity(expectedSellExecutedQuantity)
+                .buyExecutedPrice(expectedBuyExecutedPrice)
+                .sellExecutedPrice(expectedSellExecutedPrice)
+                .profitPercentage(expectedProfitPercentage)
+                .boughtAt(expectedBoughtAt)
+                .soldAt(expectedSoldAt)
+                .status(expectedStatus)
+                .origin(expectedOrigin)
+                .build());
+
+        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+    }
+
+    @Test
+    public void givenParamsWithSoldAtFilledAndStatusBUY_whenCallsNewExecution_shouldReturnADomainException() {
+        final var expectedStockId = StockID.unique();
+        final var expectedWalletId = WalletID.unique();
+        final var expectedBuyExecutedQuantity = 1L;
+        final Long expectedSellExecutedQuantity = null;
+        final var expectedBuyExecutedPrice = BigDecimal.ONE;
+        final BigDecimal expectedSellExecutedPrice = null;
+        final var expectedStatus = ExecutionStatus.BUY;
+        final var expectedProfitPercentage = 5.00;
+        final ExecutionID expectedOrigin = null;
+        final var expectedBoughtAt = Instant.now();
+        final var expectedSoldAt = Instant.now();
+
+        final var expectedErrorMessage = "'soldAt' should not be filled";
+
+        final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
+                .stockId(expectedStockId)
+                .walletId(expectedWalletId)
+                .buyExecutedQuantity(expectedBuyExecutedQuantity)
+                .sellExecutedQuantity(expectedSellExecutedQuantity)
+                .buyExecutedPrice(expectedBuyExecutedPrice)
+                .sellExecutedPrice(expectedSellExecutedPrice)
+                .profitPercentage(expectedProfitPercentage)
+                .boughtAt(expectedBoughtAt)
+                .soldAt(expectedSoldAt)
+                .status(expectedStatus)
+                .origin(expectedOrigin)
+                .build());
+
+        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+    }
+    @Test
+    public void givenParamsWithNullBoughtAtFilled_whenCallsNewExecution_shouldReturnADomainException() {
+        final var expectedStockId = StockID.unique();
+        final var expectedWalletId = WalletID.unique();
+        final var expectedBuyExecutedQuantity = 1L;
+        final Long expectedSellExecutedQuantity = null;
+        final var expectedBuyExecutedPrice = BigDecimal.ONE;
+        final BigDecimal expectedSellExecutedPrice = null;
+        final var expectedStatus = ExecutionStatus.BUY;
+        final var expectedProfitPercentage = 5.00;
+        final ExecutionID expectedOrigin = null;
+        final Instant expectedBoughtAt = null;
+        final Instant expectedSoldAt = null;
+
+        final var expectedErrorMessage = "'boughtAt' must not be null";
+
+        final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
+                .stockId(expectedStockId)
+                .walletId(expectedWalletId)
+                .buyExecutedQuantity(expectedBuyExecutedQuantity)
+                .sellExecutedQuantity(expectedSellExecutedQuantity)
+                .buyExecutedPrice(expectedBuyExecutedPrice)
+                .sellExecutedPrice(expectedSellExecutedPrice)
+                .profitPercentage(expectedProfitPercentage)
+                .boughtAt(expectedBoughtAt)
+                .soldAt(expectedSoldAt)
+                .status(expectedStatus)
+                .origin(expectedOrigin)
+                .build());
+
+        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+    }
+
+    @Test
+    public void givenParamsWithSoldAtNullAndStatusSELL_whenCallsNewExecution_shouldReturnADomainException() {
+        final var expectedStockId = StockID.unique();
+        final var expectedWalletId = WalletID.unique();
+        final Long expectedBuyExecutedQuantity = null;
+        final var expectedSellExecutedQuantity = 1L;
+        final BigDecimal expectedBuyExecutedPrice = null;
+        final var expectedSellExecutedPrice = BigDecimal.TEN;
+        final var expectedStatus = ExecutionStatus.SELL;
+        final var expectedProfitPercentage = 5.00;
+        final ExecutionID expectedOrigin = null;
+        final Instant expectedBoughtAt = null;
+        final Instant expectedSoldAt = null;
+
+        final var expectedErrorMessage = "'soldAt' must not be null";
+
+        final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
+                .stockId(expectedStockId)
+                .walletId(expectedWalletId)
+                .buyExecutedQuantity(expectedBuyExecutedQuantity)
+                .sellExecutedQuantity(expectedSellExecutedQuantity)
+                .buyExecutedPrice(expectedBuyExecutedPrice)
+                .sellExecutedPrice(expectedSellExecutedPrice)
+                .profitPercentage(expectedProfitPercentage)
+                .boughtAt(expectedBoughtAt)
+                .soldAt(expectedSoldAt)
                 .status(expectedStatus)
                 .origin(expectedOrigin)
                 .build());
@@ -216,7 +356,7 @@ public class ExecutionTest {
         final BigDecimal expectedSellExecutedPrice = null;
         final var expectedStatus = ExecutionStatus.BUY;
         final ExecutionID expectedOrigin = null;
-        final var expectedErrorMessage = "'walletId' should not be null";
+        final var expectedErrorMessage = "'walletId' must not be null";
 
         final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
                 .stockId(expectedStockId)
@@ -242,7 +382,7 @@ public class ExecutionTest {
         final BigDecimal expectedSellExecutedPrice = null;
         final ExecutionStatus expectedStatus = null;
         final ExecutionID expectedOrigin = null;
-        final var expectedErrorMessage = "'status' should not be null";
+        final var expectedErrorMessage = "'status' must not be null";
 
         final var actualException = Assertions.assertThrows(DomainException.class, () -> ExecutionBuilder.create()
                 .stockId(expectedStockId)
