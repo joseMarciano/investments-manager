@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class ExecutionTest {
 
     @Test
-    public void givenAValidParams_whenCallsNewExecution_shouldInstantiateIt() {
+    public void givenAValidParams_whenCallsNewExecutionWithBUYStatus_shouldInstantiateIt() {
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
         final var expectedBuyExecutedQuantity = 100L;
@@ -20,6 +20,7 @@ public class ExecutionTest {
         final BigDecimal expectedSellExecutedPrice = null;
         final var expectedStatus = ExecutionStatus.BUY;
         final ExecutionID expectedOrigin = null;
+        final var expectedBuyExecutedVolume = BigDecimal.valueOf(1000L);
 
         final var actualWallet = ExecutionBuilder.create()
                 .stockId(expectedStockId)
@@ -40,6 +41,48 @@ public class ExecutionTest {
         Assertions.assertEquals(actualWallet.getSellExecutedQuantity(), expectedSellExecutedQuantity);
         Assertions.assertEquals(actualWallet.getBuyExecutedPrice(), expectedBuyExecutedPrice);
         Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
+        Assertions.assertEquals(actualWallet.getBuyExecutedVolume(), expectedBuyExecutedVolume);
+        Assertions.assertNull(actualWallet.getSellExecutedVolume());
+        Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
+        Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
+        Assertions.assertNotNull(actualWallet.getCreatedAt());
+        Assertions.assertNotNull(actualWallet.getUpdatedAt());
+        Assertions.assertEquals(actualWallet.getUpdatedAt(), actualWallet.getCreatedAt());
+    }
+
+    @Test
+    public void givenAValidParams_whenCallsNewExecutionWithSELLStatus_shouldInstantiateIt() {
+        final var expectedStockId = StockID.unique();
+        final var expectedWalletId = WalletID.unique();
+        final Long expectedBuyExecutedQuantity = null;
+        final var expectedSellExecutedQuantity = 11L;
+        final BigDecimal expectedBuyExecutedPrice = null;
+        final var expectedSellExecutedPrice = BigDecimal.TEN;
+        final var expectedStatus = ExecutionStatus.SELL;
+        final ExecutionID expectedOrigin = null;
+        final var expectedBuyExecutedVolume = BigDecimal.valueOf(110);
+
+        final var actualWallet = ExecutionBuilder.create()
+                .stockId(expectedStockId)
+                .walletId(expectedWalletId)
+                .buyExecutedQuantity(expectedBuyExecutedQuantity)
+                .sellExecutedQuantity(expectedSellExecutedQuantity)
+                .buyExecutedPrice(expectedBuyExecutedPrice)
+                .sellExecutedPrice(expectedSellExecutedPrice)
+                .status(expectedStatus)
+                .origin(expectedOrigin)
+                .build();
+
+
+        Assertions.assertNotNull(actualWallet.getId());
+        Assertions.assertEquals(actualWallet.getStockId(), expectedStockId);
+        Assertions.assertEquals(actualWallet.getWalletId(), expectedWalletId);
+        Assertions.assertEquals(actualWallet.getBuyExecutedQuantity(), expectedBuyExecutedQuantity);
+        Assertions.assertEquals(actualWallet.getSellExecutedQuantity(), expectedSellExecutedQuantity);
+        Assertions.assertEquals(actualWallet.getBuyExecutedPrice(), expectedBuyExecutedPrice);
+        Assertions.assertEquals(actualWallet.getSellExecutedPrice(), expectedSellExecutedPrice);
+        Assertions.assertEquals(actualWallet.getSellExecutedVolume(), expectedBuyExecutedVolume);
+        Assertions.assertNull(actualWallet.getBuyExecutedVolume());
         Assertions.assertEquals(actualWallet.getStatus(), expectedStatus);
         Assertions.assertEquals(actualWallet.getOrigin(), expectedOrigin);
         Assertions.assertNotNull(actualWallet.getCreatedAt());
@@ -279,7 +322,6 @@ public class ExecutionTest {
 
         Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
     }
-
 
     @Test
     public void givenParamsWithInvalidNullSellExecutedQuantity_whenCallsNewExecution_shouldReturnADomainException() {
