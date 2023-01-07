@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
-import static com.investment.managment.execution.ExecutionStatus.*;
+import static com.investment.managment.execution.ExecutionStatus.BUY;
+import static com.investment.managment.execution.ExecutionStatus.SELL;
 import static java.math.BigDecimal.valueOf;
 
 public class Execution extends AggregateRoot<ExecutionID> {
@@ -21,6 +22,8 @@ public class Execution extends AggregateRoot<ExecutionID> {
     protected StockID stockId;
 
     protected WalletID walletId;
+
+    protected Double profitPercentage;
 
     protected Long buyExecutedQuantity;
 
@@ -118,6 +121,10 @@ public class Execution extends AggregateRoot<ExecutionID> {
 
     public BigDecimal getSellExecutedVolume() {
         return sellExecutedVolume;
+    }
+
+    public Double getProfitPercentage() {
+        return profitPercentage;
     }
 
     public Instant getCreatedAt() {

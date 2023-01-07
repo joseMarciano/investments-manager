@@ -67,6 +67,11 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
         return this;
     }
 
+    public ExecutionBuilder profitPercentage(final Double profitPercentage) {
+        this.target.profitPercentage = profitPercentage;
+        return this;
+    }
+
     public ExecutionBuilder origin(final ExecutionID origin) {
         this.target.origin = origin;
         return this;

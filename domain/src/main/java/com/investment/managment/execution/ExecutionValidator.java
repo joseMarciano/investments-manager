@@ -32,6 +32,7 @@ public class ExecutionValidator implements Validator {
         checkSellExecutedPriceConstraint();
         checkBuyExecutedQuantityConstraint();
         checkBuyExecutedPriceConstraint();
+        checkProfitPercentageConstraint();
     }
 
     private void checkStockIdConstraint() {
@@ -96,7 +97,7 @@ public class ExecutionValidator implements Validator {
         final var status = this.entity.getStatus();
 
 
-        if(BUY.equals(status) && isNull(buyExecutedQuantity)) {
+        if (BUY.equals(status) && isNull(buyExecutedQuantity)) {
             this.handler.append(new Error("'buyExecutedQuantity' must not be null"));
             return;
         }
@@ -121,16 +122,18 @@ public class ExecutionValidator implements Validator {
             return;
         }
     }
-//
-//    private void checkDescriptionConstraint() {
-//        final var description = this.entity.getDescription();
-//        if (isNull(description)) {
-//            return;
-//        }
-//
-//        if (description.length() > MAX_DESCRIPTION_SIZE) {
-//            this.handler.append(new Error("'description' should be between 1 and %s characters".formatted(MAX_DESCRIPTION_SIZE)));
-//            return;
-//        }
-//    }
+
+    private void checkProfitPercentageConstraint() {
+        final var profitPercentage = this.entity.getProfitPercentage();
+
+        if (isNull(profitPercentage)) {
+            this.handler.append(new Error("'profitPercentage' must not be null"));
+            return;
+        }
+
+        if (profitPercentage.compareTo(0.0) <= 0) {
+            this.handler.append(new Error("'profitPercentage' should be bigger than 0.0"));
+            return;
+        }
+    }
 }
