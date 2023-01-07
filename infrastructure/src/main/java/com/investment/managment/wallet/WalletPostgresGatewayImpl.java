@@ -7,7 +7,6 @@ import com.investment.managment.util.SpecificationUtil;
 import com.investment.managment.wallet.persistence.WalletJpaEntity;
 import com.investment.managment.wallet.persistence.WalletRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,11 +14,11 @@ import java.util.Optional;
 import static java.util.Set.*;
 
 @Component
-public class WalletGatewayImpl implements WalletGateway {
+public class WalletPostgresGatewayImpl implements WalletGateway {
 
     private final WalletRepository walletRepository;
 
-    public WalletGatewayImpl(final WalletRepository walletRepository) {
+    public WalletPostgresGatewayImpl(final WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
     }
 

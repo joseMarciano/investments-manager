@@ -14,11 +14,11 @@ import java.util.Optional;
 import static java.util.Set.of;
 
 @Component
-public class StockGatewayImpl implements StockGateway {
+public class StockPostgresGatewayImpl implements StockGateway {
 
     private final StockRepository stockRepository;
 
-    public StockGatewayImpl(final StockRepository stockRepository) {
+    public StockPostgresGatewayImpl(final StockRepository stockRepository) {
         this.stockRepository = stockRepository;
     }
 

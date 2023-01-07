@@ -17,7 +17,7 @@ import static com.investment.managment.stock.StockBuilder.create;
 
 
 @IntegrationTest
-public class StockGatewayIT extends DataBaseExtension {
+public class StockPostgresGatewayIT extends DataBaseExtension {
 
     @Autowired
     private StockGateway stockGateway;

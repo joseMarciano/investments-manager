@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.investment.managment.wallet.WalletBuilder.create;
 
 @IntegrationTest
-public class WalletGatewayIT extends DataBaseExtension {
+public class WalletPostgresGatewayIT extends DataBaseExtension {
 
     @Autowired
     private WalletGateway walletGateway;
