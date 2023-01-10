@@ -1,4 +1,4 @@
-package com.investment.managment.api;
+package com.investment.managment.api.wallet;
 
 import com.investment.managment.page.Pagination;
 import com.investment.managment.wallet.models.*;
