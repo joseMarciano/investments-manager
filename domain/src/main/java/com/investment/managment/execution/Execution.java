@@ -55,31 +55,23 @@ public class Execution extends AggregateRoot<ExecutionID> {
         this.updatedAt = now;
     }
 
-    private Execution(final ExecutionID anId, final Instant createdAt, final Instant updatedAt) {
-        this.id = anId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public static Execution with(final ExecutionID anId, final Instant createdAt, final Instant updatedAt) {
-        return new Execution(anId, createdAt, updatedAt);
-    }
-
-    public Execution update( // TODO: need to be tested
-                             final ExecutionID origin,
-                             final StockID stockId,
-                             final WalletID walletId,
-                             final Double profitPercentage,
-                             final Long buyExecutedQuantity,
-                             final BigDecimal buyExecutedPrice,
-                             final BigDecimal buyExecutedVolume,
-                             final Long sellExecutedQuantity,
-                             final BigDecimal sellExecutedPrice,
-                             final BigDecimal sellExecutedVolume,
-                             final ExecutionStatus status,
-                             final Instant boughtAt,
-                             final Instant soldAt
-    ) {
+    private Execution(final ExecutionID id,
+                      final ExecutionID origin,
+                      final StockID stockId,
+                      final WalletID walletId,
+                      final Double profitPercentage,
+                      final Long buyExecutedQuantity,
+                      final BigDecimal buyExecutedPrice,
+                      final BigDecimal buyExecutedVolume,
+                      final Long sellExecutedQuantity,
+                      final BigDecimal sellExecutedPrice,
+                      final BigDecimal sellExecutedVolume,
+                      final ExecutionStatus status,
+                      final Instant boughtAt,
+                      final Instant soldAt,
+                      final Instant createdAt,
+                      final Instant updatedAt) {
+        this.id = id;
         this.origin = origin;
         this.stockId = stockId;
         this.walletId = walletId;
@@ -93,8 +85,42 @@ public class Execution extends AggregateRoot<ExecutionID> {
         this.status = status;
         this.boughtAt = boughtAt;
         this.soldAt = soldAt;
-        this.updatedAt = InstantUtil.now();
-        return ExecutionBuilder.from(this).build();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public static Execution with(final ExecutionID id,
+                                 final ExecutionID origin,
+                                 final StockID stockId,
+                                 final WalletID walletId,
+                                 final Double profitPercentage,
+                                 final Long buyExecutedQuantity,
+                                 final BigDecimal buyExecutedPrice,
+                                 final BigDecimal buyExecutedVolume,
+                                 final Long sellExecutedQuantity,
+                                 final BigDecimal sellExecutedPrice,
+                                 final BigDecimal sellExecutedVolume,
+                                 final ExecutionStatus status,
+                                 final Instant boughtAt,
+                                 final Instant soldAt,
+                                 final Instant createdAt,
+                                 final Instant updatedAt) {
+        return new Execution(id,
+                origin,
+                stockId,
+                walletId,
+                profitPercentage,
+                buyExecutedQuantity,
+                buyExecutedPrice,
+                buyExecutedVolume,
+                sellExecutedQuantity,
+                sellExecutedPrice,
+                sellExecutedVolume,
+                status,
+                boughtAt,
+                soldAt,
+                createdAt,
+                updatedAt);
     }
 
     protected void calculateBuyExecutedVolume() {
