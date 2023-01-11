@@ -13,4 +13,13 @@ public record CreateExecutionCommandInput(
 
 ) {
 
+    public static CreateExecutionCommandInput with(final String stockId,
+                                                   final String walletId,
+                                                   final Double profitPercentage,
+                                                   final Long buyExecutedQuantity,
+                                                   final BigDecimal buyExecutedPrice,
+                                                   final Instant boughtAt) {
+        return new CreateExecutionCommandInput(stockId, walletId, profitPercentage, buyExecutedQuantity, buyExecutedPrice, boughtAt);
+    }
+
 }
