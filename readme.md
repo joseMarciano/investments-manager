@@ -22,8 +22,9 @@ This application is a part of an Undergraduate Thesis.
 ## :ballot_box_with_check: Progress of the project
 
 - [x] Initialize application
-- [x] Implementation about Wallet 
-- [x] Implementation about Stocks ⚠ _in progress_
+- [x] Implementation about Wallet
+- [x] Implementation about Stocks
+- [ ] Implementation about Executions ⚠ _in progress_
 
 ### :robot: Back-end:
 
