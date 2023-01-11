@@ -15,7 +15,7 @@ public class FindExecutionByIdUseCase extends UseCase<ExecutionID, FindExecution
     }
 
     @Override
-    public FindExecutionByIdCommandOutput execute(final ExecutionID anId) {
+    public FindExecutionByIdCommandOutput execute(final ExecutionID anId) { // TODO: NEED TO BE TESTED
         return executionGateway.findById(anId)
                 .map(FindExecutionByIdCommandOutput::from)
                 .orElseThrow(() -> DomainExeceptionFactory.notFoundException(anId, Execution.class));
