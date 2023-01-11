@@ -57,4 +57,11 @@ public class WalletJpaEntity {
                 .updatedAt(aWallet.getUpdatedAt())
                 .build();
     }
+
+    public static WalletJpaEntity withID(final WalletID anId) {
+        return WalletJpaEntity
+                .builder()
+                .id(anId.getValue())
+                .build();
+    }
 }

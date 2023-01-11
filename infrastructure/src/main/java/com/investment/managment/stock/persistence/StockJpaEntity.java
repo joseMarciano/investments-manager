@@ -47,4 +47,11 @@ public class StockJpaEntity {
                 .updatedAt(aStock.getUpdatedAt())
                 .build();
     }
+
+    public static StockJpaEntity withID(final StockID anId) {
+        return StockJpaEntity
+                .builder()
+                .id(anId.getValue())
+                .build();
+    }
 }
