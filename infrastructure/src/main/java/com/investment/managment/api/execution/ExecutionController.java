@@ -1,11 +1,10 @@
 package com.investment.managment.api.execution;
 
-import com.investment.managment.api.execution.models.CreateExecutionRequest;
-import com.investment.managment.api.execution.models.CreateExecutionResponse;
-import com.investment.managment.api.execution.models.UpdateExecutionRequest;
-import com.investment.managment.api.execution.models.UpdateExecutionResponse;
+import com.investment.managment.api.execution.models.*;
+import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.create.CreateExecutionCommandInput;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
+import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.presenters.ExecutionAPIPresenter;
 import com.investment.managment.execution.update.UpdateExecutionCommandInput;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
@@ -16,11 +15,14 @@ public class ExecutionController implements ExecutionAPI {
 
     private final UpdateExecutionUseCase updateExecutionUseCase;
     private final CreateExecutionUseCase createExecutionUseCase;
+    private final FindExecutionByIdUseCase findExecutionByIdUseCase;
 
     public ExecutionController(final UpdateExecutionUseCase updateExecutionUseCase,
-                               final CreateExecutionUseCase createExecutionUseCase) {
+                               final CreateExecutionUseCase createExecutionUseCase,
+                               final FindExecutionByIdUseCase findExecutionByIdUseCase) {
         this.updateExecutionUseCase = updateExecutionUseCase;
         this.createExecutionUseCase = createExecutionUseCase;
+        this.findExecutionByIdUseCase = findExecutionByIdUseCase;
     }
 
     @Override
@@ -45,5 +47,10 @@ public class ExecutionController implements ExecutionAPI {
                 executionRequest.profitPercentage(),
                 executionRequest.executedAt()
         )));
+    }
+
+    @Override
+    public FindByIdExecutionResponse findById(final String id) {
+        return ExecutionAPIPresenter.present(this.findExecutionByIdUseCase.execute(ExecutionID.from(id)));
     }
 }

@@ -2,6 +2,7 @@ package com.investment.managment.config.execution;
 
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
+import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.wallet.WalletGateway;
@@ -31,5 +32,10 @@ public class ExecutionUseCaseConfig {
     @Bean
     public UpdateExecutionUseCase updateExecutionUseCase() {
         return new UpdateExecutionUseCase(this.executionGateway, this.stockGateway);
+    }
+
+    @Bean
+    public FindExecutionByIdUseCase findExecutionByIdUseCase() {
+        return new FindExecutionByIdUseCase(this.executionGateway);
     }
 }

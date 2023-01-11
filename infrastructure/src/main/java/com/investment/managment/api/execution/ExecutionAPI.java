@@ -1,9 +1,6 @@
 package com.investment.managment.api.execution;
 
-import com.investment.managment.api.execution.models.CreateExecutionRequest;
-import com.investment.managment.api.execution.models.CreateExecutionResponse;
-import com.investment.managment.api.execution.models.UpdateExecutionRequest;
-import com.investment.managment.api.execution.models.UpdateExecutionResponse;
+import com.investment.managment.api.execution.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +14,10 @@ public interface ExecutionAPI {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CreateExecutionResponse create(@RequestBody CreateExecutionRequest executionRequest);
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    FindByIdExecutionResponse findById(@PathVariable("id") String id);
 
 
 }

@@ -1,8 +1,10 @@
 package com.investment.managment.execution.presenters;
 
 import com.investment.managment.api.execution.models.CreateExecutionResponse;
+import com.investment.managment.api.execution.models.FindByIdExecutionResponse;
 import com.investment.managment.api.execution.models.UpdateExecutionResponse;
 import com.investment.managment.execution.create.CreateExecutionCommandOutput;
+import com.investment.managment.execution.findById.FindExecutionByIdCommandOutput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 
 public interface ExecutionAPIPresenter {
@@ -38,6 +40,27 @@ public interface ExecutionAPIPresenter {
                 output.buyExecutedVolume(),
                 output.status(),
                 output.boughtAt(),
+                output.createdAt(),
+                output.updatedAt()
+        );
+    }
+
+    static FindByIdExecutionResponse present(final FindExecutionByIdCommandOutput output) {
+        return new FindByIdExecutionResponse(
+                output.id().getValue(),
+                output.origin().getValue(),
+                output.stockId().getValue(),
+                output.walletId().getValue(),
+                output.profitPercentage(),
+                output.buyExecutedQuantity(),
+                output.buyExecutedPrice(),
+                output.buyExecutedVolume(),
+                output.sellExecutedQuantity(),
+                output.sellExecutedPrice(),
+                output.sellExecutedVolume(),
+                output.status(),
+                output.boughtAt(),
+                output.soldAt(),
                 output.createdAt(),
                 output.updatedAt()
         );
