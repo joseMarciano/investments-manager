@@ -1,15 +1,21 @@
 package com.investment.managment.config.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.util.concurrent.Callable;
 
 public enum Json {
 
     INSTANCE;
-    private final ObjectMapper mapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule());
+    private final ObjectMapper mapper = new Jackson2ObjectMapperBuilder()
+            .modules(new JavaTimeModule())
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .dateFormat(new StdDateFormat())
+            .build();
 
 
     public static ObjectMapper mapper() {
