@@ -5,6 +5,8 @@ import com.investment.managment.execution.ExecutionBuilder;
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.ExecutionStatus;
+import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
+import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
 import com.investment.managment.stock.Stock;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.stock.StockID;
@@ -12,7 +14,6 @@ import com.investment.managment.validation.exception.NotFoundException;
 import com.investment.managment.wallet.WalletID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -32,6 +33,15 @@ public class UpdateExecutionUseCaseTest {
     private StockGateway stockGateway;
     @Mock
     private ExecutionGateway executionGateway;
+    @Mock
+    private UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase;
+    @Mock
+    private UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase;
+
+
+    // 1 -> Quando eu edito e não tem execuções vendidas, pode seguir o fluxo normal
+    // 2 -> Quando eu edito e tem execuções vendidas, buscar as execuções e verificar se o numero de ações é menor de que o total já vendido. Se for, exception (ValidationException)
+    // 3 -> Só devo deixar atualizar os campos dos respectivos status
 
     @Test
     public void givenAValidCommand_whenCallsUpdateUseCaseWithBUYExecutionStatus_shouldUpdateIt() {
@@ -57,6 +67,24 @@ public class UpdateExecutionUseCaseTest {
 
         final var expectedId = anExecution.getId();
 
+        final var expectedOutput = new UpdateExecutionCommandOutput(
+                expectedId,
+                expectedStockId,
+                expectedWalletId,
+                expectedProfitPercentage,
+                expectedBuyExecutedQuantity,
+                expectedBuyExecutedPrice,
+                expectedBuyExecutedVolume,
+                null,
+                null,
+                null,
+                expectedStatus,
+                expectedBoughtAt,
+                null,
+                Instant.now(),
+                Instant.now()
+        );
+
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
                 expectedStockId.getValue(),
@@ -70,9 +98,8 @@ public class UpdateExecutionUseCaseTest {
                 .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
-
-        when(executionGateway.update(any()))
-                .thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(updateBuyFieldsExecutionUseCase.execute(aCommand))
+                .thenReturn(expectedOutput);
 
         final var actualOutput = useCase.execute(aCommand);
 
@@ -93,6 +120,8 @@ public class UpdateExecutionUseCaseTest {
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
         Assertions.assertTrue(actualOutput.updatedAt().isAfter(actualOutput.createdAt()));
+        verify(updateBuyFieldsExecutionUseCase).execute(aCommand);
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
     }
 
     @Test
@@ -116,8 +145,26 @@ public class UpdateExecutionUseCaseTest {
                         .profitPercentage(8.00)
                         .soldAt(Instant.now())
                         .build();
-
         final var expectedId = anExecution.getId();
+
+        final var expectedOutput = new UpdateExecutionCommandOutput(
+                expectedId,
+                expectedStockId,
+                expectedWalletId,
+                expectedProfitPercentage,
+                null,
+                null,
+                null,
+                expectedSellExecutedQuantity,
+                expectedSellExecutedPrice,
+                expectedSellExecutedVolume,
+                expectedStatus,
+                null,
+                expectedSoldAt,
+                Instant.now(),
+                Instant.now()
+        );
+
 
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
@@ -132,9 +179,8 @@ public class UpdateExecutionUseCaseTest {
                 .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
-
-        when(executionGateway.update(any()))
-                .thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(updateSellFieldsExecutionUseCase.execute(aCommand))
+                .thenReturn(expectedOutput);
 
         final var actualOutput = useCase.execute(aCommand);
 
@@ -155,6 +201,8 @@ public class UpdateExecutionUseCaseTest {
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
         Assertions.assertTrue(actualOutput.updatedAt().isAfter(actualOutput.createdAt()));
+        verify(updateSellFieldsExecutionUseCase).execute(aCommand);
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
     }
 
     @Test
@@ -182,6 +230,8 @@ public class UpdateExecutionUseCaseTest {
         final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
         Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
     }
 
     @Test
@@ -210,6 +260,8 @@ public class UpdateExecutionUseCaseTest {
         final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
         Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
     }
 
 }
