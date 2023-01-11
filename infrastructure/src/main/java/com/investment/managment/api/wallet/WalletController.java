@@ -1,6 +1,5 @@
 package com.investment.managment.api.wallet;
 
-import com.investment.managment.api.WalletAPI;
 import com.investment.managment.page.Pagination;
 import com.investment.managment.page.SearchQuery;
 import com.investment.managment.wallet.WalletID;
