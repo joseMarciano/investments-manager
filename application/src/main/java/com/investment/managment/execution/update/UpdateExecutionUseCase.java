@@ -2,7 +2,6 @@ package com.investment.managment.execution.update;
 
 import com.investment.managment.UseCase;
 import com.investment.managment.execution.Execution;
-import com.investment.managment.execution.ExecutionBuilder;
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.stock.Stock;
@@ -28,44 +27,61 @@ public class UpdateExecutionUseCase extends UseCase<UpdateExecutionCommandInput,
     }
 
     @Override
-    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand) { // TODO: NEED TO BE TESTED
+    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand) {
         final var stockId = StockID.from(aCommand.stockId());
         final var executionID = ExecutionID.from(aCommand.id());
 
         this.stockGateway.findById(stockId)
                 .orElseThrow(() -> notFoundException(stockId, Stock.class));
-        final var execution = this.executionGateway.findById(executionID)
+
+        final var anExecution = this.executionGateway.findById(executionID)
                 .orElseThrow(() -> notFoundException(executionID, Execution.class));
 
-        final var executionBuilder = ExecutionBuilder.from(execution);
 
-        if (BUY.equals(execution.getStatus())) {
-            updateBUYFields(aCommand, executionBuilder);
+        if (BUY.equals(anExecution.getStatus())) {
+            updateBUYFields(aCommand, anExecution);
         }
 
-        if (SELL.equals(execution.getStatus())) {
-            updateBUYFields(aCommand, executionBuilder);
+        if (SELL.equals(anExecution.getStatus())) {
+            updateSELLFields(aCommand, anExecution);
         }
 
-        executionBuilder
-                .stockId(stockId)
-                .profitPercentage(aCommand.profitPercentage());
 
-        return UpdateExecutionCommandOutput.from(executionGateway.create(executionBuilder.build()));
+        return UpdateExecutionCommandOutput.from(executionGateway.update(anExecution));
     }
 
 
-    private void updateBUYFields(final UpdateExecutionCommandInput aCommand, final ExecutionBuilder executionBuilder) {
-        executionBuilder
-                .buyExecutedQuantity(aCommand.executedQuantity())
-                .buyExecutedPrice(aCommand.executedPrice())
-                .boughtAt(aCommand.executedAt());
+    private void updateBUYFields(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
+        anExecution
+                .update(
+                        anExecution.getOrigin(),
+                        StockID.from(aCommand.stockId()),
+                        anExecution.getWalletId(),
+                        aCommand.profitPercentage(),
+                        aCommand.executedQuantity(),
+                        aCommand.executedPrice(),
+                        anExecution.getSellExecutedQuantity(),
+                        anExecution.getSellExecutedPrice(),
+                        anExecution.getStatus(),
+                        aCommand.executedAt(),
+                        anExecution.getSoldAt()
+                );
     }
 
-    private void updateSELLFields(final UpdateExecutionCommandInput aCommand, final ExecutionBuilder executionBuilder) {
-        executionBuilder
-                .buyExecutedQuantity(aCommand.executedQuantity())
-                .buyExecutedPrice(aCommand.executedPrice())
-                .boughtAt(aCommand.executedAt());
+    private void updateSELLFields(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
+        anExecution
+                .update(
+                        anExecution.getOrigin(),
+                        StockID.from(aCommand.stockId()),
+                        anExecution.getWalletId(),
+                        aCommand.profitPercentage(),
+                        anExecution.getBuyExecutedQuantity(),
+                        anExecution.getBuyExecutedPrice(),
+                        aCommand.executedQuantity(),
+                        aCommand.executedPrice(),
+                        anExecution.getStatus(),
+                        anExecution.getBoughtAt(),
+                        aCommand.executedAt()
+                );
     }
 }

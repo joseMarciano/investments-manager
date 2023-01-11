@@ -123,6 +123,34 @@ public class Execution extends AggregateRoot<ExecutionID> {
                 updatedAt);
     }
 
+    public Execution update(
+            final ExecutionID origin,
+            final StockID stockId,
+            final WalletID walletId,
+            final Double profitPercentage,
+            final Long buyExecutedQuantity,
+            final BigDecimal buyExecutedPrice,
+            final Long sellExecutedQuantity,
+            final BigDecimal sellExecutedPrice,
+            final ExecutionStatus status,
+            final Instant boughtAt,
+            final Instant soldAt
+    ) {
+        this.origin = origin;
+        this.stockId = stockId;
+        this.walletId = walletId;
+        this.profitPercentage = profitPercentage;
+        this.buyExecutedQuantity = buyExecutedQuantity;
+        this.buyExecutedPrice = buyExecutedPrice;
+        this.sellExecutedQuantity = sellExecutedQuantity;
+        this.sellExecutedPrice = sellExecutedPrice;
+        this.status = status;
+        this.boughtAt = boughtAt;
+        this.soldAt = soldAt;
+        this.updatedAt = InstantUtil.now();
+        return ExecutionBuilder.from(this).build();
+    }
+
     protected void calculateBuyExecutedVolume() {
         this.buyExecutedVolume = BUY.equals(this.status)
                 ? this.buyExecutedPrice.multiply(valueOf(this.buyExecutedQuantity))
