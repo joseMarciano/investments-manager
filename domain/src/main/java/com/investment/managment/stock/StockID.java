@@ -30,8 +30,8 @@ public class StockID extends Identifier<String> {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final StockID walletID = (StockID) o;
-        return id.equals(walletID.id);
+        final StockID stockID = (StockID) o;
+        return id.equals(stockID.id);
     }
 
     @Override
