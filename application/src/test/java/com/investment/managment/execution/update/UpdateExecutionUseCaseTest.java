@@ -39,10 +39,6 @@ public class UpdateExecutionUseCaseTest {
     private UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase;
 
 
-    // 1 -> Quando eu edito e não tem execuções vendidas, pode seguir o fluxo normal
-    // 2 -> Quando eu edito e tem execuções vendidas, buscar as execuções e verificar se o numero de ações é menor de que o total já vendido. Se for, exception (ValidationException)
-    // 3 -> Só devo deixar atualizar os campos dos respectivos status
-
     @Test
     public void givenAValidCommand_whenCallsUpdateUseCaseWithBUYExecutionStatus_shouldUpdateIt() {
         final var expectedStockId = StockID.unique();
