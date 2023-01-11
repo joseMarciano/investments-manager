@@ -6,9 +6,9 @@ import com.investment.managment.page.SearchQuery;
 import java.util.Optional;
 
 public interface ExecutionGateway {
-    Execution create(Execution aExecution);
+    Execution create(Execution anExecution);
 
-    Execution update(Execution aExecution);
+    Execution update(Execution anExecution);
 
     Optional<Execution> findById(ExecutionID anId);
 
