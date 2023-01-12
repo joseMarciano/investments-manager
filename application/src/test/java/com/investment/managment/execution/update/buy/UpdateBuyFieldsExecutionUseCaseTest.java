@@ -29,7 +29,6 @@ public class UpdateBuyFieldsExecutionUseCaseTest {
     @Mock
     private ExecutionGateway executionGateway;
 
-//    1 -> verificar se existe execuções com originID, se existir validar o quantity;
 
     @Test
     public void givenAValidCommand_whenCallsUpdateUseCaseWithoutExecutionsSold_shouldUpdateIt() {
