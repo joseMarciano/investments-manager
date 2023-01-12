@@ -3,14 +3,10 @@ package com.investment.managment.execution.update;
 import com.investment.managment.UseCaseTest;
 import com.investment.managment.execution.ExecutionBuilder;
 import com.investment.managment.execution.ExecutionGateway;
-import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.ExecutionStatus;
 import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
-import com.investment.managment.stock.Stock;
-import com.investment.managment.stock.StockGateway;
 import com.investment.managment.stock.StockID;
-import com.investment.managment.validation.exception.NotFoundException;
 import com.investment.managment.wallet.WalletID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,8 +25,6 @@ public class UpdateExecutionUseCaseTest {
 
     @InjectMocks
     private UpdateExecutionUseCase useCase;
-    @Mock
-    private StockGateway stockGateway;
     @Mock
     private ExecutionGateway executionGateway;
     @Mock
@@ -52,7 +46,7 @@ public class UpdateExecutionUseCaseTest {
         final var anExecution =
                 ExecutionBuilder
                         .create()
-                        .stockId(StockID.unique())
+                        .stockId(expectedStockId)
                         .walletId(expectedWalletId)
                         .buyExecutedQuantity(6L)
                         .buyExecutedPrice(BigDecimal.ONE)
@@ -83,15 +77,12 @@ public class UpdateExecutionUseCaseTest {
 
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
-                expectedStockId.getValue(),
                 expectedProfitPercentage,
                 expectedBuyExecutedQuantity,
                 expectedBuyExecutedPrice,
                 expectedBoughtAt
         );
 
-        when(stockGateway.findById(eq(expectedStockId)))
-                .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
         when(updateBuyFieldsExecutionUseCase.execute(aCommand, anExecution))
@@ -133,7 +124,7 @@ public class UpdateExecutionUseCaseTest {
         final var anExecution =
                 ExecutionBuilder
                         .create()
-                        .stockId(StockID.unique())
+                        .stockId(expectedStockId)
                         .walletId(expectedWalletId)
                         .sellExecutedQuantity(6L)
                         .sellExecutedPrice(BigDecimal.ONE)
@@ -164,15 +155,12 @@ public class UpdateExecutionUseCaseTest {
 
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
-                expectedStockId.getValue(),
                 expectedProfitPercentage,
                 expectedSellExecutedQuantity,
                 expectedSellExecutedPrice,
                 expectedSoldAt
         );
 
-        when(stockGateway.findById(eq(expectedStockId)))
-                .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
         when(updateSellFieldsExecutionUseCase.execute(aCommand, anExecution))
@@ -200,64 +188,4 @@ public class UpdateExecutionUseCaseTest {
         verify(updateSellFieldsExecutionUseCase).execute(aCommand, anExecution);
         verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
     }
-
-    @Test
-    public void givenAInvalidCommandWithInvalidStockId_whenCallsUpdateUseCase_shouldReturnNotFoundException() {
-        final var expectedStockId = StockID.unique();
-        final var expectedSellExecutedQuantity = 2L;
-        final var expectedSellExecutedPrice = BigDecimal.TEN;
-        final var expectedProfitPercentage = 5.00;
-        final var expectedSoldAt = Instant.now();
-        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted("Stock", expectedStockId.getValue());
-        final var expectedId = ExecutionID.unique();
-
-        final var aCommand = new UpdateExecutionCommandInput(
-                expectedId.getValue(),
-                expectedStockId.getValue(),
-                expectedProfitPercentage,
-                expectedSellExecutedQuantity,
-                expectedSellExecutedPrice,
-                expectedSoldAt
-        );
-
-        when(stockGateway.findById(any()))
-                .thenReturn(Optional.empty());
-
-        final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
-
-        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
-        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any(), any());
-        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
-    }
-
-    @Test
-    public void givenAInvalidCommandWithInvalidWalletId_whenCallsUpdateUseCase_shouldReturnNotFoundException() {
-        final var expectedStockId = StockID.unique();
-        final var expectedSellExecutedQuantity = 2L;
-        final var expectedSellExecutedPrice = BigDecimal.TEN;
-        final var expectedProfitPercentage = 5.00;
-        final var expectedSoldAt = Instant.now();
-        final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted("Stock", expectedStockId.getValue());
-        final var expectedId = ExecutionID.from("invalid-id");
-
-        final var aCommand = new UpdateExecutionCommandInput(
-                expectedId.getValue(),
-                expectedStockId.getValue(),
-                expectedProfitPercentage,
-                expectedSellExecutedQuantity,
-                expectedSellExecutedPrice,
-                expectedSoldAt
-        );
-
-        when(stockGateway.findById(any()))
-                .thenReturn(Optional.empty());
-
-
-        final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
-
-        Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
-        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any(), any());
-        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
-    }
-
 }
