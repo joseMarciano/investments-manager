@@ -10,6 +10,8 @@ import com.investment.managment.stock.Stock;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.stock.StockID;
 
+import java.util.function.Function;
+
 import static com.investment.managment.execution.ExecutionStatus.SELL;
 import static com.investment.managment.validation.exception.DomainExeceptionFactory.notFoundException;
 import static java.util.Objects.requireNonNull;
@@ -43,60 +45,16 @@ public class UpdateExecutionUseCase extends UseCase<UpdateExecutionCommandInput,
         this.stockGateway.findById(stockId)
                 .orElseThrow(() -> notFoundException(stockId, Stock.class));
 
-        final var anExecution = this.executionGateway.findById(executionID)
+        return this.executionGateway.findById(executionID)
+                .map(resolve(aCommand))
                 .orElseThrow(() -> notFoundException(executionID, Execution.class));
-
-        if (SELL.equals(anExecution.getStatus())) return this.updateSellFieldsExecutionUseCase.execute(aCommand);
-
-        return this.updateBuyFieldsExecutionUseCase.execute(aCommand);
     }
 
-
-    private void resolveToBuyStatus(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        final ExecutionID executionID = anExecution.getId();
-
-        if (!this.executionGateway.existsByOriginId(executionID)) {
-            updateBUYFields(aCommand, anExecution);
-            return;
-        }
-
-
-        this.executionGateway.findAllByOriginId(executionID);
-
-
-    }
-
-    private void updateBUYFields(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        anExecution
-                .update(
-                        anExecution.getOrigin(),
-                        StockID.from(aCommand.stockId()),
-                        anExecution.getWalletId(),
-                        aCommand.profitPercentage(),
-                        aCommand.executedQuantity(),
-                        aCommand.executedPrice(),
-                        anExecution.getSellExecutedQuantity(),
-                        anExecution.getSellExecutedPrice(),
-                        anExecution.getStatus(),
-                        aCommand.executedAt(),
-                        anExecution.getSoldAt()
-                );
-    }
-
-    private void updateSELLFields(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        anExecution
-                .update(
-                        anExecution.getOrigin(),
-                        StockID.from(aCommand.stockId()),
-                        anExecution.getWalletId(),
-                        aCommand.profitPercentage(),
-                        anExecution.getBuyExecutedQuantity(),
-                        anExecution.getBuyExecutedPrice(),
-                        aCommand.executedQuantity(),
-                        aCommand.executedPrice(),
-                        anExecution.getStatus(),
-                        anExecution.getBoughtAt(),
-                        aCommand.executedAt()
-                );
+    private Function<Execution, UpdateExecutionCommandOutput> resolve(final UpdateExecutionCommandInput aCommand) {
+        return anExecution -> {
+            if (SELL.equals(anExecution.getStatus()))
+                return this.updateSellFieldsExecutionUseCase.execute(aCommand, anExecution);
+            return this.updateBuyFieldsExecutionUseCase.execute(aCommand, anExecution);
+        };
     }
 }

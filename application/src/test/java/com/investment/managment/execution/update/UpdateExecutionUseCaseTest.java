@@ -94,7 +94,7 @@ public class UpdateExecutionUseCaseTest {
                 .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
-        when(updateBuyFieldsExecutionUseCase.execute(aCommand))
+        when(updateBuyFieldsExecutionUseCase.execute(aCommand, anExecution))
                 .thenReturn(expectedOutput);
 
         final var actualOutput = useCase.execute(aCommand);
@@ -116,8 +116,8 @@ public class UpdateExecutionUseCaseTest {
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
         Assertions.assertTrue(actualOutput.updatedAt().isAfter(actualOutput.createdAt()));
-        verify(updateBuyFieldsExecutionUseCase).execute(aCommand);
-        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateBuyFieldsExecutionUseCase).execute(aCommand, anExecution);
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any(), any());
     }
 
     @Test
@@ -175,7 +175,7 @@ public class UpdateExecutionUseCaseTest {
                 .thenReturn(Optional.of(mock(Stock.class)));
         when(executionGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(anExecution));
-        when(updateSellFieldsExecutionUseCase.execute(aCommand))
+        when(updateSellFieldsExecutionUseCase.execute(aCommand, anExecution))
                 .thenReturn(expectedOutput);
 
         final var actualOutput = useCase.execute(aCommand);
@@ -197,8 +197,8 @@ public class UpdateExecutionUseCaseTest {
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
         Assertions.assertTrue(actualOutput.updatedAt().isAfter(actualOutput.createdAt()));
-        verify(updateSellFieldsExecutionUseCase).execute(aCommand);
-        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateSellFieldsExecutionUseCase).execute(aCommand, anExecution);
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
     }
 
     @Test
@@ -226,8 +226,8 @@ public class UpdateExecutionUseCaseTest {
         final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
         Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
-        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
-        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any(), any());
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
     }
 
     @Test
@@ -256,8 +256,8 @@ public class UpdateExecutionUseCaseTest {
         final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
         Assertions.assertEquals(actualException.getError().message(), expectedErrorMessage);
-        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any());
-        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any());
+        verify(updateSellFieldsExecutionUseCase, times(0)).execute(any(), any());
+        verify(updateBuyFieldsExecutionUseCase, times(0)).execute(any(), any());
     }
 
 }
