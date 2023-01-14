@@ -1,5 +1,6 @@
 package com.investment.managment.wallet.persistence;
 
+import com.investment.managment.Identifier;
 import com.investment.managment.wallet.Wallet;
 import com.investment.managment.wallet.WalletID;
 import lombok.*;
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Entity(name = "Wallet")
 @Table(name = "WALLETS")
@@ -59,9 +62,13 @@ public class WalletJpaEntity {
     }
 
     public static WalletJpaEntity withID(final WalletID anId) {
-        return WalletJpaEntity
+        final Function<String, WalletJpaEntity> mapToWalletID = walletID -> WalletJpaEntity
                 .builder()
-                .id(anId.getValue())
+                .id(walletID)
                 .build();
+        return Optional.ofNullable(anId)
+                .map(Identifier::getValue)
+                .map(mapToWalletID)
+                .orElse(null);
     }
 }

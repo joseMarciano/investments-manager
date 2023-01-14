@@ -1,5 +1,6 @@
 package com.investment.managment.stock.persistence;
 
+import com.investment.managment.Identifier;
 import com.investment.managment.stock.Stock;
 import com.investment.managment.stock.StockID;
 import lombok.*;
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Entity(name = "Stock")
 @Table(name = "STOCKS")
@@ -49,9 +52,13 @@ public class StockJpaEntity {
     }
 
     public static StockJpaEntity withID(final StockID anId) {
-        return StockJpaEntity
+        final Function<String, StockJpaEntity> mapToStockID = stockID -> StockJpaEntity
                 .builder()
-                .id(anId.getValue())
+                .id(stockID)
                 .build();
+        return Optional.ofNullable(anId)
+                .map(Identifier::getValue)
+                .map(mapToStockID)
+                .orElse(null);
     }
 }
