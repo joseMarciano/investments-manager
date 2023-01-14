@@ -41,7 +41,6 @@ public class ExecutionController implements ExecutionAPI {
     public UpdateExecutionResponse update(final String id, final UpdateExecutionRequest executionRequest) {
         return ExecutionAPIPresenter.present(this.updateExecutionUseCase.execute(UpdateExecutionCommandInput.with(
                 executionRequest.id(),
-                executionRequest.stockId(),
                 executionRequest.executedQuantity(),
                 executionRequest.executedPrice(),
                 executionRequest.profitPercentage(),
