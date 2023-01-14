@@ -4,6 +4,8 @@ import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
+import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
+import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.wallet.WalletGateway;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +32,20 @@ public class ExecutionUseCaseConfig {
     }
 
     @Bean
-    public UpdateExecutionUseCase updateExecutionUseCase() {
-        return new UpdateExecutionUseCase(this.executionGateway, this.stockGateway);
+    public UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase() {
+        return new UpdateBuyFieldsExecutionUseCase(this.executionGateway);
+    }
+
+    @Bean
+    public UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase() {
+        return new UpdateSellFieldsExecutionUseCase(this.executionGateway);
+    }
+
+
+    @Bean
+    public UpdateExecutionUseCase updateExecutionUseCase(final UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase,
+                                                         final UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase) {
+        return new UpdateExecutionUseCase(this.executionGateway, updateBuyFieldsExecutionUseCase, updateSellFieldsExecutionUseCase);
     }
 
     @Bean
