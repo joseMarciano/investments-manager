@@ -1,5 +1,6 @@
 package com.investment.managment.execution.persistence;
 
+import com.investment.managment.Identifier;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.ExecutionStatus;
@@ -12,6 +13,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.function.Function;
+
+import static java.util.Optional.ofNullable;
 
 @Entity(name = "Execution")
 @Table(name = "EXECUTIONS")
@@ -75,7 +79,7 @@ public class ExecutionJpaEntity {
     public Execution toAggregate() {
         return Execution.with(
                 ExecutionID.from(this.id),
-                ExecutionID.from(this.origin.getId()),
+                ofNullable(this.origin).map(ExecutionJpaEntity::getId).map(ExecutionID::from).orElse(null),
                 StockID.from(this.stock.getId()),
                 WalletID.from(this.wallet.getId()),
                 this.profitPercentage,
@@ -96,7 +100,7 @@ public class ExecutionJpaEntity {
     public static ExecutionJpaEntity from(final Execution anExecution) {
         return ExecutionJpaEntity.builder()
                 .id(anExecution.getId().getValue())
-                .origin(ExecutionJpaEntity.withID(anExecution.getId()))
+                .origin(ExecutionJpaEntity.withID(anExecution.getOrigin()))
                 .stock(StockJpaEntity.withID(anExecution.getStockId()))
                 .wallet(WalletJpaEntity.withID(anExecution.getWalletId()))
                 .profitPercentage(anExecution.getProfitPercentage())
@@ -115,10 +119,15 @@ public class ExecutionJpaEntity {
     }
 
     public static ExecutionJpaEntity withID(final ExecutionID anId) {
-        return ExecutionJpaEntity
+        final Function<String, ExecutionJpaEntity> mapToExecutionID = executionID -> ExecutionJpaEntity
                 .builder()
-                .id(anId.getValue())
+                .id(executionID)
                 .build();
+
+        return ofNullable(anId)
+                .map(Identifier::getValue)
+                .map(mapToExecutionID)
+                .orElse(null);
     }
 }
 
