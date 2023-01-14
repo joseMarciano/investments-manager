@@ -19,7 +19,5 @@ public interface ExecutionGateway {
 
     boolean existsByOriginId(ExecutionID... originId);
 
-    boolean existsById(ExecutionID... originId);
-
     void deleteById(ExecutionID id);
 }
