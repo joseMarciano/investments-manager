@@ -2,9 +2,11 @@ package com.investment.managment.execution.presenters;
 
 import com.investment.managment.api.execution.models.CreateExecutionResponse;
 import com.investment.managment.api.execution.models.FindByIdExecutionResponse;
+import com.investment.managment.api.execution.models.SummaryExecutionByStockResponse;
 import com.investment.managment.api.execution.models.UpdateExecutionResponse;
 import com.investment.managment.execution.create.CreateExecutionCommandOutput;
 import com.investment.managment.execution.findById.FindExecutionByIdCommandOutput;
+import com.investment.managment.execution.summarybystock.SummaryExecutionCommandOutput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 
 public interface ExecutionAPIPresenter {
@@ -63,6 +65,12 @@ public interface ExecutionAPIPresenter {
                 output.soldAt(),
                 output.createdAt(),
                 output.updatedAt()
+        );
+    }
+
+    static SummaryExecutionByStockResponse present(final SummaryExecutionCommandOutput response) {
+        return new SummaryExecutionByStockResponse(
+                response.symbol()
         );
     }
 }

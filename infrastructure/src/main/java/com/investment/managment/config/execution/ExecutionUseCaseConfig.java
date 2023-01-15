@@ -3,6 +3,7 @@ package com.investment.managment.config.execution;
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
+import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
@@ -51,5 +52,10 @@ public class ExecutionUseCaseConfig {
     @Bean
     public FindExecutionByIdUseCase findExecutionByIdUseCase() {
         return new FindExecutionByIdUseCase(this.executionGateway);
+    }
+
+    @Bean
+    public SummaryExecutionUseCase summaryExecutionUseCase() {
+        return new SummaryExecutionUseCase(this.executionGateway);
     }
 }

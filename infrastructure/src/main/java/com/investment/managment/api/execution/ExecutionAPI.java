@@ -4,6 +4,8 @@ import com.investment.managment.api.execution.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/executions")
 public interface ExecutionAPI {
 
@@ -18,6 +20,10 @@ public interface ExecutionAPI {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     FindByIdExecutionResponse findById(@PathVariable("id") String id);
+
+    @GetMapping("summary/{walletId}")
+    @ResponseStatus(HttpStatus.OK)
+    List<SummaryExecutionByStockResponse> getSummaryByStock(@PathVariable("walletId") String walletId);
 
 
 }
