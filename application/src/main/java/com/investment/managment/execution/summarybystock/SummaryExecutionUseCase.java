@@ -6,18 +6,18 @@ import com.investment.managment.wallet.WalletID;
 
 import java.util.List;
 
-public class ListExecutionUseCase extends UseCase<WalletID, List<ListExecutionCommandOutput>> {
+public class SummaryExecutionUseCase extends UseCase<WalletID, List<SummaryExecutionCommandOutput>> {
 
     private final ExecutionGateway executionGateway;
 
-    public ListExecutionUseCase(final ExecutionGateway executionGateway) {
+    public SummaryExecutionUseCase(final ExecutionGateway executionGateway) {
         this.executionGateway = executionGateway;
     }
 
     @Override
-    public List<ListExecutionCommandOutput> execute(final WalletID aWalletID) {
+    public List<SummaryExecutionCommandOutput> execute(final WalletID aWalletID) {
         return this.executionGateway.getExecutionSummaryByStock(aWalletID)
-                .stream().map(ListExecutionCommandOutput::from)
+                .stream().map(SummaryExecutionCommandOutput::from)
                 .toList();
     }
 }

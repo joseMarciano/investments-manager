@@ -2,11 +2,11 @@ package com.investment.managment.execution.summarybystock;
 
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 
-public record ListExecutionCommandOutput(
+public record SummaryExecutionCommandOutput(
         String symbol
 ) {
-    public static ListExecutionCommandOutput from(final ExecutionSummaryByStock executionSummaryByStock) {
-        return new ListExecutionCommandOutput(
+    public static SummaryExecutionCommandOutput from(final ExecutionSummaryByStock executionSummaryByStock) {
+        return new SummaryExecutionCommandOutput(
                 executionSummaryByStock.symbol()
         );
     }
