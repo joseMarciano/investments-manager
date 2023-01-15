@@ -2,8 +2,10 @@ package com.investment.managment.execution;
 
 import com.investment.managment.execution.persistence.ExecutionJpaEntity;
 import com.investment.managment.execution.persistence.ExecutionRepository;
+import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 import com.investment.managment.page.Pagination;
 import com.investment.managment.page.SearchQuery;
+import com.investment.managment.wallet.WalletID;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -48,6 +50,11 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
                         .map(it -> Arrays.stream(it).map(ExecutionID::getValue).collect(Collectors.toSet()))
                         .orElse(Collections.emptySet());
         return this.executionRepository.existsByOrigin_IdIn(ids);
+    }
+
+    @Override
+    public List<ExecutionSummaryByStock> getExecutionSummaryByStock(final WalletID aWalletID) {
+        return this.executionRepository.getExecutionSummaryByStock(aWalletID.getValue());
     }
 
     @Override
