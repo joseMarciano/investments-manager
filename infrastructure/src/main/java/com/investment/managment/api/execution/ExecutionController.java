@@ -9,6 +9,7 @@ import com.investment.managment.execution.presenters.ExecutionAPIPresenter;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionCommandInput;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
+import com.investment.managment.stock.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.wallet.WalletID;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +22,18 @@ public class ExecutionController implements ExecutionAPI {
     private final CreateExecutionUseCase createExecutionUseCase;
     private final FindExecutionByIdUseCase findExecutionByIdUseCase;
     private final SummaryExecutionUseCase summaryExecutionUseCase;
+    private final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase;
 
     public ExecutionController(final UpdateExecutionUseCase updateExecutionUseCase,
                                final CreateExecutionUseCase createExecutionUseCase,
                                final FindExecutionByIdUseCase findExecutionByIdUseCase,
-                               final SummaryExecutionUseCase summaryExecutionUseCase) {
+                               final SummaryExecutionUseCase summaryExecutionUseCase,
+                               final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase) {
         this.updateExecutionUseCase = updateExecutionUseCase;
         this.createExecutionUseCase = createExecutionUseCase;
         this.findExecutionByIdUseCase = findExecutionByIdUseCase;
         this.summaryExecutionUseCase = summaryExecutionUseCase;
+        this.deleteExecutionByIdUseCase = deleteExecutionByIdUseCase;
     }
 
     @Override
@@ -66,5 +70,10 @@ public class ExecutionController implements ExecutionAPI {
                 .stream()
                 .map(ExecutionAPIPresenter::present)
                 .toList();
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteExecutionByIdUseCase.execute(ExecutionID.from(id));
     }
 }

@@ -25,5 +25,9 @@ public interface ExecutionAPI {
     @ResponseStatus(HttpStatus.OK)
     List<SummaryExecutionByStockResponse> getSummaryByStock(@PathVariable("walletId") String walletId);
 
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteById(@PathVariable("id") String id);
+
 
 }

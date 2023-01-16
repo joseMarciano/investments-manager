@@ -1,5 +1,6 @@
 package com.investment.managment.execution;
 
+import com.investment.managment.Identifier;
 import com.investment.managment.execution.persistence.ExecutionJpaEntity;
 import com.investment.managment.execution.persistence.ExecutionRepository;
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
@@ -13,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 @Component
 public class ExecutionPostgresGateway implements ExecutionGateway {
@@ -46,7 +49,7 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
     @Override
     public boolean existsByOriginId(final ExecutionID... originIds) {
         final var ids =
-                Optional.ofNullable(originIds)
+                ofNullable(originIds)
                         .map(it -> Arrays.stream(it).map(ExecutionID::getValue).collect(Collectors.toSet()))
                         .orElse(Collections.emptySet());
         return this.executionRepository.existsByOrigin_IdIn(ids);
@@ -63,8 +66,10 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
     }
 
     @Override
-    public void deleteById(final ExecutionID id) {
-
+    public void deleteById(final ExecutionID anId) {
+        ofNullable(anId)
+                .map(Identifier::getValue)
+                .ifPresent(executionRepository::deleteById);
     }
 
     private Execution save(final Execution anExecution) {

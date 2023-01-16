@@ -8,6 +8,7 @@ import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
 import com.investment.managment.stock.StockGateway;
+import com.investment.managment.stock.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.wallet.WalletGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,10 @@ public class ExecutionUseCaseConfig {
         return new UpdateSellFieldsExecutionUseCase(this.executionGateway);
     }
 
+    @Bean
+    public DeleteExecutionByIdUseCase deleteExecutionByIdUseCase() {
+        return new DeleteExecutionByIdUseCase(this.executionGateway);
+    }
 
     @Bean
     public UpdateExecutionUseCase updateExecutionUseCase(final UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase,
