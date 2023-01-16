@@ -504,6 +504,79 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    public void givenValidId_whenCallsDeleteByIdWithSoldExecutions_shouldReturn422() throws Exception {
+        Assertions.assertEquals(0, this.executionRepository.count());
+        final var expectedErrorMessage = "There are others executions sold through this execution";
+        final var aExecution = persistExecution(
+                120L,
+                BigDecimal.ONE,
+                null,
+                null,
+                ExecutionStatus.BUY,
+                8.05,
+                null,
+                InstantUtil.now(),
+                null
+        );
+        persistExecution(
+                null,
+                null,
+                101L,
+                BigDecimal.TEN,
+                ExecutionStatus.SELL,
+                8.05,
+                aExecution.getId().getValue(),
+                null,
+                InstantUtil.now()
+        );
+        Assertions.assertEquals(2, this.executionRepository.count());
+
+        final RequestBuilder request =
+                MockMvcRequestBuilders.delete(DEFAULT_PATH + "/{id}", aExecution.getId().getValue());
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)));
+        Assertions.assertEquals(2, this.executionRepository.count());
+    }
+
+    @Test
+    public void givenValidId_whenCallsDeleteById_shouldReturn204() throws Exception {
+        Assertions.assertEquals(0, this.executionRepository.count());
+        final var aExecution = persistExecution(
+                120L,
+                BigDecimal.ONE,
+                null,
+                null,
+                ExecutionStatus.BUY,
+                8.05,
+                null,
+                InstantUtil.now(),
+                null
+        );
+        Assertions.assertEquals(1, this.executionRepository.count());
+
+        final RequestBuilder request =
+                MockMvcRequestBuilders.delete(DEFAULT_PATH + "/{id}", aExecution.getId().getValue());
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        Assertions.assertEquals(0, this.executionRepository.count());
+    }
+
+
+    @Test
+    public void givenInvalidId_whenCallsDeleteById_shouldReturn204() throws Exception {
+        final var expectedId = ExecutionID.unique();
+
+        final RequestBuilder request =
+                MockMvcRequestBuilders.delete(DEFAULT_PATH + "/{id}", expectedId);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
 
     public Stock persistStock(final String symbol) {
         return this.stockRepository
