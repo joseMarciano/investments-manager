@@ -2,13 +2,13 @@ package com.investment.managment.config.execution;
 
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
+import com.investment.managment.execution.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
 import com.investment.managment.stock.StockGateway;
-import com.investment.managment.stock.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.wallet.WalletGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

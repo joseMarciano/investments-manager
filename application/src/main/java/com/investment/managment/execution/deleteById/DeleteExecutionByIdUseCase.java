@@ -1,4 +1,4 @@
-package com.investment.managment.stock.deleteById;
+package com.investment.managment.execution.deleteById;
 
 import com.investment.managment.UnitUseCase;
 import com.investment.managment.execution.ExecutionGateway;

@@ -4,6 +4,7 @@ import com.investment.managment.UseCaseTest;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
+import com.investment.managment.execution.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.validation.exception.DomainException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
