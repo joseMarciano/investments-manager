@@ -3,9 +3,7 @@ package com.investment.managment.api.execution;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investment.managment.DataBaseExtension;
 import com.investment.managment.E2ETest;
-import com.investment.managment.api.execution.models.CreateExecutionRequest;
-import com.investment.managment.api.execution.models.UpdateExecutionRequest;
-import com.investment.managment.api.execution.models.UpdateExecutionResponse;
+import com.investment.managment.api.execution.models.*;
 import com.investment.managment.config.json.Json;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionBuilder;
@@ -524,6 +522,105 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
+    @Test
+    public void givenAValidParams_whenCallsSellExecution_shouldBe204() throws Exception {
+        final var originExecution = persistExecution(10L, BigDecimal.TEN, ExecutionStatus.BUY, 8.04, null, InstantUtil.now());
+        final var expectedOriginId = originExecution.getId();
+        final var expectedStockId = originExecution.getStockId().getValue();
+        final var expectedWalletId = originExecution.getWalletId().getValue();
+        final var expectedStatus = ExecutionStatus.SELL;
+        final var expectedProfitPercentage = originExecution.getProfitPercentage();
+        final Long expectedExecutedQuantity = 10L;
+        final var expectedExecutedPrice = BigDecimal.valueOf(4.85);
+        final var executedVolume = BigDecimal.valueOf(48.5);
+        final var expectedExecutedAt = InstantUtil.now();
+
+        final var actualRequestCommand = new SellExecutionRequest(expectedExecutedQuantity, expectedExecutedPrice, expectedExecutedAt);
+
+        final RequestBuilder request = MockMvcRequestBuilders.put(DEFAULT_PATH + "/sell/{originId}", expectedOriginId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stockId", Matchers.is(expectedStockId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.originId", Matchers.is(expectedOriginId.getValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.walletId", Matchers.is(expectedWalletId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.profitPercentage", Matchers.is(expectedProfitPercentage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedQuantity", Matchers.is(expectedExecutedQuantity.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedPrice", Matchers.is(expectedExecutedPrice.doubleValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedVolume", Matchers.is(executedVolume.doubleValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(expectedStatus.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedAt", Matchers.is(expectedExecutedAt.toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()))
+                .andExpect(result -> {
+                    final var response = Json.readValue(result.getResponse().getContentAsString(), SellExecutionResponse.class);
+                    final ExecutionJpaEntity executionUpdated =
+                            this.executionRepository.findById(response.id()).get();
+
+
+                    Assertions.assertNotNull(executionUpdated.getId());
+                    Assertions.assertEquals(executionUpdated.getOrigin().getId(), originExecution.getId().getValue());
+                    Assertions.assertEquals(executionUpdated.getStock().getId(), originExecution.getStockId().getValue());
+                    Assertions.assertEquals(executionUpdated.getWallet().getId(), originExecution.getWalletId().getValue());
+                    Assertions.assertEquals(executionUpdated.getProfitPercentage(), originExecution.getProfitPercentage());
+                    Assertions.assertEquals(executionUpdated.getExecutedQuantity(), expectedExecutedQuantity);
+                    Assertions.assertEquals(executionUpdated.getExecutedPrice(), expectedExecutedPrice.setScale(5));
+                    Assertions.assertEquals(executionUpdated.getExecutedVolume(), executedVolume.setScale(5));
+                    Assertions.assertEquals(executionUpdated.getStatus(), expectedStatus);
+                    Assertions.assertEquals(executionUpdated.getExecutedAt(), expectedExecutedAt);
+                    Assertions.assertNotNull(executionUpdated.getCreatedAt());
+                    Assertions.assertNotNull(executionUpdated.getUpdatedAt());
+                    Assertions.assertEquals(executionUpdated.getCreatedAt(), executionUpdated.getUpdatedAt());
+
+
+                });
+    }
+
+    @Test
+    public void givenAValidParams_whenCallsSellExecution_shouldBe422() throws Exception {
+        final var aWallet = persistWallet("Wallet");
+        final var aStock = persistStock("MGLU3");
+        final var originExecution = persistExecution(10L, BigDecimal.TEN, ExecutionStatus.BUY, 8.04, null, InstantUtil.now(), aStock, aWallet);
+        final var expectedOriginId = originExecution.getId();
+        final Long expectedExecutedQuantity = 10L;
+        final var expectedExecutedPrice = BigDecimal.valueOf(4.85);
+        final var expectedExecutedAt = InstantUtil.now();
+        final var expectedErrorMessage = "'executedQuantity' can not be greater than 1";
+
+
+        persistExecution(8L, BigDecimal.TEN, ExecutionStatus.SELL, 8.04, expectedOriginId.getValue(), InstantUtil.now(), aStock, aWallet);
+        persistExecution(1L, BigDecimal.TEN, ExecutionStatus.SELL, 8.04, expectedOriginId.getValue(), InstantUtil.now(), aStock, aWallet);
+
+        final var actualRequestCommand = new SellExecutionRequest(expectedExecutedQuantity, expectedExecutedPrice, expectedExecutedAt);
+
+        final RequestBuilder request = MockMvcRequestBuilders.put(DEFAULT_PATH + "/sell/{originId}", expectedOriginId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)));
+    }
+
+    @Test
+    public void givenInvalidIdParam_whenCallsSellExecution_shouldBe404() throws Exception {
+        final var expectedOriginId = ExecutionID.unique();
+        final var actualRequestCommand = new SellExecutionRequest(null, null, null);
+
+        final RequestBuilder request = MockMvcRequestBuilders.put(DEFAULT_PATH + "/sell/{originId}", expectedOriginId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(actualRequestCommand));
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
 
     public Stock persistStock(final String symbol) {
         return this.stockRepository
@@ -545,10 +642,31 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
     ) {
         final var aStock = persistStock("PETR4F");
         final var aWallet = persistWallet("Wallet");
+        return persistExecution(
+                executedQuantity,
+                executedPrice,
+                executionStatus,
+                profitPercentage,
+                originID,
+                executedAt,
+                aStock,
+                aWallet
+        );
+    }
+
+    public Execution persistExecution(final Long executedQuantity,
+                                      final BigDecimal executedPrice,
+                                      final ExecutionStatus executionStatus,
+                                      final Double profitPercentage,
+                                      final String originID,
+                                      final Instant executedAt,
+                                      final Stock stock,
+                                      final Wallet wallet
+    ) {
         return this.executionRepository.saveAndFlush(ExecutionJpaEntity.from(
                 ExecutionBuilder.create()
-                        .stockId(StockID.from(aStock.getId().getValue()))
-                        .walletId(WalletID.from(aWallet.getId().getValue()))
+                        .stockId(StockID.from(stock.getId().getValue()))
+                        .walletId(WalletID.from(wallet.getId().getValue()))
                         .executedQuantity(executedQuantity)
                         .executedPrice(executedPrice)
                         .status(executionStatus)
