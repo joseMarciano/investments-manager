@@ -5,7 +5,6 @@ import java.time.Instant;
 
 public record UpdateExecutionRequest(
         String id,
-        String stockId,
         Double profitPercentage,
         Long executedQuantity,
         BigDecimal executedPrice,

@@ -6,8 +6,8 @@ import com.investment.managment.execution.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
-import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
-import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
+import com.investment.managment.execution.update.buy.UpdateBuyExecutionUseCase;
+import com.investment.managment.execution.update.sell.UpdateSellExecutionUseCase;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.wallet.WalletGateway;
 import org.springframework.context.annotation.Bean;
@@ -34,13 +34,13 @@ public class ExecutionUseCaseConfig {
     }
 
     @Bean
-    public UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase() {
-        return new UpdateBuyFieldsExecutionUseCase(this.executionGateway);
+    public UpdateBuyExecutionUseCase updateBuyFieldsExecutionUseCase() {
+        return new UpdateBuyExecutionUseCase(this.executionGateway);
     }
 
     @Bean
-    public UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase() {
-        return new UpdateSellFieldsExecutionUseCase(this.executionGateway);
+    public UpdateSellExecutionUseCase updateSellFieldsExecutionUseCase() {
+        return new UpdateSellExecutionUseCase(this.executionGateway);
     }
 
     @Bean
@@ -49,9 +49,9 @@ public class ExecutionUseCaseConfig {
     }
 
     @Bean
-    public UpdateExecutionUseCase updateExecutionUseCase(final UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase,
-                                                         final UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase) {
-        return new UpdateExecutionUseCase(this.executionGateway, updateBuyFieldsExecutionUseCase, updateSellFieldsExecutionUseCase);
+    public UpdateExecutionUseCase updateExecutionUseCase(final UpdateBuyExecutionUseCase updateBuyExecutionUseCase,
+                                                         final UpdateSellExecutionUseCase updateSellExecutionUseCase) {
+        return new UpdateExecutionUseCase(this.executionGateway, updateBuyExecutionUseCase, updateSellExecutionUseCase);
     }
 
     @Bean

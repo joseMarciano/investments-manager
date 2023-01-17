@@ -7,9 +7,9 @@ public record CreateExecutionRequest(
         String stockId,
         String walletId,
         Double profitPercentage,
-        Long buyExecutedQuantity,
-        BigDecimal buyExecutedPrice,
-        Instant boughtAt
+        Long executedQuantity,
+        BigDecimal executedPrice,
+        Instant executedAt
 
 ) {
 }

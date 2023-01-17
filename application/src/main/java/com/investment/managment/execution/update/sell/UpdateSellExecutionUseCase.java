@@ -1,4 +1,4 @@
-package com.investment.managment.execution.update.buy;
+package com.investment.managment.execution.update.sell;
 
 import com.investment.managment.DoubleUseCase;
 import com.investment.managment.execution.Execution;
@@ -13,40 +13,47 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
-public class UpdateBuyFieldsExecutionUseCase extends DoubleUseCase<UpdateExecutionCommandInput, Execution, UpdateExecutionCommandOutput> {
+public class UpdateSellExecutionUseCase extends DoubleUseCase<UpdateExecutionCommandInput, Execution, UpdateExecutionCommandOutput> {
 
     private final ExecutionGateway executionGateway;
 
 
-    public UpdateBuyFieldsExecutionUseCase(final ExecutionGateway executionGateway) {
+    public UpdateSellExecutionUseCase(final ExecutionGateway executionGateway) {
         this.executionGateway = requireNonNull(executionGateway);
     }
 
     @Override
-    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        if (!this.executionGateway.existsByOriginId(anExecution.getId())) return update(aCommand, anExecution);
-
-        return updateWithValidation(aCommand, anExecution);
+    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand, final Execution execution) {
+        return updateWithValidation(aCommand, execution);
     }
 
 
     private UpdateExecutionCommandOutput updateWithValidation(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        final var totalQuantityExecutionsSold =
-                this.executionGateway.findAllByOriginId(anExecution.getId())
+        final var originId = anExecution.getOrigin();
+        final var buyExecutedQuantity =
+                this.executionGateway.findById(originId)
+                        .map(Execution::getExecutedQuantity)
+                        .orElse(0L);
+
+        final var totalSellExecutedQuantity =
+                this.executionGateway.findAllByOriginId(originId)
                         .stream()
-                        .map(Execution::getSellExecutedQuantity)
+                        .filter(execution -> !execution.getId().equals(anExecution.getId()))
+                        .map(Execution::getExecutedQuantity)
                         .filter(Objects::nonNull)
                         .reduce(Long::sum)
                         .orElse(0L);
 
-        final var buyExecutedQuantity = ofNullable(aCommand.executedQuantity()).orElse(0L);
+        final var quantityRemaining = buyExecutedQuantity - totalSellExecutedQuantity;
+        final var executedQuantity = ofNullable(aCommand.executedQuantity()).orElse(0L);
 
-        if (buyExecutedQuantity < totalQuantityExecutionsSold) {
-            throw DomainExeceptionFactory.constraintException(new Error("'buyExecutedPrice' can not be less than %s".formatted(totalQuantityExecutionsSold)));
+        if (quantityRemaining < executedQuantity) {
+            throw DomainExeceptionFactory.constraintException(new Error("'executedPrice' should not be greater than %s".formatted(quantityRemaining)));
         }
 
         return update(aCommand, anExecution);
     }
+
 
     private UpdateExecutionCommandOutput update(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
         anExecution
@@ -57,15 +64,10 @@ public class UpdateBuyFieldsExecutionUseCase extends DoubleUseCase<UpdateExecuti
                         aCommand.profitPercentage(),
                         aCommand.executedQuantity(),
                         aCommand.executedPrice(),
-                        anExecution.getSellExecutedQuantity(),
-                        anExecution.getSellExecutedPrice(),
                         anExecution.getStatus(),
-                        aCommand.executedAt(),
-                        anExecution.getSoldAt()
+                        aCommand.executedAt()
                 );
 
         return UpdateExecutionCommandOutput.from(this.executionGateway.update(anExecution));
     }
-
-
 }

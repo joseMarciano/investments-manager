@@ -44,10 +44,10 @@ public class CreateExecutionUseCase extends UseCase<CreateExecutionCommandInput,
                 .stockId(stockId)
                 .walletId(walletId)
                 .profitPercentage(aCommand.profitPercentage())
-                .buyExecutedQuantity(aCommand.buyExecutedQuantity())
-                .buyExecutedPrice(aCommand.buyExecutedPrice())
+                .executedQuantity(aCommand.executedQuantity())
+                .executedPrice(aCommand.executedPrice())
                 .status(ExecutionStatus.BUY)
-                .boughtAt(aCommand.boughtAt())
+                .executedAt(aCommand.executedAt())
                 .build();
 
         return CreateExecutionCommandOutput.from(executionGateway.create(aExecution));

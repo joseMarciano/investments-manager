@@ -14,11 +14,11 @@ public record CreateExecutionCommandOutput(
         StockID stockId,
         WalletID walletId,
         Double profitPercentage,
-        Long buyExecutedQuantity,
-        BigDecimal buyExecutedPrice,
-        BigDecimal buyExecutedVolume,
+        Long executedQuantity,
+        BigDecimal executedPrice,
+        BigDecimal executedVolume,
         ExecutionStatus status,
-        Instant boughtAt,
+        Instant executedAt,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -28,11 +28,11 @@ public record CreateExecutionCommandOutput(
                 anExecution.getStockId(),
                 anExecution.getWalletId(),
                 anExecution.getProfitPercentage(),
-                anExecution.getBuyExecutedQuantity(),
-                anExecution.getBuyExecutedPrice(),
-                anExecution.getBuyExecutedVolume(),
+                anExecution.getExecutedQuantity(),
+                anExecution.getExecutedPrice(),
+                anExecution.getExecutedVolume(),
                 anExecution.getStatus(),
-                anExecution.getBoughtAt(),
+                anExecution.getExecutedAt(),
                 anExecution.getCreatedAt(),
                 anExecution.getUpdatedAt()
         );

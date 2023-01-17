@@ -24,10 +24,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @UseCaseTest
-public class UpdateSellFieldsExecutionUseCaseTest {
+public class UpdateSellExecutionUseCaseTest {
 
     @InjectMocks
-    private UpdateSellFieldsExecutionUseCase useCase;
+    private UpdateSellExecutionUseCase useCase;
     @Mock
     private ExecutionGateway executionGateway;
 
@@ -36,23 +36,23 @@ public class UpdateSellFieldsExecutionUseCaseTest {
         final var expectedOriginId = ExecutionID.unique();
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
-        final var expectedSellExecutedQuantity = 2L;
-        final var expectedSellExecutedPrice = BigDecimal.TEN;
-        final var expectedSellExecutedVolume = BigDecimal.valueOf(20);
+        final var expectedExecutedQuantity = 2L;
+        final var expectedExecutedPrice = BigDecimal.TEN;
+        final var expectedExecutedVolume = BigDecimal.valueOf(20);
         final var expectedStatus = ExecutionStatus.SELL;
         final var expectedProfitPercentage = 5.00;
-        final var expectedSoldAt = Instant.now();
+        final var expectedExecutedAt = Instant.now();
         final var anExecution =
                 ExecutionBuilder
                         .create()
                         .origin(expectedOriginId)
                         .stockId(expectedStockId)
                         .walletId(expectedWalletId)
-                        .sellExecutedQuantity(6L)
-                        .sellExecutedPrice(BigDecimal.ONE)
+                        .executedQuantity(6L)
+                        .executedPrice(BigDecimal.ONE)
                         .status(expectedStatus)
                         .profitPercentage(8.00)
-                        .soldAt(Instant.now())
+                        .executedAt(Instant.now())
                         .build();
 
         final var expectedId = anExecution.getId();
@@ -60,9 +60,9 @@ public class UpdateSellFieldsExecutionUseCaseTest {
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
                 expectedProfitPercentage,
-                expectedSellExecutedQuantity,
-                expectedSellExecutedPrice,
-                expectedSoldAt
+                expectedExecutedQuantity,
+                expectedExecutedPrice,
+                expectedExecutedAt
         );
 
         when(executionGateway.findById(expectedOriginId))
@@ -70,11 +70,11 @@ public class UpdateSellFieldsExecutionUseCaseTest {
                         .create()
                         .stockId(expectedStockId)
                         .walletId(expectedWalletId)
-                        .buyExecutedQuantity(10L)
-                        .buyExecutedPrice(BigDecimal.ONE)
+                        .executedQuantity(10L)
+                        .executedPrice(BigDecimal.ONE)
                         .status(ExecutionStatus.BUY)
                         .profitPercentage(8.00)
-                        .boughtAt(Instant.now())
+                        .executedAt(Instant.now())
                         .build()));
         when(executionGateway.update(any()))
                 .thenAnswer(AdditionalAnswers.returnsFirstArg());
@@ -86,14 +86,11 @@ public class UpdateSellFieldsExecutionUseCaseTest {
         Assertions.assertEquals(actualOutput.id(), expectedId);
         Assertions.assertEquals(actualOutput.stockId(), expectedStockId);
         Assertions.assertEquals(actualOutput.walletId(), expectedWalletId);
-        Assertions.assertEquals(actualOutput.sellExecutedQuantity(), expectedSellExecutedQuantity);
-        Assertions.assertEquals(actualOutput.sellExecutedPrice(), expectedSellExecutedPrice);
-        Assertions.assertEquals(actualOutput.sellExecutedVolume(), expectedSellExecutedVolume);
-        Assertions.assertNull(actualOutput.buyExecutedQuantity());
-        Assertions.assertNull(actualOutput.buyExecutedPrice());
+        Assertions.assertEquals(actualOutput.executedQuantity(), expectedExecutedQuantity);
+        Assertions.assertEquals(actualOutput.executedPrice(), expectedExecutedPrice);
+        Assertions.assertEquals(actualOutput.executedVolume(), expectedExecutedVolume);
         Assertions.assertEquals(actualOutput.profitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(actualOutput.soldAt(), expectedSoldAt);
-        Assertions.assertNull(actualOutput.boughtAt());
+        Assertions.assertEquals(actualOutput.executedAt(), expectedExecutedAt);
         Assertions.assertEquals(actualOutput.status(), expectedStatus);
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
@@ -105,34 +102,34 @@ public class UpdateSellFieldsExecutionUseCaseTest {
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
         final var expectedOriginId = ExecutionID.unique();
-        final var expectedSellExecutedQuantity = 17L;
-        final var expectedSellExecutedPrice = BigDecimal.TEN;
+        final var expectedExecutedQuantity = 17L;
+        final var expectedExecutedPrice = BigDecimal.TEN;
         final var expectedStatus = ExecutionStatus.SELL;
         final var expectedProfitPercentage = 5.00;
-        final var expectedSoldAt = Instant.now();
+        final var expectedExecutedAt = Instant.now();
         final var anExecution =
                 ExecutionBuilder
                         .create()
                         .origin(expectedOriginId)
                         .stockId(expectedStockId)
                         .walletId(expectedWalletId)
-                        .sellExecutedQuantity(2L)
-                        .sellExecutedPrice(BigDecimal.ONE)
+                        .executedQuantity(2L)
+                        .executedPrice(BigDecimal.ONE)
                         .status(expectedStatus)
                         .profitPercentage(8.00)
-                        .soldAt(Instant.now())
+                        .executedAt(Instant.now())
                         .build();
 
 
         final var expectedId = anExecution.getId();
-        final var expectedErrorMessage = "'sellExecutedPrice' should not be greater than 3";
+        final var expectedErrorMessage = "'executedPrice' should not be greater than 3";
 
         final var aCommand = new UpdateExecutionCommandInput(
                 expectedId.getValue(),
                 expectedProfitPercentage,
-                expectedSellExecutedQuantity,
-                expectedSellExecutedPrice,
-                expectedSoldAt
+                expectedExecutedQuantity,
+                expectedExecutedPrice,
+                expectedExecutedAt
         );
 
         when(executionGateway.findById(expectedOriginId))
@@ -140,11 +137,11 @@ public class UpdateSellFieldsExecutionUseCaseTest {
                         .create()
                         .stockId(expectedStockId)
                         .walletId(expectedWalletId)
-                        .buyExecutedQuantity(10L)
-                        .buyExecutedPrice(BigDecimal.ONE)
+                        .executedQuantity(10L)
+                        .executedPrice(BigDecimal.ONE)
                         .status(ExecutionStatus.BUY)
                         .profitPercentage(8.00)
-                        .boughtAt(Instant.now())
+                        .executedAt(Instant.now())
                         .build()));
 
         when(executionGateway.findAllByOriginId(expectedOriginId))
@@ -153,11 +150,11 @@ public class UpdateSellFieldsExecutionUseCaseTest {
                         .origin(expectedOriginId)
                         .stockId(expectedStockId)
                         .walletId(expectedWalletId)
-                        .sellExecutedQuantity(7L)
-                        .sellExecutedPrice(BigDecimal.TEN)
+                        .executedQuantity(7L)
+                        .executedPrice(BigDecimal.TEN)
                         .status(expectedStatus)
                         .profitPercentage(7.00)
-                        .soldAt(Instant.now())
+                        .executedAt(Instant.now())
                         .build(), anExecution));
 
         final var actualException =
@@ -168,64 +165,4 @@ public class UpdateSellFieldsExecutionUseCaseTest {
 
 
     }
-//
-//    @Test
-//    public void givenAValidCommand_whenCallsUpdateUseCaseWithExecutionsSoldAndInvalidExecutedQuantity_shouldUpdateIt() {
-//        final var expectedStockId = StockID.unique();
-//        final var expectedWalletId = WalletID.unique();
-//        final var expectedSellExecutedQuantity = 7L;
-//        final var expectedSellExecutedPrice = BigDecimal.TEN;
-//        final var expectedSellExecutedVolume = BigDecimal.valueOf(70);
-//        final var expectedStatus = ExecutionStatus.BUY;
-//        final var expectedProfitPercentage = 5.00;
-//        final var expectedSoldAt = Instant.now();
-//        final var anExecution =
-//                ExecutionBuilder
-//                        .create()
-//                        .stockId(expectedStockId)
-//                        .walletId(expectedWalletId)
-//                        .sellExecutedQuantity(6L)
-//                        .sellExecutedPrice(BigDecimal.ONE)
-//                        .status(expectedStatus)
-//                        .profitPercentage(8.00)
-//                        .boughtAt(Instant.now())
-//                        .build();
-//
-//        final var expectedId = anExecution.getId();
-//        final var aCommand = new UpdateExecutionCommandInput(
-//                expectedId.getValue(),
-//                expectedProfitPercentage,
-//                expectedSellExecutedQuantity,
-//                expectedSellExecutedPrice,
-//                expectedSoldAt
-//        );
-//
-//
-//        when(executionGateway.update(any()))
-//                .thenAnswer(AdditionalAnswers.returnsFirstArg());
-//        when(executionGateway.existsByOriginId(expectedId))
-//                .thenReturn(false);
-//
-//        final var actualOutput = useCase.execute(aCommand, anExecution);
-//
-//
-//        Assertions.assertNotNull(actualOutput.id());
-//        Assertions.assertEquals(actualOutput.id(), expectedId);
-//        Assertions.assertEquals(actualOutput.stockId(), expectedStockId);
-//        Assertions.assertEquals(actualOutput.walletId(), expectedWalletId);
-//        Assertions.assertEquals(actualOutput.sellExecutedQuantity(), expectedSellExecutedQuantity);
-//        Assertions.assertEquals(actualOutput.sellExecutedPrice(), expectedSellExecutedPrice);
-//        Assertions.assertEquals(actualOutput.sellExecutedVolume(), expectedSellExecutedVolume);
-//        Assertions.assertNull(actualOutput.sellExecutedQuantity());
-//        Assertions.assertNull(actualOutput.sellExecutedPrice());
-//        Assertions.assertEquals(actualOutput.profitPercentage(), expectedProfitPercentage);
-//        Assertions.assertEquals(actualOutput.boughtAt(), expectedSoldAt);
-//        Assertions.assertNull(actualOutput.soldAt());
-//        Assertions.assertEquals(actualOutput.status(), expectedStatus);
-//        Assertions.assertNotNull(actualOutput.createdAt());
-//        Assertions.assertNotNull(actualOutput.updatedAt());
-//        Assertions.assertTrue(actualOutput.updatedAt().isAfter(actualOutput.createdAt()));
-//
-//
-//    }
 }

@@ -11,36 +11,30 @@ import java.time.Instant;
 
 public record UpdateExecutionCommandOutput(
         ExecutionID id,
+        ExecutionID originId,
         StockID stockId,
         WalletID walletId,
         Double profitPercentage,
-        Long buyExecutedQuantity,
-        BigDecimal buyExecutedPrice,
-        BigDecimal buyExecutedVolume,
-        Long sellExecutedQuantity,
-        BigDecimal sellExecutedPrice,
-        BigDecimal sellExecutedVolume,
+        Long executedQuantity,
+        BigDecimal executedPrice,
+        BigDecimal executedVolume,
         ExecutionStatus status,
-        Instant boughtAt,
-        Instant soldAt,
+        Instant executedAt,
         Instant createdAt,
         Instant updatedAt
 ) {
     public static UpdateExecutionCommandOutput from(final Execution anExecution) {
         return new UpdateExecutionCommandOutput(
                 anExecution.getId(),
+                anExecution.getOrigin(),
                 anExecution.getStockId(),
                 anExecution.getWalletId(),
                 anExecution.getProfitPercentage(),
-                anExecution.getBuyExecutedQuantity(),
-                anExecution.getBuyExecutedPrice(),
-                anExecution.getBuyExecutedVolume(),
-                anExecution.getSellExecutedQuantity(),
-                anExecution.getSellExecutedPrice(),
-                anExecution.getSellExecutedVolume(),
+                anExecution.getExecutedQuantity(),
+                anExecution.getExecutedPrice(),
+                anExecution.getExecutedVolume(),
                 anExecution.getStatus(),
-                anExecution.getBoughtAt(),
-                anExecution.getSoldAt(),
+                anExecution.getExecutedAt(),
                 anExecution.getCreatedAt(),
                 anExecution.getUpdatedAt()
         );

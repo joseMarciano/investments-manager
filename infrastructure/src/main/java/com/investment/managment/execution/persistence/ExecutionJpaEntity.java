@@ -44,32 +44,20 @@ public class ExecutionJpaEntity {
     @Column(name = "PROFIT_PERCENTAGE")
     private Double profitPercentage;
 
-    @Column(name = "BUY_EXECUTED_QUANTITY")
-    private Long buyExecutedQuantity;
+    @Column(name = "EXECUTED_QUANTITY")
+    private Long executedQuantity;
 
-    @Column(name = "BUY_EXECUTED_PRICE")
-    private BigDecimal buyExecutedPrice;
+    @Column(name = "EXECUTED_PRICE")
+    private BigDecimal executedPrice;
 
-    @Column(name = "BUY_EXECUTED_VOLUME")
-    private BigDecimal buyExecutedVolume;
-
-    @Column(name = "SELL_EXECUTED_QUANTITY")
-    private Long sellExecutedQuantity;
-
-    @Column(name = "SELL_EXECUTED_PRICE")
-    private BigDecimal sellExecutedPrice;
-
-    @Column(name = "SELL_EXECUTED_VOLUME")
-    private BigDecimal sellExecutedVolume;
+    @Column(name = "EXECUTED_VOLUME")
+    private BigDecimal executedVolume;
 
     @Column(name = "STATUS")
     private ExecutionStatus status;
 
-    @Column(name = "BOUGHT_AT", columnDefinition = "TIMESTAMP(6)")
-    private Instant boughtAt;
-
-    @Column(name = "SOLD_AT", columnDefinition = "TIMESTAMP(6)")
-    private Instant soldAt;
+    @Column(name = "EXECUTED_AT", columnDefinition = "TIMESTAMP(6)")
+    private Instant executedAt;
 
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant createdAt;
@@ -83,15 +71,11 @@ public class ExecutionJpaEntity {
                 StockID.from(this.stock.getId()),
                 WalletID.from(this.wallet.getId()),
                 this.profitPercentage,
-                this.buyExecutedQuantity,
-                this.buyExecutedPrice,
-                this.buyExecutedVolume,
-                this.sellExecutedQuantity,
-                this.sellExecutedPrice,
-                this.sellExecutedVolume,
+                this.executedQuantity,
+                this.executedPrice,
+                this.executedVolume,
                 this.status,
-                this.boughtAt,
-                this.soldAt,
+                this.executedAt,
                 this.createdAt,
                 this.updatedAt
         );
@@ -104,15 +88,11 @@ public class ExecutionJpaEntity {
                 .stock(StockJpaEntity.withID(anExecution.getStockId()))
                 .wallet(WalletJpaEntity.withID(anExecution.getWalletId()))
                 .profitPercentage(anExecution.getProfitPercentage())
-                .buyExecutedQuantity(anExecution.getBuyExecutedQuantity())
-                .buyExecutedPrice(anExecution.getBuyExecutedPrice())
-                .buyExecutedVolume(anExecution.getBuyExecutedVolume())
-                .sellExecutedQuantity(anExecution.getSellExecutedQuantity())
-                .sellExecutedPrice(anExecution.getSellExecutedPrice())
-                .sellExecutedVolume(anExecution.getSellExecutedVolume())
+                .executedQuantity(anExecution.getExecutedQuantity())
+                .executedPrice(anExecution.getExecutedPrice())
+                .executedVolume(anExecution.getExecutedVolume())
                 .status(anExecution.getStatus())
-                .boughtAt(anExecution.getBoughtAt())
-                .soldAt(anExecution.getSoldAt())
+                .executedAt(anExecution.getExecutedAt())
                 .createdAt(anExecution.getCreatedAt())
                 .updatedAt(anExecution.getUpdatedAt())
                 .build();

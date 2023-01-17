@@ -31,6 +31,10 @@ public final class SpecificationUtil {
         };
     }
 
+    public static <T> Specification<T> equal(final String prop, final String id) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(prop), id);
+    }
+
     private static <T> Function<Specification<T>, Predicate> toPredicate(final Root<T> root,
                                                                          final CriteriaQuery<?> query,
                                                                          final CriteriaBuilder criteriaBuilder) {

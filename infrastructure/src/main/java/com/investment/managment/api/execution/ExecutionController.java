@@ -42,9 +42,9 @@ public class ExecutionController implements ExecutionAPI {
                 executionRequest.stockId(),
                 executionRequest.walletId(),
                 executionRequest.profitPercentage(),
-                executionRequest.buyExecutedQuantity(),
-                executionRequest.buyExecutedPrice(),
-                executionRequest.boughtAt()
+                executionRequest.executedQuantity(),
+                executionRequest.executedPrice(),
+                executionRequest.executedAt()
         )));
     }
 

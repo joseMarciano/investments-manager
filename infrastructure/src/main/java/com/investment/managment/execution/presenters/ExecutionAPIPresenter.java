@@ -1,5 +1,6 @@
 package com.investment.managment.execution.presenters;
 
+import com.investment.managment.Identifier;
 import com.investment.managment.api.execution.models.CreateExecutionResponse;
 import com.investment.managment.api.execution.models.FindByIdExecutionResponse;
 import com.investment.managment.api.execution.models.SummaryExecutionByStockResponse;
@@ -9,6 +10,8 @@ import com.investment.managment.execution.findById.FindExecutionByIdCommandOutpu
 import com.investment.managment.execution.summarybystock.SummaryExecutionCommandOutput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 
+import java.util.Optional;
+
 public interface ExecutionAPIPresenter {
 
     static UpdateExecutionResponse present(final UpdateExecutionCommandOutput output) {
@@ -17,15 +20,11 @@ public interface ExecutionAPIPresenter {
                 output.stockId().getValue(),
                 output.walletId().getValue(),
                 output.profitPercentage(),
-                output.buyExecutedQuantity(),
-                output.buyExecutedPrice(),
-                output.buyExecutedVolume(),
-                output.sellExecutedQuantity(),
-                output.sellExecutedPrice(),
-                output.sellExecutedVolume(),
+                output.executedQuantity(),
+                output.executedPrice(),
+                output.executedVolume(),
                 output.status(),
-                output.boughtAt(),
-                output.soldAt(),
+                output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()
         );
@@ -37,11 +36,11 @@ public interface ExecutionAPIPresenter {
                 output.stockId().getValue(),
                 output.walletId().getValue(),
                 output.profitPercentage(),
-                output.buyExecutedQuantity(),
-                output.buyExecutedPrice(),
-                output.buyExecutedVolume(),
+                output.executedQuantity(),
+                output.executedPrice(),
+                output.executedVolume(),
                 output.status(),
-                output.boughtAt(),
+                output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()
         );
@@ -50,19 +49,15 @@ public interface ExecutionAPIPresenter {
     static FindByIdExecutionResponse present(final FindExecutionByIdCommandOutput output) {
         return new FindByIdExecutionResponse(
                 output.id().getValue(),
-                output.origin().getValue(),
+                Optional.ofNullable(output.origin()).map(Identifier::getValue).orElse(null),
                 output.stockId().getValue(),
                 output.walletId().getValue(),
                 output.profitPercentage(),
-                output.buyExecutedQuantity(),
-                output.buyExecutedPrice(),
-                output.buyExecutedVolume(),
-                output.sellExecutedQuantity(),
-                output.sellExecutedPrice(),
-                output.sellExecutedVolume(),
+                output.executedQuantity(),
+                output.executedPrice(),
+                output.executedVolume(),
                 output.status(),
-                output.boughtAt(),
-                output.soldAt(),
+                output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()
         );

@@ -4,8 +4,8 @@ import com.investment.managment.UseCase;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
-import com.investment.managment.execution.update.buy.UpdateBuyFieldsExecutionUseCase;
-import com.investment.managment.execution.update.sell.UpdateSellFieldsExecutionUseCase;
+import com.investment.managment.execution.update.buy.UpdateBuyExecutionUseCase;
+import com.investment.managment.execution.update.sell.UpdateSellExecutionUseCase;
 
 import java.util.function.Function;
 
@@ -17,17 +17,17 @@ public class UpdateExecutionUseCase extends UseCase<UpdateExecutionCommandInput,
 
     private final ExecutionGateway executionGateway;
 
-    private final UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase;
+    private final UpdateBuyExecutionUseCase updateBuyExecutionUseCase;
 
-    private final UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase;
+    private final UpdateSellExecutionUseCase updateSellExecutionUseCase;
 
 
     public UpdateExecutionUseCase(final ExecutionGateway executionGateway,
-                                  final UpdateBuyFieldsExecutionUseCase updateBuyFieldsExecutionUseCase,
-                                  final UpdateSellFieldsExecutionUseCase updateSellFieldsExecutionUseCase) {
+                                  final UpdateBuyExecutionUseCase updateBuyExecutionUseCase,
+                                  final UpdateSellExecutionUseCase updateSellExecutionUseCase) {
         this.executionGateway = requireNonNull(executionGateway);
-        this.updateBuyFieldsExecutionUseCase = updateBuyFieldsExecutionUseCase;
-        this.updateSellFieldsExecutionUseCase = updateSellFieldsExecutionUseCase;
+        this.updateBuyExecutionUseCase = updateBuyExecutionUseCase;
+        this.updateSellExecutionUseCase = updateSellExecutionUseCase;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class UpdateExecutionUseCase extends UseCase<UpdateExecutionCommandInput,
     private Function<Execution, UpdateExecutionCommandOutput> resolve(final UpdateExecutionCommandInput aCommand) {
         return anExecution -> {
             if (SELL.equals(anExecution.getStatus()))
-                return this.updateSellFieldsExecutionUseCase.execute(aCommand, anExecution);
-            return this.updateBuyFieldsExecutionUseCase.execute(aCommand, anExecution);
+                return this.updateSellExecutionUseCase.execute(aCommand, anExecution);
+            return this.updateBuyExecutionUseCase.execute(aCommand, anExecution);
         };
     }
 }

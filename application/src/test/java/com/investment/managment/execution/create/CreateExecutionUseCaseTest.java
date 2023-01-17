@@ -41,21 +41,21 @@ public class CreateExecutionUseCaseTest {
     public void givenAValidCommand_whenCallsCreateUseCase_shouldInstantiateIt() {
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
-        final var expectedBuyExecutedQuantity = 2L;
-        final var expectedBuyExecutedPrice = BigDecimal.TEN;
-        final var expectedBuyExecutedVolume = BigDecimal.valueOf(20);
+        final var expectedExecutedQuantity = 2L;
+        final var expectedExecutedPrice = BigDecimal.TEN;
+        final var expectedExecutedVolume = BigDecimal.valueOf(20);
         final var expectedStatus = ExecutionStatus.BUY;
         final var expectedProfitPercentage = 5.00;
-        final var expectedBoughtAt = Instant.now();
+        final var expectedExecutedAt = Instant.now();
 
 
         final var aCommand = new CreateExecutionCommandInput(
                 expectedStockId.getValue(),
                 expectedWalletId.getValue(),
                 expectedProfitPercentage,
-                expectedBuyExecutedQuantity,
-                expectedBuyExecutedPrice,
-                expectedBoughtAt
+                expectedExecutedQuantity,
+                expectedExecutedPrice,
+                expectedExecutedAt
         );
 
         when(stockGateway.findById(expectedStockId))
@@ -72,11 +72,11 @@ public class CreateExecutionUseCaseTest {
         Assertions.assertNotNull(actualOutput.id());
         Assertions.assertEquals(actualOutput.stockId(), expectedStockId);
         Assertions.assertEquals(actualOutput.walletId(), expectedWalletId);
-        Assertions.assertEquals(actualOutput.buyExecutedQuantity(), expectedBuyExecutedQuantity);
-        Assertions.assertEquals(actualOutput.buyExecutedPrice(), expectedBuyExecutedPrice);
-        Assertions.assertEquals(actualOutput.buyExecutedVolume(), expectedBuyExecutedVolume);
+        Assertions.assertEquals(actualOutput.executedQuantity(), expectedExecutedQuantity);
+        Assertions.assertEquals(actualOutput.executedPrice(), expectedExecutedPrice);
+        Assertions.assertEquals(actualOutput.executedVolume(), expectedExecutedVolume);
         Assertions.assertEquals(actualOutput.profitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(actualOutput.boughtAt(), expectedBoughtAt);
+        Assertions.assertEquals(actualOutput.executedAt(), expectedExecutedAt);
         Assertions.assertEquals(actualOutput.status(), expectedStatus);
         Assertions.assertNotNull(actualOutput.createdAt());
         Assertions.assertNotNull(actualOutput.updatedAt());
@@ -87,10 +87,10 @@ public class CreateExecutionUseCaseTest {
     public void givenAInvalidCommandWithNullStockId_whenCallsCreateUseCase_shouldReturnNotFoundException() {
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
-        final var expectedBuyExecutedQuantity = 2L;
-        final var expectedBuyExecutedPrice = BigDecimal.TEN;
+        final var expectedExecutedQuantity = 2L;
+        final var expectedExecutedPrice = BigDecimal.TEN;
         final var expectedProfitPercentage = 5.00;
-        final var expectedBoughtAt = Instant.now();
+        final var expectedExecutedAt = Instant.now();
         final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted("Stock", expectedStockId.getValue());
 
 
@@ -98,9 +98,9 @@ public class CreateExecutionUseCaseTest {
                 expectedStockId.getValue(),
                 expectedWalletId.getValue(),
                 expectedProfitPercentage,
-                expectedBuyExecutedQuantity,
-                expectedBuyExecutedPrice,
-                expectedBoughtAt
+                expectedExecutedQuantity,
+                expectedExecutedPrice,
+                expectedExecutedAt
         );
 
         when(stockGateway.findById(any()))
@@ -116,10 +116,10 @@ public class CreateExecutionUseCaseTest {
     public void givenAInvalidCommandWithNullWalletId_whenCallsCreateUseCase_shouldReturnNotFoundException() {
         final var expectedStockId = StockID.unique();
         final var expectedWalletId = WalletID.unique();
-        final var expectedBuyExecutedQuantity = 2L;
-        final var expectedBuyExecutedPrice = BigDecimal.TEN;
+        final var expectedExecutedQuantity = 2L;
+        final var expectedExecutedPrice = BigDecimal.TEN;
         final var expectedProfitPercentage = 5.00;
-        final var expectedBoughtAt = Instant.now();
+        final var expectedExecutedAt = Instant.now();
         final var expectedErrorMessage = "Entity %s with identifier %s was not found".formatted("Wallet", expectedWalletId.getValue());
 
 
@@ -127,9 +127,9 @@ public class CreateExecutionUseCaseTest {
                 expectedStockId.getValue(),
                 expectedWalletId.getValue(),
                 expectedProfitPercentage,
-                expectedBuyExecutedQuantity,
-                expectedBuyExecutedPrice,
-                expectedBoughtAt
+                expectedExecutedQuantity,
+                expectedExecutedPrice,
+                expectedExecutedAt
         );
 
         when(stockGateway.findById(expectedStockId))

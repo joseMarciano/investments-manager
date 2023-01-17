@@ -1,4 +1,4 @@
-package com.investment.managment.execution.update.sell;
+package com.investment.managment.execution.update.buy;
 
 import com.investment.managment.DoubleUseCase;
 import com.investment.managment.execution.Execution;
@@ -13,47 +13,40 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
-public class UpdateSellFieldsExecutionUseCase extends DoubleUseCase<UpdateExecutionCommandInput, Execution, UpdateExecutionCommandOutput> {
+public class UpdateBuyExecutionUseCase extends DoubleUseCase<UpdateExecutionCommandInput, Execution, UpdateExecutionCommandOutput> {
 
     private final ExecutionGateway executionGateway;
 
 
-    public UpdateSellFieldsExecutionUseCase(final ExecutionGateway executionGateway) {
+    public UpdateBuyExecutionUseCase(final ExecutionGateway executionGateway) {
         this.executionGateway = requireNonNull(executionGateway);
     }
 
     @Override
-    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand, final Execution execution) {
-        return updateWithValidation(aCommand, execution);
+    public UpdateExecutionCommandOutput execute(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
+        if (!this.executionGateway.existsByOriginId(anExecution.getId())) return update(aCommand, anExecution);
+
+        return updateWithValidation(aCommand, anExecution);
     }
 
 
     private UpdateExecutionCommandOutput updateWithValidation(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
-        final var originId = anExecution.getOrigin();
-        final var buyExecutedQuantity =
-                this.executionGateway.findById(originId)
-                        .map(Execution::getBuyExecutedQuantity)
-                        .orElse(0L);
-
-        final var totalSellExecutedQuantity =
-                this.executionGateway.findAllByOriginId(originId)
+        final var totalQuantityExecutionsSold =
+                this.executionGateway.findAllByOriginId(anExecution.getId())
                         .stream()
-                        .filter(execution -> !execution.getId().equals(anExecution.getId()))
-                        .map(Execution::getSellExecutedQuantity)
+                        .map(Execution::getExecutedQuantity)
                         .filter(Objects::nonNull)
                         .reduce(Long::sum)
                         .orElse(0L);
 
-        final var quantityRemaining = buyExecutedQuantity - totalSellExecutedQuantity;
         final var executedQuantity = ofNullable(aCommand.executedQuantity()).orElse(0L);
 
-        if (quantityRemaining < executedQuantity) {
-            throw DomainExeceptionFactory.constraintException(new Error("'sellExecutedPrice' should not be greater than %s".formatted(quantityRemaining)));
+        if (executedQuantity < totalQuantityExecutionsSold) {
+            throw DomainExeceptionFactory.constraintException(new Error("'executedPrice' can not be less than %s".formatted(totalQuantityExecutionsSold)));
         }
 
         return update(aCommand, anExecution);
     }
-
 
     private UpdateExecutionCommandOutput update(final UpdateExecutionCommandInput aCommand, final Execution anExecution) {
         anExecution
@@ -62,15 +55,14 @@ public class UpdateSellFieldsExecutionUseCase extends DoubleUseCase<UpdateExecut
                         anExecution.getStockId(),
                         anExecution.getWalletId(),
                         aCommand.profitPercentage(),
-                        anExecution.getBuyExecutedQuantity(),
-                        anExecution.getBuyExecutedPrice(),
                         aCommand.executedQuantity(),
                         aCommand.executedPrice(),
                         anExecution.getStatus(),
-                        anExecution.getBoughtAt(),
                         aCommand.executedAt()
                 );
 
         return UpdateExecutionCommandOutput.from(this.executionGateway.update(anExecution));
     }
+
+
 }

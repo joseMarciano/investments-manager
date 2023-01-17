@@ -42,6 +42,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import static java.util.Optional.ofNullable;
+
 @E2ETest
 public class ExecutionControllerE2ETest extends DataBaseExtension {
 
@@ -69,12 +71,12 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var expectedStockId = aStock.getId().getValue();
         final var expectedWalletId = aWallet.getId().getValue();
         final var profitPercentage = 8.00;
-        final Long buyExecutedQuantity = 10L;
-        final var buyExecutedPrice = BigDecimal.valueOf(4.85);
-        final var buyExecutedVolume = BigDecimal.valueOf(48.5);
-        final var boughtAt = Instant.now();
+        final Long executedQuantity = 10L;
+        final var executedPrice = BigDecimal.valueOf(4.85);
+        final var executedVolume = BigDecimal.valueOf(48.5);
+        final var executedAt = Instant.now();
 
-        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, buyExecutedQuantity, buyExecutedPrice, boughtAt);
+        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, executedQuantity, executedPrice, executedAt);
 
         final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,11 +90,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.stockId", Matchers.is(expectedStockId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.walletId", Matchers.is(expectedWalletId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.profitPercentage", Matchers.is(profitPercentage)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedQuantity", Matchers.is(buyExecutedQuantity.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedPrice", Matchers.is(buyExecutedPrice.doubleValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedVolume", Matchers.is(buyExecutedVolume.doubleValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedQuantity", Matchers.is(executedQuantity.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedPrice", Matchers.is(executedPrice.doubleValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedVolume", Matchers.is(executedVolume.doubleValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(ExecutionStatus.BUY.name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.boughtAt", Matchers.is(boughtAt.toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedAt", Matchers.is(executedAt.toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()));
     }
@@ -103,11 +105,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var expectedStockId = StockID.from("invalid-id").getValue();
         final var expectedWalletId = aWallet.getId().getValue();
         final var profitPercentage = 8.00;
-        final Long buyExecutedQuantity = 10L;
-        final var buyExecutedPrice = BigDecimal.valueOf(4.85);
-        final var boughtAt = Instant.now();
+        final Long executedQuantity = 10L;
+        final var executedPrice = BigDecimal.valueOf(4.85);
+        final var executedAt = Instant.now();
 
-        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, buyExecutedQuantity, buyExecutedPrice, boughtAt);
+        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, executedQuantity, executedPrice, executedAt);
 
         final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,11 +127,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var expectedStockId = aStock.getId().getValue();
         final var expectedWalletId = WalletID.from("invalid-id").getValue();
         final var profitPercentage = 8.00;
-        final Long buyExecutedQuantity = 10L;
-        final var buyExecutedPrice = BigDecimal.valueOf(4.85);
-        final var boughtAt = Instant.now();
+        final Long executedQuantity = 10L;
+        final var executedPrice = BigDecimal.valueOf(4.85);
+        final var executedAt = Instant.now();
 
-        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, buyExecutedQuantity, buyExecutedPrice, boughtAt);
+        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, profitPercentage, executedQuantity, executedPrice, executedAt);
 
         final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -146,14 +148,14 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
     @CsvSource(value = {
             ", 25 , 7.52 , 2023-01-10T23:24:35.229493Z , 'profitPercentage' must not be null",
             "0.0, 25 , 7.52 , 2023-01-10T23:24:35.229493Z , 'profitPercentage' should be bigger than 0.0",
-            "1, 25 , 7.52 ,  , 'boughtAt' must not be null",
-            "2.55,  , 7.52 , 2023-01-10T23:24:35.229493Z , 'buyExecutedQuantity' must not be null",
-            "9, 25 , , 2023-01-10T23:24:35.229493Z , 'buyExecutedPrice' must not be null",
+            "1, 25 , 7.52 ,  , 'executedAt' must not be null",
+            "2.55,  , 7.52 , 2023-01-10T23:24:35.229493Z , 'executedQuantity' must not be null",
+            "9, 25 , , 2023-01-10T23:24:35.229493Z , 'executedPrice' must not be null",
     })
     public void givenAInvalidEmptyName_whenCallsNewExecution_shouldReturn422(
             final Double expectedProfitPercentage,
-            final Long expectedBuyExecutedQuantity,
-            final BigDecimal expectedBuyExecutedPrice,
+            final Long expectedExecutedQuantity,
+            final BigDecimal expectedExecutedPrice,
             final Instant expectedBoughtAt,
             final String expectedErrorMessage
     ) throws Exception {
@@ -162,7 +164,7 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var expectedStockId = aStock.getId().getValue();
         final var expectedWalletId = aWallet.getId().getValue();
 
-        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, expectedProfitPercentage, expectedBuyExecutedQuantity, expectedBuyExecutedPrice, expectedBoughtAt);
+        final var actualRequestCommand = new CreateExecutionRequest(expectedStockId, expectedWalletId, expectedProfitPercentage, expectedExecutedQuantity, expectedExecutedPrice, expectedBoughtAt);
 
         final RequestBuilder request = MockMvcRequestBuilders.post(DEFAULT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -187,20 +189,16 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var anExecution = persistExecution(
                 10L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         final var expectedWalletId = anExecution.getWalletId().getValue();
         final var expectedStockId = anExecution.getStockId().getValue();
 
         final var actualRequestCommand = new UpdateExecutionRequest(
                 anExecution.getId().getValue(),
-                anExecution.getStockId().getValue(),
                 expectedProfitPercentage,
                 expectedExecutedQuantity,
                 expectedExecutedPrice,
@@ -219,15 +217,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.stockId", Matchers.is(expectedStockId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.walletId", Matchers.is(expectedWalletId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.profitPercentage", Matchers.is(expectedProfitPercentage)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedQuantity", Matchers.is(expectedExecutedQuantity.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedPrice", Matchers.is(expectedExecutedPrice.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedVolume", Matchers.is(expectedExecutedVolume.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedQuantity", Matchers.nullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedQuantity", Matchers.is(expectedExecutedQuantity.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedPrice", Matchers.is(expectedExecutedPrice.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedVolume", Matchers.is(expectedExecutedVolume.intValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(anExecution.getStatus().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedPrice", Matchers.nullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedVolume", Matchers.nullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.boughtAt", Matchers.is(expectedExecutedAt.toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.soldAt", Matchers.nullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedAt", Matchers.is(expectedExecutedAt.toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()))
                 .andExpect(result -> {
@@ -246,15 +240,10 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         Assertions.assertEquals(executionUpdated.getStock().getId(), anExecution.getStockId().getValue());
         Assertions.assertEquals(executionUpdated.getWallet().getId(), anExecution.getWalletId().getValue());
         Assertions.assertEquals(executionUpdated.getProfitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(executionUpdated.getBuyExecutedQuantity(), expectedExecutedQuantity);
-        Assertions.assertEquals(executionUpdated.getBuyExecutedPrice(), expectedExecutedPrice.setScale(5));
-        Assertions.assertEquals(executionUpdated.getBuyExecutedVolume(), expectedExecutedVolume.setScale(5));
-        Assertions.assertNull(executionUpdated.getSellExecutedQuantity());
-        Assertions.assertNull(executionUpdated.getSellExecutedPrice());
-        Assertions.assertNull(executionUpdated.getSellExecutedVolume());
+        Assertions.assertEquals(executionUpdated.getExecutedQuantity(), expectedExecutedQuantity);
+        Assertions.assertEquals(executionUpdated.getExecutedPrice(), expectedExecutedPrice.setScale(5));
+        Assertions.assertEquals(executionUpdated.getExecutedVolume(), expectedExecutedVolume.setScale(5));
         Assertions.assertEquals(executionUpdated.getStatus(), anExecution.getStatus());
-        Assertions.assertEquals(executionUpdated.getBoughtAt(), expectedExecutedAt);
-        Assertions.assertNull(executionUpdated.getSoldAt());
         Assertions.assertEquals(executionUpdated.getCreatedAt(), anExecution.getCreatedAt());
         Assertions.assertTrue(executionUpdated.getCreatedAt().isBefore(executionUpdated.getUpdatedAt()));
     }
@@ -269,23 +258,17 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var anExecution = persistExecution(
                 10L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         persistExecution(
-                null,
-                null,
-                8L,
+                5L,
                 BigDecimal.TEN,
                 ExecutionStatus.SELL,
                 8.05,
                 anExecution.getId().getValue(),
-                null,
                 InstantUtil.now()
         );
         final var expectedWalletId = anExecution.getWalletId().getValue();
@@ -293,7 +276,6 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
         final var actualRequestCommand = new UpdateExecutionRequest(
                 anExecution.getId().getValue(),
-                anExecution.getStockId().getValue(),
                 expectedProfitPercentage,
                 expectedExecutedQuantity,
                 expectedExecutedPrice,
@@ -312,15 +294,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.stockId", Matchers.is(expectedStockId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.walletId", Matchers.is(expectedWalletId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.profitPercentage", Matchers.is(expectedProfitPercentage)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedQuantity", Matchers.is(expectedExecutedQuantity.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedPrice", Matchers.is(expectedExecutedPrice.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.buyExecutedVolume", Matchers.is(expectedExecutedVolume.intValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedQuantity", Matchers.nullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedQuantity", Matchers.is(expectedExecutedQuantity.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedPrice", Matchers.is(expectedExecutedPrice.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedVolume", Matchers.is(expectedExecutedVolume.intValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(anExecution.getStatus().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedPrice", Matchers.nullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.sellExecutedVolume", Matchers.nullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.boughtAt", Matchers.is(expectedExecutedAt.toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.soldAt", Matchers.nullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.executedAt", Matchers.is(expectedExecutedAt.toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()))
                 .andExpect(result -> {
@@ -339,15 +317,11 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         Assertions.assertEquals(executionUpdated.getStock().getId(), anExecution.getStockId().getValue());
         Assertions.assertEquals(executionUpdated.getWallet().getId(), anExecution.getWalletId().getValue());
         Assertions.assertEquals(executionUpdated.getProfitPercentage(), expectedProfitPercentage);
-        Assertions.assertEquals(executionUpdated.getBuyExecutedQuantity(), expectedExecutedQuantity);
-        Assertions.assertEquals(executionUpdated.getBuyExecutedPrice(), expectedExecutedPrice.setScale(5));
-        Assertions.assertEquals(executionUpdated.getBuyExecutedVolume(), expectedExecutedVolume.setScale(5));
-        Assertions.assertNull(executionUpdated.getSellExecutedQuantity());
-        Assertions.assertNull(executionUpdated.getSellExecutedPrice());
-        Assertions.assertNull(executionUpdated.getSellExecutedVolume());
+        Assertions.assertEquals(executionUpdated.getExecutedQuantity(), expectedExecutedQuantity);
+        Assertions.assertEquals(executionUpdated.getExecutedPrice(), expectedExecutedPrice.setScale(5));
+        Assertions.assertEquals(executionUpdated.getExecutedVolume(), expectedExecutedVolume.setScale(5));
         Assertions.assertEquals(executionUpdated.getStatus(), anExecution.getStatus());
-        Assertions.assertEquals(executionUpdated.getBoughtAt(), expectedExecutedAt);
-        Assertions.assertNull(executionUpdated.getSoldAt());
+        Assertions.assertEquals(executionUpdated.getExecutedAt(), expectedExecutedAt);
         Assertions.assertEquals(executionUpdated.getCreatedAt(), anExecution.getCreatedAt());
         Assertions.assertTrue(executionUpdated.getCreatedAt().isBefore(executionUpdated.getUpdatedAt()));
     }
@@ -359,34 +333,27 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final Long expectedExecutedQuantity = 5L;
         final var expectedExecutedPrice = BigDecimal.TEN;
         final var expectedExecutedAt = InstantUtil.now();
-        final var expectedErrorMessage = "'buyExecutedPrice' can not be less than 10";
+        final var expectedErrorMessage = "'executedPrice' can not be less than 10";
 
         final var anExecution = persistExecution(
                 10L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         persistExecution(
-                null,
-                null,
                 10L,
                 BigDecimal.TEN,
                 ExecutionStatus.SELL,
                 8.05,
                 anExecution.getId().getValue(),
-                null,
                 InstantUtil.now()
         );
 
         final var actualRequestCommand = new UpdateExecutionRequest(
                 anExecution.getId().getValue(),
-                anExecution.getStockId().getValue(),
                 expectedProfitPercentage,
                 expectedExecutedQuantity,
                 expectedExecutedPrice,
@@ -415,46 +382,36 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final Long expectedExecutedQuantity = 20L;
         final var expectedExecutedPrice = BigDecimal.TEN;
         final var expectedExecutedAt = InstantUtil.now();
-        final var expectedErrorMessage = "'sellExecutedPrice' should not be greater than 19";
+        final var expectedErrorMessage = "'executedPrice' should not be greater than 19";
 
         final var origin = persistExecution(
                 120L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         final var anExecution = persistExecution(
-                null,
-                null,
                 5L,
                 BigDecimal.TEN,
                 ExecutionStatus.SELL,
                 8.05,
                 origin.getId().getValue(),
-                null,
                 InstantUtil.now()
         );
 
         persistExecution(
-                null,
-                null,
                 101L,
                 BigDecimal.TEN,
                 ExecutionStatus.SELL,
                 8.05,
                 origin.getId().getValue(),
-                null,
                 InstantUtil.now()
         );
 
         final var actualRequestCommand = new UpdateExecutionRequest(
                 anExecution.getId().getValue(),
-                anExecution.getStockId().getValue(),
                 expectedProfitPercentage,
                 expectedExecutedQuantity,
                 expectedExecutedPrice,
@@ -486,7 +443,6 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
         final var actualRequestCommand = new UpdateExecutionRequest(
                 expectedId,
-                null,
                 expectedProfitPercentage,
                 expectedExecutedQuantity,
                 expectedExecutedPrice,
@@ -511,23 +467,17 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var aExecution = persistExecution(
                 120L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         persistExecution(
-                null,
-                null,
                 101L,
                 BigDecimal.TEN,
                 ExecutionStatus.SELL,
                 8.05,
                 aExecution.getId().getValue(),
-                null,
                 InstantUtil.now()
         );
         Assertions.assertEquals(2, this.executionRepository.count());
@@ -547,13 +497,10 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         final var aExecution = persistExecution(
                 120L,
                 BigDecimal.ONE,
-                null,
-                null,
                 ExecutionStatus.BUY,
                 8.05,
                 null,
-                InstantUtil.now(),
-                null
+                InstantUtil.now()
         );
         Assertions.assertEquals(1, this.executionRepository.count());
 
@@ -589,15 +536,12 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .toAggregate();
     }
 
-    public Execution persistExecution(final Long buyExecutedQuantity,
-                                      final BigDecimal buyExecutedPrice,
-                                      final Long sellExecutedQuantity,
-                                      final BigDecimal sellExecutedPrice,
+    public Execution persistExecution(final Long executedQuantity,
+                                      final BigDecimal executedPrice,
                                       final ExecutionStatus executionStatus,
                                       final Double profitPercentage,
                                       final String originID,
-                                      final Instant boughtAt,
-                                      final Instant soldAt
+                                      final Instant executedAt
     ) {
         final var aStock = persistStock("PETR4F");
         final var aWallet = persistWallet("Wallet");
@@ -605,15 +549,12 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 ExecutionBuilder.create()
                         .stockId(StockID.from(aStock.getId().getValue()))
                         .walletId(WalletID.from(aWallet.getId().getValue()))
-                        .buyExecutedQuantity(buyExecutedQuantity)
-                        .sellExecutedQuantity(sellExecutedQuantity)
-                        .buyExecutedPrice(buyExecutedPrice)
-                        .sellExecutedPrice(sellExecutedPrice)
+                        .executedQuantity(executedQuantity)
+                        .executedPrice(executedPrice)
                         .status(executionStatus)
-                        .boughtAt(boughtAt)
-                        .soldAt(soldAt)
+                        .executedAt(executedAt)
                         .profitPercentage(profitPercentage)
-                        .origin(ExecutionID.from(originID))
+                        .origin(ofNullable(originID).map(ExecutionID::from).orElse(null))
                         .build()
         )).toAggregate();
     }

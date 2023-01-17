@@ -10,11 +10,11 @@ public record CreateExecutionResponse(
         String stockId,
         String walletId,
         Double profitPercentage,
-        Long buyExecutedQuantity,
-        BigDecimal buyExecutedPrice,
-        BigDecimal buyExecutedVolume,
+        Long executedQuantity,
+        BigDecimal executedPrice,
+        BigDecimal executedVolume,
         ExecutionStatus status,
-        Instant boughtAt,
+        Instant executedAt,
         Instant createdAt,
         Instant updatedAt
 ) {
