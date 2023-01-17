@@ -7,6 +7,8 @@ import com.investment.managment.execution.create.CreateExecutionUseCase;
 import com.investment.managment.execution.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
 import com.investment.managment.execution.presenters.ExecutionAPIPresenter;
+import com.investment.managment.execution.sell.SellExecutionCommandInput;
+import com.investment.managment.execution.sell.SellExecutionUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionCommandInput;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
@@ -24,16 +26,20 @@ public class ExecutionController implements ExecutionAPI {
     private final SummaryExecutionUseCase summaryExecutionUseCase;
     private final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase;
 
+    private final SellExecutionUseCase sellExecutionUseCase;
+
     public ExecutionController(final UpdateExecutionUseCase updateExecutionUseCase,
                                final CreateExecutionUseCase createExecutionUseCase,
                                final FindExecutionByIdUseCase findExecutionByIdUseCase,
                                final SummaryExecutionUseCase summaryExecutionUseCase,
-                               final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase) {
+                               final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase,
+                               final SellExecutionUseCase sellExecutionUseCase) {
         this.updateExecutionUseCase = updateExecutionUseCase;
         this.createExecutionUseCase = createExecutionUseCase;
         this.findExecutionByIdUseCase = findExecutionByIdUseCase;
         this.summaryExecutionUseCase = summaryExecutionUseCase;
         this.deleteExecutionByIdUseCase = deleteExecutionByIdUseCase;
+        this.sellExecutionUseCase = sellExecutionUseCase;
     }
 
     @Override
@@ -75,5 +81,16 @@ public class ExecutionController implements ExecutionAPI {
     @Override
     public void deleteById(final String id) {
         this.deleteExecutionByIdUseCase.execute(ExecutionID.from(id));
+    }
+
+    @Override
+    public SellExecutionResponse sell(final String originId, final SellExecutionRequest executionRequest) {
+        final var aCommand = SellExecutionCommandInput.with(
+                ExecutionID.from(originId),
+                executionRequest.executedQuantity(),
+                executionRequest.executedPrice(),
+                executionRequest.executedAt()
+        );
+        return ExecutionAPIPresenter.present(this.sellExecutionUseCase.execute(aCommand));
     }
 }

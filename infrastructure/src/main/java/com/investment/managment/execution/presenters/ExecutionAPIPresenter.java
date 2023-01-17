@@ -1,12 +1,10 @@
 package com.investment.managment.execution.presenters;
 
 import com.investment.managment.Identifier;
-import com.investment.managment.api.execution.models.CreateExecutionResponse;
-import com.investment.managment.api.execution.models.FindByIdExecutionResponse;
-import com.investment.managment.api.execution.models.SummaryExecutionByStockResponse;
-import com.investment.managment.api.execution.models.UpdateExecutionResponse;
+import com.investment.managment.api.execution.models.*;
 import com.investment.managment.execution.create.CreateExecutionCommandOutput;
 import com.investment.managment.execution.findById.FindExecutionByIdCommandOutput;
+import com.investment.managment.execution.sell.SellExecutionCommandOutput;
 import com.investment.managment.execution.summarybystock.SummaryExecutionCommandOutput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 
@@ -63,9 +61,26 @@ public interface ExecutionAPIPresenter {
         );
     }
 
-    static SummaryExecutionByStockResponse present(final SummaryExecutionCommandOutput response) {
+    static SummaryExecutionByStockResponse present(final SummaryExecutionCommandOutput output) {
         return new SummaryExecutionByStockResponse(
-                response.symbol()
+                output.symbol()
+        );
+    }
+
+    static SellExecutionResponse present(final SellExecutionCommandOutput output) {
+        return new SellExecutionResponse(
+                output.id().getValue(),
+                Optional.ofNullable(output.originId()).map(Identifier::getValue).orElse(null),
+                output.stockId().getValue(),
+                output.walletId().getValue(),
+                output.profitPercentage(),
+                output.executedQuantity(),
+                output.executedPrice(),
+                output.executedVolume(),
+                output.status(),
+                output.executedAt(),
+                output.createdAt(),
+                output.updatedAt()
         );
     }
 }

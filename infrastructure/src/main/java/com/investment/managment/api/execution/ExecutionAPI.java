@@ -29,5 +29,9 @@ public interface ExecutionAPI {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteById(@PathVariable("id") String id);
 
+    @PutMapping("sell/{originId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    SellExecutionResponse sell(@PathVariable("originId") String originId, @RequestBody SellExecutionRequest executionRequest);
+
 
 }
