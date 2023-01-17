@@ -17,8 +17,7 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
 
     @Override
     protected void afterValidate() {
-        this.target.calculateBuyExecutedVolume();
-        this.target.calculateSellExecutedVolume();
+        this.target.calculateExecutedVolume();
     }
 
     private ExecutionBuilder(final Execution execution) {
@@ -43,23 +42,13 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
         return this;
     }
 
-    public ExecutionBuilder buyExecutedQuantity(final Long buyExecutedQuantity) {
-        this.target.buyExecutedQuantity = buyExecutedQuantity;
+    public ExecutionBuilder executedQuantity(final Long executedQuantity) {
+        this.target.executedQuantity = executedQuantity;
         return this;
     }
 
-    public ExecutionBuilder sellExecutedQuantity(final Long sellExecutedQuantity) {
-        this.target.sellExecutedQuantity = sellExecutedQuantity;
-        return this;
-    }
-
-    public ExecutionBuilder buyExecutedPrice(final BigDecimal buyExecutedPrice) {
-        this.target.buyExecutedPrice = buyExecutedPrice;
-        return this;
-    }
-
-    public ExecutionBuilder sellExecutedPrice(final BigDecimal sellExecutedPrice) {
-        this.target.sellExecutedPrice = sellExecutedPrice;
+    public ExecutionBuilder executedPrice(final BigDecimal executedPrice) {
+        this.target.executedPrice = executedPrice;
         return this;
     }
 
@@ -73,12 +62,8 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
         return this;
     }
 
-    public ExecutionBuilder boughtAt(final Instant boughtAt) {
-        this.target.boughtAt = boughtAt;
-        return this;
-    }
-    public ExecutionBuilder soldAt(final Instant soldAt) {
-        this.target.soldAt = soldAt;
+    public ExecutionBuilder executedAt(final Instant executedAt) {
+        this.target.executedAt = executedAt;
         return this;
     }
 

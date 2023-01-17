@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
-import static com.investment.managment.execution.ExecutionStatus.BUY;
-import static com.investment.managment.execution.ExecutionStatus.SELL;
 import static java.math.BigDecimal.valueOf;
 
 public class Execution extends AggregateRoot<ExecutionID> {
@@ -25,23 +23,15 @@ public class Execution extends AggregateRoot<ExecutionID> {
 
     protected Double profitPercentage;
 
-    protected Long buyExecutedQuantity;
+    protected Long executedQuantity;
 
-    protected BigDecimal buyExecutedPrice;
+    protected BigDecimal executedPrice;
 
-    private BigDecimal buyExecutedVolume;
-
-    protected Long sellExecutedQuantity;
-
-    protected BigDecimal sellExecutedPrice;
-
-    private BigDecimal sellExecutedVolume;
+    private BigDecimal executedVolume;
 
     protected ExecutionStatus status;
 
-    protected Instant boughtAt;
-
-    protected Instant soldAt;
+    protected Instant executedAt;
 
     private final Instant createdAt;
 
@@ -60,15 +50,11 @@ public class Execution extends AggregateRoot<ExecutionID> {
                       final StockID stockId,
                       final WalletID walletId,
                       final Double profitPercentage,
-                      final Long buyExecutedQuantity,
-                      final BigDecimal buyExecutedPrice,
-                      final BigDecimal buyExecutedVolume,
-                      final Long sellExecutedQuantity,
-                      final BigDecimal sellExecutedPrice,
-                      final BigDecimal sellExecutedVolume,
+                      final Long executedQuantity,
+                      final BigDecimal executedPrice,
+                      final BigDecimal executedVolume,
                       final ExecutionStatus status,
-                      final Instant boughtAt,
-                      final Instant soldAt,
+                      final Instant executedAt,
                       final Instant createdAt,
                       final Instant updatedAt) {
         this.id = id;
@@ -76,15 +62,11 @@ public class Execution extends AggregateRoot<ExecutionID> {
         this.stockId = stockId;
         this.walletId = walletId;
         this.profitPercentage = profitPercentage;
-        this.buyExecutedQuantity = buyExecutedQuantity;
-        this.buyExecutedPrice = buyExecutedPrice;
-        this.buyExecutedVolume = buyExecutedVolume;
-        this.sellExecutedQuantity = sellExecutedQuantity;
-        this.sellExecutedPrice = sellExecutedPrice;
-        this.sellExecutedVolume = sellExecutedVolume;
+        this.executedQuantity = executedQuantity;
+        this.executedPrice = executedPrice;
+        this.executedVolume = executedVolume;
         this.status = status;
-        this.boughtAt = boughtAt;
-        this.soldAt = soldAt;
+        this.executedAt = executedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -94,15 +76,11 @@ public class Execution extends AggregateRoot<ExecutionID> {
                                  final StockID stockId,
                                  final WalletID walletId,
                                  final Double profitPercentage,
-                                 final Long buyExecutedQuantity,
-                                 final BigDecimal buyExecutedPrice,
-                                 final BigDecimal buyExecutedVolume,
-                                 final Long sellExecutedQuantity,
-                                 final BigDecimal sellExecutedPrice,
-                                 final BigDecimal sellExecutedVolume,
+                                 final Long executedQuantity,
+                                 final BigDecimal executedPrice,
+                                 final BigDecimal executedVolume,
                                  final ExecutionStatus status,
-                                 final Instant boughtAt,
-                                 final Instant soldAt,
+                                 final Instant executedAt,
                                  final Instant createdAt,
                                  final Instant updatedAt) {
         return new Execution(id,
@@ -110,15 +88,11 @@ public class Execution extends AggregateRoot<ExecutionID> {
                 stockId,
                 walletId,
                 profitPercentage,
-                buyExecutedQuantity,
-                buyExecutedPrice,
-                buyExecutedVolume,
-                sellExecutedQuantity,
-                sellExecutedPrice,
-                sellExecutedVolume,
+                executedQuantity,
+                executedPrice,
+                executedVolume,
                 status,
-                boughtAt,
-                soldAt,
+                executedAt,
                 createdAt,
                 updatedAt);
     }
@@ -128,39 +102,25 @@ public class Execution extends AggregateRoot<ExecutionID> {
             final StockID stockId,
             final WalletID walletId,
             final Double profitPercentage,
-            final Long buyExecutedQuantity,
-            final BigDecimal buyExecutedPrice,
-            final Long sellExecutedQuantity,
-            final BigDecimal sellExecutedPrice,
+            final Long executedQuantity,
+            final BigDecimal executedPrice,
             final ExecutionStatus status,
-            final Instant boughtAt,
-            final Instant soldAt
+            final Instant executedAt
     ) {
         this.origin = origin;
         this.stockId = stockId;
         this.walletId = walletId;
         this.profitPercentage = profitPercentage;
-        this.buyExecutedQuantity = buyExecutedQuantity;
-        this.buyExecutedPrice = buyExecutedPrice;
-        this.sellExecutedQuantity = sellExecutedQuantity;
-        this.sellExecutedPrice = sellExecutedPrice;
+        this.executedQuantity = executedQuantity;
+        this.executedPrice = executedPrice;
         this.status = status;
-        this.boughtAt = boughtAt;
-        this.soldAt = soldAt;
+        this.executedAt = executedAt;
         this.updatedAt = InstantUtil.now();
         return ExecutionBuilder.from(this).build();
     }
 
-    protected void calculateBuyExecutedVolume() {
-        this.buyExecutedVolume = BUY.equals(this.status)
-                ? this.buyExecutedPrice.multiply(valueOf(this.buyExecutedQuantity))
-                : null;
-    }
-
-    protected void calculateSellExecutedVolume() {
-        this.sellExecutedVolume = SELL.equals(this.status)
-                ? this.sellExecutedPrice.multiply(valueOf(this.sellExecutedQuantity))
-                : null;
+    protected void calculateExecutedVolume() {
+        this.executedVolume = this.executedPrice.multiply(valueOf(this.executedQuantity));
     }
 
     @Override
@@ -176,22 +136,6 @@ public class Execution extends AggregateRoot<ExecutionID> {
         return walletId;
     }
 
-    public Long getBuyExecutedQuantity() {
-        return buyExecutedQuantity;
-    }
-
-    public Long getSellExecutedQuantity() {
-        return sellExecutedQuantity;
-    }
-
-    public BigDecimal getBuyExecutedPrice() {
-        return buyExecutedPrice;
-    }
-
-    public BigDecimal getSellExecutedPrice() {
-        return sellExecutedPrice;
-    }
-
     public ExecutionStatus getStatus() {
         return status;
     }
@@ -200,24 +144,24 @@ public class Execution extends AggregateRoot<ExecutionID> {
         return origin;
     }
 
-    public BigDecimal getBuyExecutedVolume() {
-        return buyExecutedVolume;
-    }
-
-    public BigDecimal getSellExecutedVolume() {
-        return sellExecutedVolume;
-    }
-
     public Double getProfitPercentage() {
         return profitPercentage;
     }
 
-    public Instant getBoughtAt() {
-        return boughtAt;
+    public Long getExecutedQuantity() {
+        return executedQuantity;
     }
 
-    public Instant getSoldAt() {
-        return soldAt;
+    public BigDecimal getExecutedPrice() {
+        return executedPrice;
+    }
+
+    public BigDecimal getExecutedVolume() {
+        return executedVolume;
+    }
+
+    public Instant getExecutedAt() {
+        return executedAt;
     }
 
     public Instant getCreatedAt() {

@@ -4,6 +4,8 @@ import com.investment.managment.validation.ValidationHandler;
 import com.investment.managment.validation.Validator;
 import com.investment.managment.validation.exception.Error;
 
+import java.math.BigDecimal;
+
 import static com.investment.managment.execution.ExecutionStatus.BUY;
 import static com.investment.managment.execution.ExecutionStatus.SELL;
 import static java.util.Objects.*;
@@ -28,13 +30,12 @@ public class ExecutionValidator implements Validator {
         checkStockIdConstraint();
         checkWalletIdConstraint();
         checkStatusConstraint();
-        checkSellExecutedQuantityConstraint();
-        checkSellExecutedPriceConstraint();
-        checkBuyExecutedQuantityConstraint();
-        checkBuyExecutedPriceConstraint();
+        checkOriginIdConstraint();
+        checkExecutedQuantityConstraint();
+        checkExecutedPriceConstraint();
         checkProfitPercentageConstraint();
-        checkBoughtAtConstraint();
-        checkSoldAtConstraint();
+        checkExecutedAtConstraint();
+        //todo: create validation to ORIGIN ID
     }
 
     private void checkStockIdConstraint() {
@@ -55,6 +56,21 @@ public class ExecutionValidator implements Validator {
         }
     }
 
+    private void checkOriginIdConstraint() {
+        final var originId = this.entity.getOrigin();
+        final var status = this.entity.getStatus();
+
+        if (SELL.equals(status) && isNull(originId)) {
+            this.handler.append(new Error("'originId' must not be null"));
+            return;
+        }
+
+        if (BUY.equals(status) && nonNull(originId)) {
+            this.handler.append(new Error("'originId' should not be filled"));
+            return;
+        }
+    }
+
     private void checkStatusConstraint() {
         final var status = this.entity.getStatus();
 
@@ -64,68 +80,36 @@ public class ExecutionValidator implements Validator {
         }
     }
 
-    private void checkSellExecutedQuantityConstraint() {
-        final var sellExecutedQuantity = this.entity.getSellExecutedQuantity();
-        final var status = this.entity.getStatus();
 
-        if (SELL.equals(status) && isNull(sellExecutedQuantity)) {
-            this.handler.append(new Error("'sellExecutedQuantity' must not be null"));
+    private void checkExecutedQuantityConstraint() {
+        final var executedQuantity = this.entity.getExecutedQuantity();
+
+        if (isNull(executedQuantity)) {
+            this.handler.append(new Error("'executedQuantity' must not be null"));
             return;
         }
 
-        if (BUY.equals(status) && nonNull(sellExecutedQuantity)) {
-            this.handler.append(new Error("'sellExecutedQuantity' should not be filled"));
-            return;
-        }
-    }
-
-    private void checkSellExecutedPriceConstraint() {
-        final var sellExecutedPrice = this.entity.getSellExecutedPrice();
-        final var status = this.entity.getStatus();
-
-        if (SELL.equals(status) && isNull(sellExecutedPrice)) {
-            this.handler.append(new Error("'sellExecutedPrice' must not be null"));
-            return;
-        }
-
-        if (BUY.equals(status) && nonNull(sellExecutedPrice)) {
-            this.handler.append(new Error("'sellExecutedPrice' should not be filled"));
+        if (executedQuantity.compareTo(0L) <= 0) {
+            this.handler.append(new Error("'executedQuantity' should be bigger than 0.0"));
             return;
         }
     }
 
-    private void checkBuyExecutedQuantityConstraint() {
-        final var buyExecutedQuantity = this.entity.getBuyExecutedQuantity();
-        final var status = this.entity.getStatus();
+    private void checkExecutedPriceConstraint() {
+        final var executedPrice = this.entity.getExecutedPrice();
 
-
-        if (BUY.equals(status) && isNull(buyExecutedQuantity)) {
-            this.handler.append(new Error("'buyExecutedQuantity' must not be null"));
+        if (isNull(executedPrice)) {
+            this.handler.append(new Error("'executedPrice' must not be null"));
             return;
         }
 
-        if (SELL.equals(status) && nonNull(buyExecutedQuantity)) {
-            this.handler.append(new Error("'buyExecutedQuantity' should not be filled"));
-            return;
-        }
-    }
-
-    private void checkBuyExecutedPriceConstraint() {
-        final var buyExecutedPrice = this.entity.getBuyExecutedPrice();
-        final var status = this.entity.getStatus();
-
-        if (SELL.equals(status) && nonNull(buyExecutedPrice)) {
-            this.handler.append(new Error("'buyExecutedPrice' should not be filled"));
-            return;
-        }
-
-        if (BUY.equals(status) && isNull(buyExecutedPrice)) {
-            this.handler.append(new Error("'buyExecutedPrice' must not be null"));
+        if (executedPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            this.handler.append(new Error("'executedPrice' should be bigger than 0.0")); // TODO: NEED VALIDATE
             return;
         }
     }
 
-    private void checkProfitPercentageConstraint() {
+    private void checkProfitPercentageConstraint() { // TODO: OK
         final var profitPercentage = this.entity.getProfitPercentage();
 
         if (isNull(profitPercentage)) {
@@ -139,38 +123,12 @@ public class ExecutionValidator implements Validator {
         }
     }
 
-    public void checkBoughtAtConstraint(){
-        final var boughtAt = this.entity.getBoughtAt();
-        final var status = this.entity.getStatus();
+    public void checkExecutedAtConstraint() { // TODO: OK
+        final var executedAt = this.entity.getExecutedAt();
 
-        if(BUY.equals(status) && isNull(boughtAt)) {
-            this.handler.append(new Error("'boughtAt' must not be null"));
+        if (isNull(executedAt)) {
+            this.handler.append(new Error("'executedAt' must not be null"));
             return;
         }
-
-        if(SELL.equals(status) && nonNull(boughtAt)) {
-            this.handler.append(new Error("'boughtAt' should not be filled"));
-            return;
-        }
-
-
     }
-    public void checkSoldAtConstraint(){
-        final var soldAt = this.entity.getSoldAt();
-        final var status = this.entity.getStatus();
-
-        if(SELL.equals(status) && isNull(soldAt)) {
-            this.handler.append(new Error("'soldAt' must not be null"));
-            return;
-        }
-
-        if(BUY.equals(status) && nonNull(soldAt)) {
-            this.handler.append(new Error("'soldAt' should not be filled"));
-            return;
-        }
-
-
-    }
-
-
 }
