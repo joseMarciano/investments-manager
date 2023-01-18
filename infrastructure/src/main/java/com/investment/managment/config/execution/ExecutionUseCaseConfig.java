@@ -4,6 +4,7 @@ import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.create.CreateExecutionUseCase;
 import com.investment.managment.execution.deleteById.DeleteExecutionByIdUseCase;
 import com.investment.managment.execution.findById.FindExecutionByIdUseCase;
+import com.investment.managment.execution.page.PageExecutionUseCase;
 import com.investment.managment.execution.sell.SellExecutionUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
@@ -68,5 +69,10 @@ public class ExecutionUseCaseConfig {
     @Bean
     public SummaryExecutionUseCase summaryExecutionUseCase() {
         return new SummaryExecutionUseCase(this.executionGateway);
+    }
+
+    @Bean
+    public PageExecutionUseCase pageExecutionUseCase() {
+        return new PageExecutionUseCase(this.executionGateway);
     }
 }

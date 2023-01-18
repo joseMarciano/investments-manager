@@ -2,13 +2,8 @@ package com.investment.managment.util;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.criteria.*;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
@@ -31,8 +26,18 @@ public final class SpecificationUtil {
         };
     }
 
-    public static <T> Specification<T> equal(final String prop, final String id) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(prop), id);
+    public static <T> Specification<T> equal(final String name, final String id) {
+        return (root, query, criteriaBuilder) -> {
+            final var props = new ArrayList<String>(Arrays.asList(name.split("\\.")));
+
+            Path<Object> obj = root.get(props.remove(0));
+            for (final String prop : props) {
+                obj = obj.get(prop);
+            }
+
+
+            return criteriaBuilder.equal(obj, id);
+        };
     }
 
     private static <T> Function<Specification<T>, Predicate> toPredicate(final Root<T> root,

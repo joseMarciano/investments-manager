@@ -1,4 +1,4 @@
-package com.investment.managment.api.execution.models;
+package com.investment.managment.execution.models;
 
 import com.investment.managment.execution.ExecutionStatus;
 

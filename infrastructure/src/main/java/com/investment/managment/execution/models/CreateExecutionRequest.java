@@ -1,10 +1,11 @@
-package com.investment.managment.api.execution.models;
+package com.investment.managment.execution.models;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record UpdateExecutionRequest(
-        String id,
+public record CreateExecutionRequest(
+        String stockId,
+        String walletId,
         Double profitPercentage,
         Long executedQuantity,
         BigDecimal executedPrice,
