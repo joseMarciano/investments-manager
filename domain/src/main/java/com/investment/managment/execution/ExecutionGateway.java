@@ -1,8 +1,8 @@
 package com.investment.managment.execution;
 
+import com.investment.managment.execution.page.ExecutionSearchQuery;
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 import com.investment.managment.page.Pagination;
-import com.investment.managment.page.SearchQuery;
 import com.investment.managment.wallet.WalletID;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface ExecutionGateway {
 
     Optional<Execution> findById(ExecutionID anId);
 
-    Pagination<Execution> findAll(SearchQuery query);
+    Pagination<Execution> findAll(ExecutionSearchQuery executionSearchQuery);
 
     List<Execution> findAllByOriginId(ExecutionID originId);
 
