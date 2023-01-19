@@ -35,7 +35,6 @@ public class ExecutionValidator implements Validator {
         checkExecutedPriceConstraint();
         checkProfitPercentageConstraint();
         checkExecutedAtConstraint();
-        //todo: create validation to ORIGIN ID
     }
 
     private void checkStockIdConstraint() {
@@ -104,12 +103,12 @@ public class ExecutionValidator implements Validator {
         }
 
         if (executedPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            this.handler.append(new Error("'executedPrice' should be bigger than 0.0")); // TODO: NEED VALIDATE
+            this.handler.append(new Error("'executedPrice' should be bigger than 0.0"));
             return;
         }
     }
 
-    private void checkProfitPercentageConstraint() { // TODO: OK
+    private void checkProfitPercentageConstraint() {
         final var profitPercentage = this.entity.getProfitPercentage();
 
         if (isNull(profitPercentage)) {
@@ -123,7 +122,7 @@ public class ExecutionValidator implements Validator {
         }
     }
 
-    public void checkExecutedAtConstraint() { // TODO: OK
+    public void checkExecutedAtConstraint() {
         final var executedAt = this.entity.getExecutedAt();
 
         if (isNull(executedAt)) {
