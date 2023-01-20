@@ -17,7 +17,7 @@ This application is a part of an Undergraduate Thesis.
 
 ## :wrench: Architecture flowchart
 
-![diagram-image](arch-diagram.png)
+![diagram-image](arch-diagram.jpg)
 
 ## :ballot_box_with_check: Progress of the project
 
