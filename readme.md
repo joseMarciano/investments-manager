@@ -24,7 +24,8 @@ This application is a part of an Undergraduate Thesis.
 - [x] Initialize application
 - [x] Implementation about Wallet
 - [x] Implementation about Stocks
-- [ ] Implementation about Executions ⚠ _in progress_
+- [x] Implementation about Executions
+- [x] SQS integration when Execution is _created/updated/deleted/sell_
 
 ### :robot: Back-end:
 
@@ -32,7 +33,7 @@ This application is a part of an Undergraduate Thesis.
 ![Badge](https://img.shields.io/badge/Swagger--%236DB33F?style=for-the-badge&logo=Swagger&color=#85EA2D)
 ![Badge](https://img.shields.io/badge/PostgeSQL--%236DB33F?style=for-the-badge&logo=Postgresql&color=4169E1)
 ![Badge](https://img.shields.io/badge/Flyway--%2347A248?style=for-the-badge&logo=Flyway&color=CC0200)
-![Badge](https://img.shields.io/badge/RabbitMQ--%2347A248?style=for-the-badge&logo=RabbitMQ&color=FF6600)
+![Badge](https://img.shields.io/badge/AMAZON_SQS--%2347A248?style=for-the-badge&logo=AmazonSQS&color=FF4F8B)
 ![Badge](https://img.shields.io/badge/Redis--%2347A248?style=for-the-badge&logo=Redis&color=DC382D)
 ![Badge](https://img.shields.io/badge/Docker--%2347A248?style=for-the-badge&logo=Docker&color=2496ED)
 ![Badge](https://img.shields.io/badge/Elastic_Stack--%2347A248?style=for-the-badge&logo=ElasticStack&color=005571)
