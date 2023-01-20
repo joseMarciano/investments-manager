@@ -2,6 +2,10 @@ server:
   servlet:
     contextPath: /api
 
+aws:
+  accessKey: ${AWS_ACCESS_KEY:}
+  secretKey: ${AWS_SECRET_KEY:}
+  region: ${AWS_REGION:us-east-1}
 
 spring:
   flyway:
