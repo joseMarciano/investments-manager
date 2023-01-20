@@ -53,9 +53,4 @@ public final class SpecificationUtil {
         );
     }
 
-//    private static <T> Function<String, CriteriaBuilder> createCriteriaLike(final String term, final Root<T> root, final CriteriaQuery<T> criteriaQuery, final CriteriaBuilder criteriaBuilder) {
-//        return prop -> {
-//
-//        }
-//    }
 }

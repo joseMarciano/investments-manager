@@ -1,6 +1,9 @@
-package com.investment.managment.execution;
+package com.investment.managment.execution.gateway.postgres;
 
 import com.investment.managment.Identifier;
+import com.investment.managment.execution.Execution;
+import com.investment.managment.execution.ExecutionID;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.page.ExecutionSearchQuery;
 import com.investment.managment.execution.persistence.ExecutionJpaEntity;
 import com.investment.managment.execution.persistence.ExecutionRepository;

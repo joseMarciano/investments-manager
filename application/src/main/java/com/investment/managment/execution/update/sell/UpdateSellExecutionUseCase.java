@@ -2,7 +2,7 @@ package com.investment.managment.execution.update.sell;
 
 import com.investment.managment.DoubleUseCase;
 import com.investment.managment.execution.Execution;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.update.UpdateExecutionCommandInput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 import com.investment.managment.validation.exception.DomainExeceptionFactory;

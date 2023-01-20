@@ -2,7 +2,7 @@ package com.investment.managment.execution.update;
 
 import com.investment.managment.UseCase;
 import com.investment.managment.execution.Execution;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.update.buy.UpdateBuyExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellExecutionUseCase;

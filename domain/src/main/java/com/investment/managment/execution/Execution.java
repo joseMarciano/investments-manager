@@ -97,6 +97,10 @@ public class Execution extends AggregateRoot<ExecutionID> {
                 updatedAt);
     }
 
+    public static Execution with(final ExecutionID id) {
+        return with(id, null, null, null, null, null, null, null, null, null, null, null);
+    }
+
     public Execution update(
             final ExecutionID origin,
             final StockID stockId,

@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.sun.xml.bind:jaxb-impl:2.3.1'
     implementation 'com.sun.xml.bind:jaxb-impl:2.3.1'
 
+    implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
+
 
 
     testImplementation 'org.flywaydb:flyway-core:9.8.1'

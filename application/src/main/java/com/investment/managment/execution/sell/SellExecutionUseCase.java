@@ -3,7 +3,7 @@ package com.investment.managment.execution.sell;
 import com.investment.managment.UseCase;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionBuilder;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.ExecutionStatus;
 import com.investment.managment.validation.exception.DomainExeceptionFactory;
 import com.investment.managment.validation.exception.Error;

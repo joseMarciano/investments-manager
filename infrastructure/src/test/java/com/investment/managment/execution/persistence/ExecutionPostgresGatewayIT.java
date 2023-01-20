@@ -4,8 +4,8 @@ import com.investment.managment.DataBaseExtension;
 import com.investment.managment.IntegrationTest;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionBuilder;
-import com.investment.managment.execution.ExecutionGateway;
 import com.investment.managment.execution.ExecutionStatus;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.stock.Stock;
 import com.investment.managment.stock.StockBuilder;
 import com.investment.managment.stock.persistence.StockJpaEntity;
@@ -18,6 +18,7 @@ import com.investment.managment.wallet.persistence.WalletRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.math.BigDecimal;
 
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 public class ExecutionPostgresGatewayIT extends DataBaseExtension {
 
     @Autowired
+    @Qualifier("default-execution-gateway")
     private ExecutionGateway executionGateway;
 
     @Autowired

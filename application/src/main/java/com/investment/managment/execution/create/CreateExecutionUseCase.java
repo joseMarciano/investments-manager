@@ -2,7 +2,7 @@ package com.investment.managment.execution.create;
 
 import com.investment.managment.UseCase;
 import com.investment.managment.execution.ExecutionBuilder;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.ExecutionStatus;
 import com.investment.managment.stock.Stock;
 import com.investment.managment.stock.StockGateway;

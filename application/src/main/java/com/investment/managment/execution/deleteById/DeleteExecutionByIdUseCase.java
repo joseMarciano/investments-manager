@@ -1,7 +1,7 @@
 package com.investment.managment.execution.deleteById;
 
 import com.investment.managment.UnitUseCase;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.validation.exception.DomainException;
 import com.investment.managment.validation.exception.Error;

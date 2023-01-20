@@ -1,7 +1,7 @@
 package com.investment.managment.execution.summarybystock;
 
 import com.investment.managment.UseCase;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.wallet.WalletID;
 
 import java.util.List;

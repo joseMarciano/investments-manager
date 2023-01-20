@@ -1,7 +1,7 @@
 package com.investment.managment.execution.page;
 
 import com.investment.managment.UseCase;
-import com.investment.managment.execution.ExecutionGateway;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.page.Pagination;
 
 public class PageExecutionUseCase extends UseCase<ExecutionSearchQuery, Pagination<PageExecutionCommandOutput>> {
