@@ -15,3 +15,5 @@ feign-client:
 app-context:
   scheduler:
     disabled: true
+  aws:
+    disabled: true

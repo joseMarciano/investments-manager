@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AWSConfig {
+@AWSContext
+public class AWSCredentialsConfig {
 
     private final String accessKey;
     private final String secretKey;
 
-    public AWSConfig(@Value("${aws.accessKey}") final String accessKey, @Value("${aws.secretKey}") final String secretKey) {
+    public AWSCredentialsConfig(@Value("${aws.accessKey}") final String accessKey, @Value("${aws.secretKey}") final String secretKey) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
     }

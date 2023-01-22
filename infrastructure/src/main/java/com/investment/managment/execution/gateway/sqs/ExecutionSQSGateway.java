@@ -1,5 +1,6 @@
 package com.investment.managment.execution.gateway.sqs;
 
+import com.investment.managment.config.aws.AWSContext;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.gateway.CreateExecutionGateway;
@@ -10,6 +11,7 @@ import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@AWSContext
 public class ExecutionSQSGateway implements
         CreateExecutionGateway,
         DeleteIdExecutionGateway,
