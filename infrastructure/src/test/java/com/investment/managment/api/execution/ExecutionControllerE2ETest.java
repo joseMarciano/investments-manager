@@ -8,6 +8,7 @@ import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionBuilder;
 import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.ExecutionStatus;
+import com.investment.managment.execution.gateway.sqs.ExecutionSQSGateway;
 import com.investment.managment.execution.models.*;
 import com.investment.managment.execution.persistence.ExecutionJpaEntity;
 import com.investment.managment.execution.persistence.ExecutionRepository;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,6 +43,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 import static java.util.Optional.ofNullable;
+import static org.mockito.Mockito.*;
 
 @E2ETest
 public class ExecutionControllerE2ETest extends DataBaseExtension {
@@ -58,6 +61,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @MockBean
+    private ExecutionSQSGateway sqsGateway;
 
     @Autowired
     private ObjectMapper mapper;
@@ -95,6 +101,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.executedAt", Matchers.is(executedAt.toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt", Matchers.notNullValue()));
+
+        verify(sqsGateway).create(any(Execution.class));
     }
 
     @Test
@@ -117,6 +125,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+
+        verify(sqsGateway, times(0)).create(any(Execution.class));
+
     }
 
     @Test
@@ -139,6 +150,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+
+        verify(sqsGateway, times(0)).create(any(Execution.class));
+
     }
 
     @DisplayName("Should return exception to invalid params")
@@ -174,6 +188,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
                 .andDo(MockMvcResultHandlers.print());
+
+        verify(sqsGateway, times(0)).create(any(Execution.class));
+
     }
 
 
@@ -244,6 +261,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         Assertions.assertEquals(executionUpdated.getStatus(), anExecution.getStatus());
         Assertions.assertEquals(executionUpdated.getCreatedAt(), anExecution.getCreatedAt());
         Assertions.assertTrue(executionUpdated.getCreatedAt().isBefore(executionUpdated.getUpdatedAt()));
+        verify(sqsGateway).update(any(Execution.class));
+
     }
 
     @Test
@@ -322,6 +341,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         Assertions.assertEquals(executionUpdated.getExecutedAt(), expectedExecutedAt);
         Assertions.assertEquals(executionUpdated.getCreatedAt(), anExecution.getCreatedAt());
         Assertions.assertTrue(executionUpdated.getCreatedAt().isBefore(executionUpdated.getUpdatedAt()));
+        verify(sqsGateway).update(any(Execution.class));
+
     }
 
     @DisplayName("Should return Domain Exception when the new executed quantity is less sum of all sold executed quantity")
@@ -370,6 +391,7 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
                 .andDo(MockMvcResultHandlers.print());
+        verify(sqsGateway, times(0)).update(any(Execution.class));
 
     }
 
@@ -428,6 +450,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)))
                 .andDo(MockMvcResultHandlers.print());
+
+        verify(sqsGateway, times(0)).update(any(Execution.class));
+
     }
 
     @Test
@@ -456,6 +481,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+        verify(sqsGateway, times(0)).update(any(Execution.class));
+
     }
 
     @Test
@@ -487,6 +514,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
                 .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)));
         Assertions.assertEquals(2, this.executionRepository.count());
+        verify(sqsGateway, times(0)).deleteById(any(ExecutionID.class));
+
     }
 
     @Test
@@ -508,6 +537,7 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
         Assertions.assertEquals(0, this.executionRepository.count());
+        verify(sqsGateway).deleteById(any(ExecutionID.class));
     }
 
 
@@ -520,6 +550,7 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+        verify(sqsGateway, times(0)).deleteById(any(ExecutionID.class));
     }
 
     @Test
@@ -579,6 +610,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
 
                 });
+
+        verify(sqsGateway).create(any(Execution.class));
     }
 
     @Test
@@ -606,6 +639,9 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", Matchers.is(expectedErrorMessage)));
+
+        verify(sqsGateway, times(0)).create(any(Execution.class));
+
     }
 
     @Test
@@ -619,6 +655,8 @@ public class ExecutionControllerE2ETest extends DataBaseExtension {
 
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+        verify(sqsGateway, times(0)).create(any(Execution.class));
+
     }
 
 
