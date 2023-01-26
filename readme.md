@@ -27,7 +27,9 @@ This application is a part of an Undergraduate Thesis.
 - [x] Implementation about Executions
 - [x] SQS integration when Execution is _created/updated/deleted/sell_
 
-### :robot: Back-end:
+### Api that is part of this project
+
+- [investiment-manager](https://github.com/joseMarciano/investments-manager
 
 ![Badge](https://img.shields.io/badge/Spring_Boot--%236DB33F?style=for-the-badge&logo=SpringBoot&color=6DB33F)
 ![Badge](https://img.shields.io/badge/Swagger--%236DB33F?style=for-the-badge&logo=Swagger&color=#85EA2D)
