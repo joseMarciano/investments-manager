@@ -58,6 +58,7 @@ public interface ExecutionAPI {
     List<SummaryExecutionByStockResponse> getSummaryByStock(@PathVariable("walletId") String walletId);
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an Execution")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Execution deleted"),
