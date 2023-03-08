@@ -29,7 +29,7 @@ This application is a part of an Undergraduate Thesis.
 
 ### Api that is part of this project
 
-- [investiment-manager](https://github.com/joseMarciano/investments-manager
+- [investiment-calculator](https://github.com/joseMarciano/investment-calculator)
 
 ![Badge](https://img.shields.io/badge/Spring_Boot--%236DB33F?style=for-the-badge&logo=SpringBoot&color=6DB33F)
 ![Badge](https://img.shields.io/badge/Swagger--%236DB33F?style=for-the-badge&logo=Swagger&color=#85EA2D)
