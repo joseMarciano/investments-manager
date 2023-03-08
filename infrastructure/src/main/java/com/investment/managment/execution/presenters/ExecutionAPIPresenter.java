@@ -64,7 +64,11 @@ public interface ExecutionAPIPresenter {
 
     static SummaryExecutionByStockResponse present(final SummaryExecutionCommandOutput output) {
         return new SummaryExecutionByStockResponse(
-                output.symbol()
+                output.stockId(),
+                output.symbol(),
+                output.totalQuantity(),
+                output.totalSoldQuantity(),
+                output.totalCustodyQuantity()
         );
     }
 
