@@ -14,7 +14,7 @@ public interface ExecutionRepository extends JpaRepository<ExecutionJpaEntity, S
             select new com.investment.managment.execution.summary.ExecutionSummaryByStock(
             s.id,
             e.stock.symbol,
-            (select coalesce(sum(e.executedQuantity), 0) from Execution e where e.stock.id = s.id  and e.wallet.id = :walletId),
+            (select coalesce(sum(e.executedQuantity), 0) from Execution e where e.stock.id = s.id  and e.wallet.id = :walletId and e.status = '0'),
             (select coalesce(sum(e.executedQuantity), 0) from Execution e where e.stock.id = s.id  and e.wallet.id = :walletId and e.status = '1')
             )
             from Execution e
@@ -24,7 +24,6 @@ public interface ExecutionRepository extends JpaRepository<ExecutionJpaEntity, S
             """)
     List<ExecutionSummaryByStock> getExecutionSummaryByStock(@Param("walletId") String walletId);
 
-    //(select 1 from Execution exec where exec.stock.id = s.id  and exec.wallet.id = :walletId)
     boolean existsByOrigin_IdIn(Set<String> ids);
 
     List<ExecutionJpaEntity> findByOrigin_Id(String id);
