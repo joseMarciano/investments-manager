@@ -6,6 +6,8 @@ import com.investment.managment.execution.ExecutionID;
 import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.page.ExecutionSearchQuery;
 import com.investment.managment.execution.persistence.ExecutionJpaEntity;
+import com.investment.managment.execution.persistence.ExecutionQuantityTotalizerJpaEntity;
+import com.investment.managment.execution.persistence.ExecutionQuantityTotalizerRepository;
 import com.investment.managment.execution.persistence.ExecutionRepository;
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 import com.investment.managment.page.Pagination;
@@ -25,9 +27,12 @@ import static java.util.Optional.ofNullable;
 public class ExecutionPostgresGateway implements ExecutionGateway {
 
     private final ExecutionRepository executionRepository;
+    private final ExecutionQuantityTotalizerRepository executionQuantityTotalizerRepository;
 
-    public ExecutionPostgresGateway(final ExecutionRepository executionRepository) {
+    public ExecutionPostgresGateway(final ExecutionRepository executionRepository,
+                                    final ExecutionQuantityTotalizerRepository executionQuantityTotalizerRepository) {
         this.executionRepository = executionRepository;
+        this.executionQuantityTotalizerRepository = executionQuantityTotalizerRepository;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
     public Pagination<Execution> findAll(final ExecutionSearchQuery query) {
         final var searchQuery = query.searchQuery();
 
-        Specification<ExecutionJpaEntity> specification = null;
+        Specification<ExecutionQuantityTotalizerJpaEntity> specification = null;
         final var walletSpecification = buildForeignKeyFilter(query.walletID(), "wallet.id");
         final var stockSpecification = buildForeignKeyFilter(query.stockID(), "stock.id");
 
@@ -77,7 +82,8 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
                 ? specification.and(stockSpecification)
                 : stockSpecification;
 
-        Page<ExecutionJpaEntity> page = this.executionRepository.findAll(
+
+        Page<ExecutionQuantityTotalizerJpaEntity> page = this.executionQuantityTotalizerRepository.findAll(
                 specification,
                 PaginationUtil.buildPage(searchQuery)
         );
@@ -87,13 +93,13 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
                 searchQuery.limit(),
                 page.getTotalElements(),
                 page.getContent()
-        ).map(ExecutionJpaEntity::toAggregate);
+        ).map(ExecutionQuantityTotalizerJpaEntity::toAggregate);
     }
 
-    private static Specification<ExecutionJpaEntity> buildForeignKeyFilter(final Identifier<String> aForeignKey, final String propName) {
+    private static Specification<ExecutionQuantityTotalizerJpaEntity> buildForeignKeyFilter(final Identifier<String> aForeignKey, final String propName) {
         return ofNullable(aForeignKey)
                 .map(Identifier::getValue)
-                .map(identifier -> SpecificationUtil.<ExecutionJpaEntity>equal(propName, identifier))
+                .map(identifier -> SpecificationUtil.<ExecutionQuantityTotalizerJpaEntity>equal(propName, identifier))
                 .orElse(null);
     }
 
