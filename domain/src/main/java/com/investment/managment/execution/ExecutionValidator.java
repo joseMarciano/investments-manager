@@ -40,7 +40,7 @@ public class ExecutionValidator implements Validator {
     private void checkStockIdConstraint() {
         final var stockId = this.entity.getStockId();
 
-        if (isNull(stockId)) {
+        if (isNull(stockId) || isNull(stockId.getValue())) {
             this.handler.append(new Error("'stockId' must not be null"));
             return;
         }
@@ -49,7 +49,7 @@ public class ExecutionValidator implements Validator {
     private void checkWalletIdConstraint() {
         final var walletId = this.entity.getWalletId();
 
-        if (isNull(walletId)) {
+        if (isNull(walletId) || isNull(walletId.getValue())) {
             this.handler.append(new Error("'walletId' must not be null"));
             return;
         }
