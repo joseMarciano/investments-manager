@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 @AWSContext
@@ -21,6 +22,7 @@ public class AWSCredentialsConfig {
 
 
     @Bean
+    @Primary
     public AWSCredentialsProvider awsCredentialsProvider() {
         return new AWSStaticCredentialsProvider(new BasicAWSCredentials(this.accessKey, this.secretKey));
     }

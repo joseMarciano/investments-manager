@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 @AWSContext
@@ -19,6 +20,7 @@ public class SQSConfig {
     }
 
     @Bean
+    @Primary
     public AmazonSQSAsync amazonSQSAsync(final AWSCredentialsProvider credentialsProvider) {
         return AmazonSQSAsyncClientBuilder.standard()
                 .withCredentials(credentialsProvider)
@@ -27,6 +29,7 @@ public class SQSConfig {
     }
 
     @Bean
+    @Primary
     public QueueMessagingTemplate queueMessagingTemplate(final AmazonSQSAsync amazonSQSAsync) {
         return new QueueMessagingTemplate(amazonSQSAsync);
     }
