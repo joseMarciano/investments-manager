@@ -67,6 +67,11 @@ public final class ExecutionBuilder extends AbstractBuilder<Execution> {
         return this;
     }
 
+    public ExecutionBuilder pnlOpen(final BigDecimal pnlOpen) {
+        this.target.pnlOpen = pnlOpen;
+        return this;
+    }
+
     public ExecutionBuilder origin(final ExecutionID origin) {
         this.target.origin = origin;
         return this;

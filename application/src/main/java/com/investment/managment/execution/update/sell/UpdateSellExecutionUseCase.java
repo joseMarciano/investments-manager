@@ -65,6 +65,7 @@ public class UpdateSellExecutionUseCase extends DoubleUseCase<UpdateExecutionCom
                         aCommand.executedQuantity(),
                         aCommand.executedPrice(),
                         anExecution.getStatus(),
+                        anExecution.getPnlOpen(),
                         aCommand.executedAt()
                 );
 

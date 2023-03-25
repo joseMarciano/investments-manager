@@ -100,6 +100,7 @@ public interface ExecutionAPIPresenter {
                 output.executedPrice(),
                 output.executedVolume(),
                 output.status(),
+                output.pnlOpen(),
                 output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()

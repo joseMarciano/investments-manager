@@ -19,6 +19,7 @@ public record PageExecutionCommandOutput(
         BigDecimal executedPrice,
         BigDecimal executedVolume,
         ExecutionStatus status,
+        BigDecimal pnlOpen,
         Instant executedAt,
         Instant createdAt,
         Instant updatedAt
@@ -34,6 +35,7 @@ public record PageExecutionCommandOutput(
                 anExecution.getExecutedPrice(),
                 anExecution.getExecutedVolume(),
                 anExecution.getStatus(),
+                anExecution.getPnlOpen(),
                 anExecution.getExecutedAt(),
                 anExecution.getCreatedAt(),
                 anExecution.getUpdatedAt()

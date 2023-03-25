@@ -14,6 +14,7 @@ import com.investment.managment.page.Pagination;
 import com.investment.managment.util.PaginationUtil;
 import com.investment.managment.util.SpecificationUtil;
 import com.investment.managment.wallet.WalletID;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 
 @Component
+@Qualifier("postgres-execution-gateway")
 public class ExecutionPostgresGateway implements ExecutionGateway {
 
     private final ExecutionRepository executionRepository;

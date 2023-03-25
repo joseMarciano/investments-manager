@@ -14,27 +14,17 @@ import static java.math.BigDecimal.valueOf;
 public class Execution extends AggregateRoot<ExecutionID> {
 
     private final ExecutionID id;
-
     protected ExecutionID origin;
-
     protected StockID stockId;
-
     protected WalletID walletId;
-
     protected Double profitPercentage;
-
     protected Long executedQuantity;
-
     protected BigDecimal executedPrice;
-
     private BigDecimal executedVolume;
-
     protected ExecutionStatus status;
-
+    protected BigDecimal pnlOpen;
     protected Instant executedAt;
-
     private final Instant createdAt;
-
     private Instant updatedAt;
 
 
@@ -54,6 +44,7 @@ public class Execution extends AggregateRoot<ExecutionID> {
                       final BigDecimal executedPrice,
                       final BigDecimal executedVolume,
                       final ExecutionStatus status,
+                      final BigDecimal pnlOpen,
                       final Instant executedAt,
                       final Instant createdAt,
                       final Instant updatedAt) {
@@ -66,6 +57,7 @@ public class Execution extends AggregateRoot<ExecutionID> {
         this.executedPrice = executedPrice;
         this.executedVolume = executedVolume;
         this.status = status;
+        this.pnlOpen = pnlOpen;
         this.executedAt = executedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -80,6 +72,7 @@ public class Execution extends AggregateRoot<ExecutionID> {
                                  final BigDecimal executedPrice,
                                  final BigDecimal executedVolume,
                                  final ExecutionStatus status,
+                                 final BigDecimal pnlOpen,
                                  final Instant executedAt,
                                  final Instant createdAt,
                                  final Instant updatedAt) {
@@ -92,13 +85,14 @@ public class Execution extends AggregateRoot<ExecutionID> {
                 executedPrice,
                 executedVolume,
                 status,
+                pnlOpen,
                 executedAt,
                 createdAt,
                 updatedAt);
     }
 
     public static Execution with(final ExecutionID id) {
-        return with(id, null, null, null, null, null, null, null, null, null, null, null);
+        return with(id, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public Execution update(
@@ -109,6 +103,7 @@ public class Execution extends AggregateRoot<ExecutionID> {
             final Long executedQuantity,
             final BigDecimal executedPrice,
             final ExecutionStatus status,
+            final BigDecimal pnlOpen,
             final Instant executedAt
     ) {
         this.origin = origin;
@@ -119,6 +114,7 @@ public class Execution extends AggregateRoot<ExecutionID> {
         this.executedPrice = executedPrice;
         this.status = status;
         this.executedAt = executedAt;
+        this.pnlOpen = pnlOpen;
         this.updatedAt = InstantUtil.now();
         return ExecutionBuilder.from(this).build();
     }
@@ -142,6 +138,10 @@ public class Execution extends AggregateRoot<ExecutionID> {
 
     public ExecutionStatus getStatus() {
         return status;
+    }
+
+    public BigDecimal getPnlOpen() {
+        return pnlOpen;
     }
 
     public ExecutionID getOrigin() {

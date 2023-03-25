@@ -15,6 +15,7 @@ public record PageExecutionResponse(
         BigDecimal executedPrice,
         BigDecimal executedVolume,
         ExecutionStatus status,
+        BigDecimal pnlOpen,
         Instant executedAt,
         Instant createdAt,
         Instant updatedAt

@@ -54,6 +54,9 @@ public class ExecutionQuantityTotalizerJpaEntity {
     @Column(name = "STATUS")
     private ExecutionStatus status;
 
+    @Column(name = "PNL_OPEN")
+    private BigDecimal pnlOpen;
+
     @Column(name = "EXECUTED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant executedAt;
 
@@ -73,6 +76,7 @@ public class ExecutionQuantityTotalizerJpaEntity {
                 this.executedPrice,
                 this.executedVolume,
                 this.status,
+                this.pnlOpen,
                 this.executedAt,
                 this.createdAt,
                 this.updatedAt

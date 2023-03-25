@@ -56,6 +56,9 @@ public class ExecutionJpaEntity {
     @Column(name = "STATUS")
     private ExecutionStatus status;
 
+    @Column(name = "PNL_OPEN")
+    private BigDecimal pnlOpen;
+
     @Column(name = "EXECUTED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant executedAt;
 
@@ -75,6 +78,7 @@ public class ExecutionJpaEntity {
                 this.executedPrice,
                 this.executedVolume,
                 this.status,
+                this.pnlOpen,
                 this.executedAt,
                 this.createdAt,
                 this.updatedAt
@@ -92,6 +96,7 @@ public class ExecutionJpaEntity {
                 .executedPrice(anExecution.getExecutedPrice())
                 .executedVolume(anExecution.getExecutedVolume())
                 .status(anExecution.getStatus())
+                .pnlOpen(anExecution.getPnlOpen())
                 .executedAt(anExecution.getExecutedAt())
                 .createdAt(anExecution.getCreatedAt())
                 .updatedAt(anExecution.getUpdatedAt())

@@ -10,6 +10,7 @@ import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.execution.update.buy.UpdateBuyExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellExecutionUseCase;
+import com.investment.managment.execution.updatePnl.UpdateExecutionPnlOpenUseCase;
 import com.investment.managment.stock.StockGateway;
 import com.investment.managment.wallet.WalletGateway;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,61 +20,69 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ExecutionUseCaseConfig {
 
-    private final ExecutionGateway executionGateway;
+    private final ExecutionGateway defaultExecutionGateway;
+    private final ExecutionGateway executionPostgresGateway;
     private final StockGateway stockGateway;
     private final WalletGateway walletGateway;
 
-    public ExecutionUseCaseConfig(final @Qualifier("default-execution-gateway") ExecutionGateway executionGateway,
+    public ExecutionUseCaseConfig(final @Qualifier("default-execution-gateway") ExecutionGateway defaultExecutionGateway,
+                                  final @Qualifier("postgres-execution-gateway") ExecutionGateway executionPostgresGateway,
                                   final StockGateway stockGateway,
                                   final WalletGateway walletGateway) {
-        this.executionGateway = executionGateway;
+        this.defaultExecutionGateway = defaultExecutionGateway;
         this.stockGateway = stockGateway;
         this.walletGateway = walletGateway;
+        this.executionPostgresGateway = executionPostgresGateway;
     }
 
     @Bean
     public CreateExecutionUseCase createExecutionUseCase() {
-        return new CreateExecutionUseCase(this.executionGateway, this.stockGateway, this.walletGateway);
+        return new CreateExecutionUseCase(this.defaultExecutionGateway, this.stockGateway, this.walletGateway);
     }
 
     @Bean
     public UpdateBuyExecutionUseCase updateBuyFieldsExecutionUseCase() {
-        return new UpdateBuyExecutionUseCase(this.executionGateway);
+        return new UpdateBuyExecutionUseCase(this.defaultExecutionGateway);
     }
 
     @Bean
     public UpdateSellExecutionUseCase updateSellFieldsExecutionUseCase() {
-        return new UpdateSellExecutionUseCase(this.executionGateway);
+        return new UpdateSellExecutionUseCase(this.defaultExecutionGateway);
     }
 
     @Bean
     public DeleteExecutionByIdUseCase deleteExecutionByIdUseCase() {
-        return new DeleteExecutionByIdUseCase(this.executionGateway);
+        return new DeleteExecutionByIdUseCase(this.defaultExecutionGateway);
     }
 
     @Bean
     public UpdateExecutionUseCase updateExecutionUseCase(final UpdateBuyExecutionUseCase updateBuyExecutionUseCase,
                                                          final UpdateSellExecutionUseCase updateSellExecutionUseCase) {
-        return new UpdateExecutionUseCase(this.executionGateway, updateBuyExecutionUseCase, updateSellExecutionUseCase);
+        return new UpdateExecutionUseCase(this.defaultExecutionGateway, updateBuyExecutionUseCase, updateSellExecutionUseCase);
     }
 
     @Bean
     public FindExecutionByIdUseCase findExecutionByIdUseCase() {
-        return new FindExecutionByIdUseCase(this.executionGateway);
+        return new FindExecutionByIdUseCase(this.defaultExecutionGateway);
     }
 
     @Bean
     public SellExecutionUseCase sellExecutionUseCase() {
-        return new SellExecutionUseCase(this.executionGateway);
+        return new SellExecutionUseCase(this.defaultExecutionGateway);
     }
 
     @Bean
     public SummaryExecutionUseCase summaryExecutionUseCase() {
-        return new SummaryExecutionUseCase(this.executionGateway);
+        return new SummaryExecutionUseCase(this.defaultExecutionGateway);
+    }
+
+    @Bean
+    public UpdateExecutionPnlOpenUseCase updateExecutionPnlOpenUseCase() {
+        return new UpdateExecutionPnlOpenUseCase(this.executionPostgresGateway);
     }
 
     @Bean
     public PageExecutionUseCase pageExecutionUseCase() {
-        return new PageExecutionUseCase(this.executionGateway);
+        return new PageExecutionUseCase(this.defaultExecutionGateway);
     }
 }
