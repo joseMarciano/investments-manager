@@ -11,6 +11,11 @@ import java.util.Set;
 
 public interface ExecutionRepository extends JpaRepository<ExecutionJpaEntity, String>, JpaSpecificationExecutor<ExecutionJpaEntity> {
     @Query("""
+            select e from Execution e where e.stock.id = :stockId and e.wallet.id = :walletId
+            """)
+    List<ExecutionJpaEntity> findByStockIdAndWalletId(@Param("stockId") String stockId, @Param("walletId") String walletId);
+
+    @Query("""
             select new com.investment.managment.execution.summary.ExecutionSummaryByStock(
             s.id,
             e.stock.symbol,
@@ -23,6 +28,7 @@ public interface ExecutionRepository extends JpaRepository<ExecutionJpaEntity, S
             group by s.id,s.symbol
             """)
     List<ExecutionSummaryByStock> getExecutionSummaryByStock(@Param("walletId") String walletId);
+
 
     boolean existsByOrigin_IdIn(Set<String> ids);
 

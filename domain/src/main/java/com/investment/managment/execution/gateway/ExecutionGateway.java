@@ -8,5 +8,6 @@ public interface ExecutionGateway extends
         FindAllExecutionGateway,
         FindByIdExecutionGateway,
         GetExecutionSummaryByStockExecutionGateway,
+        GetExecutionsTotalizatorGateway,
         UpdateExecutionGateway {
 }

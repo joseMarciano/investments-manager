@@ -7,6 +7,7 @@ import com.investment.managment.execution.models.*;
 import com.investment.managment.execution.page.PageExecutionCommandOutput;
 import com.investment.managment.execution.sell.SellExecutionCommandOutput;
 import com.investment.managment.execution.summarybystock.SummaryExecutionCommandOutput;
+import com.investment.managment.execution.totalizator.ExecutionsTotalizatorCommandOuput;
 import com.investment.managment.execution.update.UpdateExecutionCommandOutput;
 
 import java.util.Optional;
@@ -105,6 +106,15 @@ public interface ExecutionAPIPresenter {
                 output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()
+        );
+    }
+
+    static ExecutionsTotalizatorResponse present(final ExecutionsTotalizatorCommandOuput output) {
+        return new ExecutionsTotalizatorResponse(
+                output.totalSoldQuantity(),
+                output.totalBoughtQuantity(),
+                output.totalPnlOpen(),
+                output.totalPnlClose()
         );
     }
 

@@ -11,6 +11,8 @@ import com.investment.managment.execution.presenters.ExecutionAPIPresenter;
 import com.investment.managment.execution.sell.SellExecutionCommandInput;
 import com.investment.managment.execution.sell.SellExecutionUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
+import com.investment.managment.execution.totalizator.ExecutionsTotalizatorCommandInput;
+import com.investment.managment.execution.totalizator.ExecutionsTotalizatorUseCase;
 import com.investment.managment.execution.update.UpdateExecutionCommandInput;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.page.Pagination;
@@ -34,13 +36,16 @@ public class ExecutionController implements ExecutionAPI {
     private final SellExecutionUseCase sellExecutionUseCase;
     private final PageExecutionUseCase pageExecutionUseCase;
 
+    private final ExecutionsTotalizatorUseCase executionsTotalizatorUseCase;
+
     public ExecutionController(final UpdateExecutionUseCase updateExecutionUseCase,
                                final CreateExecutionUseCase createExecutionUseCase,
                                final FindExecutionByIdUseCase findExecutionByIdUseCase,
                                final SummaryExecutionUseCase summaryExecutionUseCase,
                                final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase,
                                final SellExecutionUseCase sellExecutionUseCase,
-                               final PageExecutionUseCase pageExecutionUseCase) {
+                               final PageExecutionUseCase pageExecutionUseCase,
+                               final ExecutionsTotalizatorUseCase executionsTotalizatorUseCase) {
         this.updateExecutionUseCase = updateExecutionUseCase;
         this.createExecutionUseCase = createExecutionUseCase;
         this.findExecutionByIdUseCase = findExecutionByIdUseCase;
@@ -48,6 +53,7 @@ public class ExecutionController implements ExecutionAPI {
         this.deleteExecutionByIdUseCase = deleteExecutionByIdUseCase;
         this.sellExecutionUseCase = sellExecutionUseCase;
         this.pageExecutionUseCase = pageExecutionUseCase;
+        this.executionsTotalizatorUseCase = executionsTotalizatorUseCase;
     }
 
     @Override
@@ -114,5 +120,11 @@ public class ExecutionController implements ExecutionAPI {
         return this.pageExecutionUseCase
                 .execute(of(searchQuery, WalletID.from(walletId), StockID.from(stockId)))
                 .map(ExecutionAPIPresenter::present);
+    }
+
+    @Override
+    public ExecutionsTotalizatorResponse getExecutionsTotalizator(final String walletId, final String stockId) {
+        return ExecutionAPIPresenter.present(this.executionsTotalizatorUseCase
+                .execute(ExecutionsTotalizatorCommandInput.with(walletId, stockId)));
     }
 }

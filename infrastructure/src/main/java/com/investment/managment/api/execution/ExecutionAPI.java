@@ -94,4 +94,12 @@ public interface ExecutionAPI {
             @RequestParam(value = "direction", defaultValue = "asc") String direction);
 
 
+    @GetMapping(value = "totalizator", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get executions totalizator")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200"),
+    })
+    ExecutionsTotalizatorResponse getExecutionsTotalizator(@RequestParam String walletId, @RequestParam String stockId);
+
+
 }

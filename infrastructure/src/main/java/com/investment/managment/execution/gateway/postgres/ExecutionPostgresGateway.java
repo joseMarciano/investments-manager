@@ -11,6 +11,7 @@ import com.investment.managment.execution.persistence.ExecutionQuantityTotalizer
 import com.investment.managment.execution.persistence.ExecutionRepository;
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 import com.investment.managment.page.Pagination;
+import com.investment.managment.stock.StockID;
 import com.investment.managment.util.PaginationUtil;
 import com.investment.managment.util.SpecificationUtil;
 import com.investment.managment.wallet.WalletID;
@@ -110,6 +111,14 @@ public class ExecutionPostgresGateway implements ExecutionGateway {
         ofNullable(anId)
                 .map(Identifier::getValue)
                 .ifPresent(executionRepository::deleteById);
+    }
+
+    @Override
+    public List<Execution> getExecutionsByStockIdAndWalletId(final WalletID aWalletID, final StockID aStockID) {
+        return this.executionRepository.findByStockIdAndWalletId(aStockID.getValue(), aWalletID.getValue())
+                .stream()
+                .map(ExecutionJpaEntity::toAggregate)
+                .toList();
     }
 
     private Execution save(final Execution anExecution) {

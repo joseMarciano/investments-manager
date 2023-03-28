@@ -7,6 +7,7 @@ import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.page.PageExecutionUseCase;
 import com.investment.managment.execution.sell.SellExecutionUseCase;
 import com.investment.managment.execution.summarybystock.SummaryExecutionUseCase;
+import com.investment.managment.execution.totalizator.ExecutionsTotalizatorUseCase;
 import com.investment.managment.execution.update.UpdateExecutionUseCase;
 import com.investment.managment.execution.update.buy.UpdateBuyExecutionUseCase;
 import com.investment.managment.execution.update.sell.UpdateSellExecutionUseCase;
@@ -84,5 +85,10 @@ public class ExecutionUseCaseConfig {
     @Bean
     public PageExecutionUseCase pageExecutionUseCase() {
         return new PageExecutionUseCase(this.defaultExecutionGateway);
+    }
+
+    @Bean
+    public ExecutionsTotalizatorUseCase executionsTotalizatorUseCase() {
+        return new ExecutionsTotalizatorUseCase(this.executionPostgresGateway);
     }
 }

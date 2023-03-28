@@ -7,6 +7,7 @@ import com.investment.managment.execution.gateway.sqs.ExecutionSQSGateway;
 import com.investment.managment.execution.page.ExecutionSearchQuery;
 import com.investment.managment.execution.summary.ExecutionSummaryByStock;
 import com.investment.managment.page.Pagination;
+import com.investment.managment.stock.StockID;
 import com.investment.managment.wallet.WalletID;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -75,5 +76,10 @@ public class DefaultExecutionGateway implements ExecutionGateway {
         final var executionUpdated = this.executionPostgresGateway.update(anExecution);
         this.executionSQSGateway.update(executionUpdated);
         return executionUpdated;
+    }
+
+    @Override
+    public List<Execution> getExecutionsByStockIdAndWalletId(final WalletID aWalletID, final StockID aStockID) {
+        return this.executionPostgresGateway.getExecutionsByStockIdAndWalletId(aWalletID, aStockID);
     }
 }
