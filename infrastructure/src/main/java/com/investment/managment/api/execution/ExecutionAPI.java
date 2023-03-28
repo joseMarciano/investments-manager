@@ -90,8 +90,8 @@ public interface ExecutionAPI {
             @RequestParam(required = false) String stockId,
             @RequestParam(value = "limit", defaultValue = "20") int limit,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
-            @RequestParam(value = "direction", defaultValue = "desc") String direction);
+            @RequestParam(value = "sort", defaultValue = "status") String sort,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction);
 
 
 }

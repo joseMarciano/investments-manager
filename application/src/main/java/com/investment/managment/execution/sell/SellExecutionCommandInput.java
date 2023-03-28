@@ -9,6 +9,7 @@ public record SellExecutionCommandInput(
         ExecutionID originId,
         Long executedQuantity,
         BigDecimal executedPrice,
+        BigDecimal stockSoldPrice,
         Instant executedAt
 
 ) {
@@ -17,8 +18,9 @@ public record SellExecutionCommandInput(
             final ExecutionID originId,
             final Long executedQuantity,
             final BigDecimal executedPrice,
+            final BigDecimal stockSoldPrice,
             final Instant executedAt) {
-        return new SellExecutionCommandInput(originId, executedQuantity, executedPrice, executedAt);
+        return new SellExecutionCommandInput(originId, executedQuantity, executedPrice, stockSoldPrice, executedAt);
     }
 
 }

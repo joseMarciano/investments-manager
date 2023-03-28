@@ -20,6 +20,7 @@ public record PageExecutionCommandOutput(
         BigDecimal executedVolume,
         ExecutionStatus status,
         BigDecimal pnlOpen,
+        BigDecimal pnlClose,
         Instant executedAt,
         Instant createdAt,
         Instant updatedAt
@@ -36,6 +37,7 @@ public record PageExecutionCommandOutput(
                 anExecution.getExecutedVolume(),
                 anExecution.getStatus(),
                 anExecution.getPnlOpen(),
+                anExecution.getPnlClose(),
                 anExecution.getExecutedAt(),
                 anExecution.getCreatedAt(),
                 anExecution.getUpdatedAt()

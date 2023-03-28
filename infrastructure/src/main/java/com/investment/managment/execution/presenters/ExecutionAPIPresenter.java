@@ -101,6 +101,7 @@ public interface ExecutionAPIPresenter {
                 output.executedVolume(),
                 output.status(),
                 output.pnlOpen(),
+                output.pnlClose(),
                 output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()

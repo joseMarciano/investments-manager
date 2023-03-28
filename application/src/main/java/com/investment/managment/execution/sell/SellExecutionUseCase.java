@@ -3,15 +3,17 @@ package com.investment.managment.execution.sell;
 import com.investment.managment.UseCase;
 import com.investment.managment.execution.Execution;
 import com.investment.managment.execution.ExecutionBuilder;
-import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.execution.ExecutionStatus;
+import com.investment.managment.execution.gateway.ExecutionGateway;
 import com.investment.managment.validation.exception.DomainExeceptionFactory;
 import com.investment.managment.validation.exception.Error;
 
 import java.util.Objects;
 import java.util.function.Function;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 
 public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, SellExecutionCommandOutput> {
 
@@ -41,6 +43,8 @@ public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, Sel
                     .walletId(originExecution.getWalletId())
                     .origin(originExecution.getId())
                     .build();
+
+            executionSold.calculatePnlClose(ofNullable(aCommand.stockSoldPrice()).orElse(ZERO));
 
             validate(originExecution, aCommand);
 
