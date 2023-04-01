@@ -69,7 +69,9 @@ public interface ExecutionAPIPresenter {
                 output.symbol(),
                 output.totalQuantity(),
                 output.totalSoldQuantity(),
-                output.totalCustodyQuantity()
+                output.totalCustodyQuantity(),
+                output.totalPnlClose(),
+                output.totalPnlOpen()
         );
     }
 

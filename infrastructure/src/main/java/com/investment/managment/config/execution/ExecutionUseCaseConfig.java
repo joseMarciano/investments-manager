@@ -73,8 +73,8 @@ public class ExecutionUseCaseConfig {
     }
 
     @Bean
-    public SummaryExecutionUseCase summaryExecutionUseCase() {
-        return new SummaryExecutionUseCase(this.defaultExecutionGateway);
+    public SummaryExecutionUseCase summaryExecutionUseCase(final ExecutionsTotalizatorUseCase executionsTotalizatorUseCase) {
+        return new SummaryExecutionUseCase(this.defaultExecutionGateway, executionsTotalizatorUseCase);
     }
 
     @Bean

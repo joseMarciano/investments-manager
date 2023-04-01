@@ -35,7 +35,6 @@ public class ExecutionController implements ExecutionAPI {
     private final DeleteExecutionByIdUseCase deleteExecutionByIdUseCase;
     private final SellExecutionUseCase sellExecutionUseCase;
     private final PageExecutionUseCase pageExecutionUseCase;
-
     private final ExecutionsTotalizatorUseCase executionsTotalizatorUseCase;
 
     public ExecutionController(final UpdateExecutionUseCase updateExecutionUseCase,
