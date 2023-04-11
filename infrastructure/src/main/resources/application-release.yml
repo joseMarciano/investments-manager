@@ -1,0 +1,24 @@
+aws:
+  sqs:
+    execution-event-changed-queue: https://sqs.us-east-1.amazonaws.com/446633124077/execution-event-changed
+    execution-pnl-open-changed-queue: https://sqs.us-east-1.amazonaws.com/446633124077/execution-pnl-open-event-changed
+
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
+datasource:
+  url: ${DATABASE_URL}
+  user: ${DATABASE_USER}
+  password: ${DATABASE_PASSWORD}
+
+
+feign-client:
+  market-data:
+    token: ${MARKET_DATA_TOKEN}
+    url: https://api.dadosdemercado.com.br/v1/
+    name: market-data
