@@ -1,5 +1,4 @@
 rootProject.name = 'investiment-managment'
-rootProject.buildFileName = '/infrastructure/build.gradle'
 include 'domain'
 include 'application'
 include 'infrastructure'
