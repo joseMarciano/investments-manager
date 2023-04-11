@@ -12,7 +12,7 @@ spring:
 
 
 datasource:
-  url: ${DATABASE_URL}
+  url: ${DATABASE_HOST}
   user: ${DATABASE_USER}
   password: ${DATABASE_PASSWORD}
 
