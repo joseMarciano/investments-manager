@@ -1,11 +1,14 @@
-
 // TODO: SET VERSIONS IN A CONST VARIABLE
 
 plugins {
     id 'java'
     id "org.flywaydb.flyway" version "9.8.1"
     id "io.freefair.lombok" version "6.6"
+    id "org.springframework.boot" version "2.7.6"
 }
+
+apply plugin: 'io.spring.dependency-management'
+
 
 group 'com.investment.managment'
 version '1.0-SNAPSHOT'
@@ -19,6 +22,9 @@ flyway {
     url = System.getenv('DATABASE_URL') ?: 'jdbc:postgresql://localhost:5432/investment-management'
     user = System.getenv('DATABASE_USER') ?: 'developer'
     password = System.getenv('DATABASE_PASSWORD') ?: '123456'
+//    url = 'jdbc:postgresql://investment-management.cavb7pp6g4ju.us-east-1.rds.amazonaws.com:5432/postgres'
+//    user =  'investment_onwer'
+//    password = 'NnRJ4VmWXTUg9h9c8QNI'
 }
 
 dependencies {
