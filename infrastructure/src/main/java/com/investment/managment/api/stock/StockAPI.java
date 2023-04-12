@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,6 +25,13 @@ public interface StockAPI {
                                        @RequestParam(value = "filter", required = false) String filter,
                                        @RequestParam(value = "sort", defaultValue = "symbol") String sort,
                                        @RequestParam(value = "direction", defaultValue = "asc") String direction);
+
+    @PostMapping
+    @Operation(summary = "Update or create Stocks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200"),
+    })
+    void updateOrCreate();
 
 
 }
