@@ -19,9 +19,9 @@ repositories {
 
 // MIGRATIONS
 flyway {
-    url = System.getenv('DATABASE_HOST') ?: 'jdbc:postgresql://localhost:5432/investment-management'
-    user = System.getenv('DATABASE_USER') ?: 'developer'
-    password = System.getenv('DATABASE_PASSWORD') ?: '123456'
+    url = System.getenv('JDBC_DATABASE_URL') ?: 'jdbc:postgresql://localhost:5432/investment-management'
+    user = System.getenv('JDBC_DATABASE_USERNAME') ?: 'developer'
+    password = System.getenv('JDBC_DATABASE_PASSWORD') ?: '123456'
 }
 
 dependencies {

@@ -14,9 +14,9 @@ spring:
 
 
 datasource:
-  url: ${DATABASE_HOST}
-  user: ${DATABASE_USER}
-  password: ${DATABASE_PASSWORD}
+  url: ${JDBC_DATABASE_URL}
+  user: ${JDBC_DATABASE_USERNAME}
+  password: ${JDBC_DATABASE_PASSWORD}
 
 
 feign-client:
