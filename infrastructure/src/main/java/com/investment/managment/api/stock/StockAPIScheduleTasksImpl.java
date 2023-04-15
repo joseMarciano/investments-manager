@@ -33,7 +33,7 @@ public class StockAPIScheduleTasksImpl implements StockAPIScheduleTasks {
     }
 
     @Override
-    @Scheduled(cron = "@midnight")
+    @Scheduled(cron = "@midnight", zone = "America/Sao_Paulo")
     public void updateOrCreateStocks() {
         this.stockSearcher.getAllTickers()
                 .forEach(this::updateOrCreateStock);
