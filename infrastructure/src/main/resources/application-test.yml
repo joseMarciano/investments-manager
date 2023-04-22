@@ -8,6 +8,9 @@ spring:
 
 #TODO: implements integration tests with feign
 feign-client:
+  investment-calculator:
+    name: investment-calculator
+    url: http://localhost:8081/api
   market-data:
     name: market-data
     url: localhost

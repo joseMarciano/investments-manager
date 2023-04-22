@@ -20,6 +20,9 @@ datasource:
 
 
 feign-client:
+  investment-calculator:
+    name: investment-calculator
+    url: ${INVESTMENT_CALCULATOR_URL}
   market-data:
     token: ${MARKET_DATA_TOKEN}
     url: https://api.dadosdemercado.com.br/v1/
