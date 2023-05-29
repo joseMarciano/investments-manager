@@ -42,9 +42,7 @@ public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, Sel
                     .origin(originExecution.getId())
                     .build();
 
-            final var origin = this.executionGateway.findById(aCommand.originId()).get();
-
-            executionSold.calculatePnlClose(origin.getExecutedPrice());
+            executionSold.calculatePnlClose(originExecution.getExecutedPrice());
 
             validate(originExecution, aCommand);
 
