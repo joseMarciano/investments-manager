@@ -6,7 +6,7 @@ import java.time.Instant;
 public record SellExecutionRequest(
         Long executedQuantity,
         BigDecimal executedPrice,
-        BigDecimal stockSoldPrice,
+//        BigDecimal stockSoldPrice,
         Instant executedAt
 
 ) {

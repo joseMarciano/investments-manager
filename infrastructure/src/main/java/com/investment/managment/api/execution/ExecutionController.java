@@ -102,7 +102,7 @@ public class ExecutionController implements ExecutionAPI {
                 ExecutionID.from(originId),
                 executionRequest.executedQuantity(),
                 executionRequest.executedPrice(),
-                executionRequest.stockSoldPrice(),
+//                executionRequest.stockSoldPrice(),
                 executionRequest.executedAt()
         );
         return ExecutionAPIPresenter.present(this.sellExecutionUseCase.execute(aCommand));

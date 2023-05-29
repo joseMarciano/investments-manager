@@ -11,9 +11,7 @@ import com.investment.managment.validation.exception.Error;
 import java.util.Objects;
 import java.util.function.Function;
 
-import static java.math.BigDecimal.ZERO;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 
 public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, SellExecutionCommandOutput> {
 
@@ -44,7 +42,9 @@ public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, Sel
                     .origin(originExecution.getId())
                     .build();
 
-            executionSold.calculatePnlClose(ofNullable(aCommand.stockSoldPrice()).orElse(ZERO));
+            final var origin = this.executionGateway.findById(aCommand.originId()).get();
+
+            executionSold.calculatePnlClose(origin.getExecutedPrice());
 
             validate(originExecution, aCommand);
 
