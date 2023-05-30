@@ -57,8 +57,14 @@ public class ExecutionQuantityTotalizerJpaEntity {
     @Column(name = "PNL_OPEN")
     private BigDecimal pnlOpen;
 
+    @Column(name = "PNL_OPEN_PERCENTAGE")
+    private BigDecimal pnlOpenPercentage; // TODO: NEED TO BE CALCULATED
+
     @Column(name = "PNL_CLOSE")
     private BigDecimal pnlClose;
+
+    @Column(name = "PNL_CLOSE_PERCENTAGE")
+    private BigDecimal pnlClosePercentage;  // TODO: NEED TO BE CALCULATED
 
     @Column(name = "EXECUTED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant executedAt;
@@ -80,7 +86,9 @@ public class ExecutionQuantityTotalizerJpaEntity {
                 this.executedVolume,
                 this.status,
                 this.pnlOpen,
+                this.pnlOpenPercentage,
                 this.pnlClose,
+                this.pnlClosePercentage,
                 this.executedAt,
                 this.createdAt,
                 this.updatedAt

@@ -20,7 +20,9 @@ public record PageExecutionCommandOutput(
         BigDecimal executedVolume,
         ExecutionStatus status,
         BigDecimal pnlOpen,
+        BigDecimal pnlOpenPercentage,
         BigDecimal pnlClose,
+        BigDecimal pnlClosePercentage,
         Instant executedAt,
         Instant createdAt,
         Instant updatedAt
@@ -37,7 +39,9 @@ public record PageExecutionCommandOutput(
                 anExecution.getExecutedVolume(),
                 anExecution.getStatus(),
                 anExecution.getPnlOpen(),
+                anExecution.getPnlOpenPercentage(),
                 anExecution.getPnlClose(),
+                anExecution.getPnlClosePercentage(),
                 anExecution.getExecutedAt(),
                 anExecution.getCreatedAt(),
                 anExecution.getUpdatedAt()

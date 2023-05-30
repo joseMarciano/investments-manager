@@ -6,9 +6,9 @@ import java.math.BigDecimal;
 
 public record UpdateExecutionPnlOpenCommand(
         ExecutionID id,
-        BigDecimal pnlOpen
-) {
-    public static UpdateExecutionPnlOpenCommand with(final ExecutionID anID, final BigDecimal pnlOpen) {
-        return new UpdateExecutionPnlOpenCommand(anID, pnlOpen);
+        BigDecimal pnlOpen,
+        BigDecimal pnlOpenPercentage) {
+    public static UpdateExecutionPnlOpenCommand with(final ExecutionID anID, final BigDecimal pnlOpen, final BigDecimal pnlOpenPercentage) {
+        return new UpdateExecutionPnlOpenCommand(anID, pnlOpen, pnlOpenPercentage);
     }
 }

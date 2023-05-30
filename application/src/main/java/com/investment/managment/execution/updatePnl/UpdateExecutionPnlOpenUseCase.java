@@ -31,7 +31,9 @@ public class UpdateExecutionPnlOpenUseCase extends UnitUseCase<UpdateExecutionPn
                     execution.getExecutedPrice(),
                     execution.getStatus(),
                     input.pnlOpen(),
+                    input.pnlOpenPercentage(),
                     execution.getPnlClose(),
+                    execution.getPnlClosePercentage(),
                     execution.getExecutedAt()
             );
 

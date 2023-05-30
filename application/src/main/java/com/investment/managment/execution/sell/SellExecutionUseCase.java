@@ -43,6 +43,7 @@ public class SellExecutionUseCase extends UseCase<SellExecutionCommandInput, Sel
                     .build();
 
             executionSold.calculatePnlClose(originExecution.getExecutedPrice());
+            executionSold.calculatePnlClosePercentage(originExecution.getExecutedPrice());
 
             validate(originExecution, aCommand);
 

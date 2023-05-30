@@ -59,14 +59,21 @@ public class ExecutionJpaEntity {
     @Column(name = "PNL_OPEN")
     private BigDecimal pnlOpen;
 
+    @Column(name = "PNL_OPEN_PERCENTAGE")
+    private BigDecimal pnlOpenPercentage;
+
     @Column(name = "PNL_CLOSE")
     private BigDecimal pnlClose;
+
+    @Column(name = "PNL_CLOSE_PERCENTAGE")
+    private BigDecimal pnlClosePercentage;
 
     @Column(name = "EXECUTED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant executedAt;
 
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant createdAt;
+
     @Column(name = "UPDATED_AT", columnDefinition = "TIMESTAMP(6)")
     private Instant updatedAt;
 
@@ -82,7 +89,9 @@ public class ExecutionJpaEntity {
                 this.executedVolume,
                 this.status,
                 this.pnlOpen,
+                this.pnlOpenPercentage,
                 this.pnlClose,
+                this.pnlClosePercentage,
                 this.executedAt,
                 this.createdAt,
                 this.updatedAt
@@ -101,7 +110,9 @@ public class ExecutionJpaEntity {
                 .executedVolume(anExecution.getExecutedVolume())
                 .status(anExecution.getStatus())
                 .pnlOpen(anExecution.getPnlOpen())
+                .pnlOpenPercentage(anExecution.getPnlOpenPercentage())
                 .pnlClose(anExecution.getPnlClose())
+                .pnlClosePercentage(anExecution.getPnlClosePercentage())
                 .executedAt(anExecution.getExecutedAt())
                 .createdAt(anExecution.getCreatedAt())
                 .updatedAt(anExecution.getUpdatedAt())

@@ -16,7 +16,9 @@ public record PageExecutionResponse(
         BigDecimal executedVolume,
         ExecutionStatus status,
         BigDecimal pnlOpen,
+        BigDecimal pnlOpenPercentage,
         BigDecimal pnlClose,
+        BigDecimal pnlClosePercentage,
         Instant executedAt,
         Instant createdAt,
         Instant updatedAt

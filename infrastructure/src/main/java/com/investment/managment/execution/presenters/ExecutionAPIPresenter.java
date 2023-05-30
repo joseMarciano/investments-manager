@@ -104,7 +104,9 @@ public interface ExecutionAPIPresenter {
                 output.executedVolume(),
                 output.status(),
                 output.pnlOpen(),
+                output.pnlOpenPercentage(),
                 output.pnlClose(),
+                output.pnlClosePercentage(),
                 output.executedAt(),
                 output.createdAt(),
                 output.updatedAt()

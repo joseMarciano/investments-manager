@@ -20,6 +20,6 @@ public class ExecutionPnlOpenListener {
 
     @SqsListener(value = "${aws.sqs.execution-pnl-open-changed-queue}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void executionChangedListener(final @Payload ExecutionPnlRequest request) {
-        updateExecutionPnlOpenUseCase.execute(UpdateExecutionPnlOpenCommand.with(ExecutionID.from(request.id()), request.pnl()));
+        updateExecutionPnlOpenUseCase.execute(UpdateExecutionPnlOpenCommand.with(ExecutionID.from(request.id()), request.pnl(), request.pnlOpenPercentage()));
     }
 }
